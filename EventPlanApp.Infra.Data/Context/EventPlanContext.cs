@@ -1,6 +1,5 @@
 ﻿using EventPlanApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 public class EventPlanContext : DbContext
 {
@@ -25,7 +24,7 @@ public class EventPlanContext : DbContext
             .HasMany(u => u.Ingressos)
             .WithOne(i => i.UsuarioFinal)
             .HasForeignKey(i => i.UsuarioFinalId)
-            .OnDelete(DeleteBehavior.Cascade); // Excluir ingressos se o usuário final for excluído
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Mapeamento UsuarioAdm
         modelBuilder.Entity<UsuarioAdm>()
@@ -43,17 +42,17 @@ public class EventPlanContext : DbContext
             .HasMany(o => o.Eventos)
             .WithOne(e => e.Organizacao)
             .HasForeignKey(e => e.OrganizacaoId)
-            .OnDelete(DeleteBehavior.Cascade); // Excluir eventos se a organização for excluída
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Mapeamento Evento
         modelBuilder.Entity<Evento>()
             .HasKey(e => e.EventoId);
 
         modelBuilder.Entity<Evento>()
-            .HasMany(e => e.Ingressos) // Adicionando a relação com Ingressos
+            .HasMany(e => e.Ingressos)
             .WithOne(i => i.Evento)
             .HasForeignKey(i => i.EventoId)
-            .OnDelete(DeleteBehavior.Cascade); // Excluir ingressos se o evento for excluído
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Mapeamento Ingresso
         modelBuilder.Entity<Ingresso>()
@@ -61,28 +60,15 @@ public class EventPlanContext : DbContext
 
         modelBuilder.Entity<Ingresso>()
             .Property(i => i.Valor)
-            .HasColumnType("decimal(18,2)"); // Definindo tipo da coluna para Valor
+            .HasColumnType("decimal(18,2)");
 
-        // Exemplo para NotaMedia na entidade Evento
+        // Propriedades adicionais
         modelBuilder.Entity<Evento>()
             .Property(e => e.NotaMedia)
-            .HasColumnType("decimal(18,2)"); // Definindo tipo da coluna para NotaMedia
+            .HasColumnType("decimal(18,2)");
 
-        // Exemplo para NotaMedia na entidade Organizacao
         modelBuilder.Entity<Organizacao>()
             .Property(o => o.NotaMedia)
-            .HasColumnType("decimal(18,2)"); // Definindo tipo da coluna para NotaMedia
-    }
-}
-
-// Fábrica de DbContext para uso em tempo de design
-public class EventPlanContextFactory : IDesignTimeDbContextFactory<EventPlanContext>
-{
-    public EventPlanContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<EventPlanContext>();
-        optionsBuilder.UseSqlServer("sua_string_de_conexao"); // Substitua pela sua string de conexão
-
-        return new EventPlanContext(optionsBuilder.Options);
+            .HasColumnType("decimal(18,2)");
     }
 }
