@@ -10,4 +10,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventPlanApp.Domain\EventPlanApp.Domain.csproj" />
+    <ProjectReference Include="..\EventPlanApp.Infra.Data\EventPlanApp.Infra.Data.csproj" />
+    <ProjectReference Include="..\EventPlanApp.Infra.Ioc\EventPlanApp.Infra.Ioc.csproj" />
+  </ItemGroup>
+
 </Project>

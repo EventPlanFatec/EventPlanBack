@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventPlanApp.Domain\EventPlanApp.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
