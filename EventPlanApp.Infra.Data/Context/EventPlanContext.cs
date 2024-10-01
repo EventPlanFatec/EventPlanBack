@@ -1,5 +1,6 @@
 ﻿using EventPlanApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 public class EventPlanContext : DbContext
 {
@@ -49,18 +50,39 @@ public class EventPlanContext : DbContext
             .HasKey(e => e.EventoId);
 
         modelBuilder.Entity<Evento>()
-            .HasMany(e => e.UsuariosFinais)
-            .WithMany(u => u.Eventos);
+            .HasMany(e => e.Ingressos) // Adicionando a relação com Ingressos
+            .WithOne(i => i.Evento)
+            .HasForeignKey(i => i.EventoId)
+            .OnDelete(DeleteBehavior.Cascade); // Excluir ingressos se o evento for excluído
 
         // Mapeamento Ingresso
         modelBuilder.Entity<Ingresso>()
             .HasKey(i => i.IngressoId);
 
         modelBuilder.Entity<Ingresso>()
-            .HasOne(i => i.Evento)
-            .WithMany()
-            .HasForeignKey(i => i.EventoId)
-            .OnDelete(DeleteBehavior.Cascade); // Excluir ingressos se o evento for excluído
+            .Property(i => i.Valor)
+            .HasColumnType("decimal(18,2)"); // Definindo tipo da coluna para Valor
+
+        // Exemplo para NotaMedia na entidade Evento
+        modelBuilder.Entity<Evento>()
+            .Property(e => e.NotaMedia)
+            .HasColumnType("decimal(18,2)"); // Definindo tipo da coluna para NotaMedia
+
+        // Exemplo para NotaMedia na entidade Organizacao
+        modelBuilder.Entity<Organizacao>()
+            .Property(o => o.NotaMedia)
+            .HasColumnType("decimal(18,2)"); // Definindo tipo da coluna para NotaMedia
     }
 }
 
+// Fábrica de DbContext para uso em tempo de design
+public class EventPlanContextFactory : IDesignTimeDbContextFactory<EventPlanContext>
+{
+    public EventPlanContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<EventPlanContext>();
+        optionsBuilder.UseSqlServer("sua_string_de_conexao"); // Substitua pela sua string de conexão
+
+        return new EventPlanContext(optionsBuilder.Options);
+    }
+}
