@@ -87,6 +87,8 @@ namespace EventPlanApp.Domain.Entities
 
         public ICollection<Ingresso> Ingressos { get; set; }
 
+        public ICollection<UsuarioFinal> UsuariosFinais { get; set; }
+
         [Required(ErrorMessage = "A organização é obrigatória.")]
         public int OrganizacaoId { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,17 @@ namespace EventPlanApp.Domain.Entities
         public DateTime Data { get; set; }
 
         public bool VIP { get; set; }
+
+        public int UsuarioFinalId { get; set; }
+
+        [ForeignKey("UsuarioFinalId")]
+        public UsuarioFinal UsuarioFinal { get; set; }
+
+        [Required(ErrorMessage = "O evento é obrigatório.")]
+        public int EventoId { get; set; }
+
+        [ForeignKey("EventoId")]
+        public Evento Evento { get; set; }
     }
 
 }

@@ -47,10 +47,12 @@ namespace EventPlanApp.Domain.Entities
         [Range(0, 5, ErrorMessage = "A nota média deve estar entre 0 e 5.")]
         public decimal NotaMedia { get; set; }
 
-        public ICollection<Evento> Eventos { get; set; }
 
         [Required]
         public int UsuarioAdmId { get; set; }
-        public UsuarioAdm UsuarioAdm { get; set; }
+
+        public virtual ICollection<UsuarioAdm> UsuariosAdm { get; set; } = new List<UsuarioAdm>();
+
+        public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
     }
 }

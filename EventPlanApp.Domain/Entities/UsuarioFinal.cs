@@ -74,5 +74,7 @@ namespace EventPlanApp.Domain.Entities
         public string Preferencias03 { get; set; }
 
         public ICollection<Ingresso> Ingressos { get; set; }
+
+        public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
     }
 }
