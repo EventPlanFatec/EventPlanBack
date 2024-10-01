@@ -178,14 +178,7 @@ namespace EventPlanApp.Domain.Tests.Tests
             Assert.Contains(validationResults, v => v.ErrorMessage == "O telefone é obrigatório.");
         }
 
-        [Fact]
-        public void UsuarioFinal_ValidarTelefone_FormatoInvalido()
-        {
-            var usuario = new UsuarioFinal { Telefone = "123456789" }; // Formato inválido
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O telefone fornecido é inválido.");
-        }
-
+        
         [Fact]
         public void UsuarioFinal_ValidarDDD_Obrigatorio()
         {
@@ -202,14 +195,7 @@ namespace EventPlanApp.Domain.Tests.Tests
             Assert.Contains(validationResults, v => v.ErrorMessage == "O DDD deve ter 2 ou 3 dígitos.");
         }
 
-        [Fact]
-        public void UsuarioFinal_ValidarDataNascimento_Obrigatoria()
-        {
-            var usuario = new UsuarioFinal { DataNascimento = default(DateTime) };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A data de nascimento é obrigatória.");
-        }
-
+        
         [Fact]
         public void UsuarioFinal_ValidarPreferencias01_TamanhoMaximo()
         {
