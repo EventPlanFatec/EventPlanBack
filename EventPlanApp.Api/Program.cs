@@ -1,14 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using EventPlanApp.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Add services to the container.
-builder.Services.AddControllers();
-
 // Configuração do DbContext para conexão com o SQL Server
 builder.Services.AddDbContext<EventPlanContext>(options =>
-    options.UseSqlServer("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Usando a string de conexão do appsettings.json
+
+builder.Services.AddControllers();
 
 // Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -16,7 +15,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configuração do pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
