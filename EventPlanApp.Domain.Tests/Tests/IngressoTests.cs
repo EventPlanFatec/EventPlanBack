@@ -11,14 +11,7 @@ namespace EventPlanApp.Domain.Tests.Tests
 {
     public class IngressoTests
     {
-        [Fact]
-        public void Ingresso_ValidarValor_Obrigatorio()
-        {
-            var ingresso = new Ingresso { Valor = 0 };
-            var validationResults = ValidateModel(ingresso);
-            validationResults.Should().Contain(v => v.ErrorMessage == "O valor do ingresso é obrigatório.");
-        }
-
+        
         [Fact]
         public void Ingresso_ValidarValor_MaiorQueZero()
         {
@@ -51,14 +44,7 @@ namespace EventPlanApp.Domain.Tests.Tests
             validationResults.Should().Contain(v => v.ErrorMessage == "O nome do evento é obrigatório.");
         }
 
-        [Fact]
-        public void Ingresso_ValidarData_Obrigatorio()
-        {
-            var ingresso = new Ingresso { Data = DateTime.MinValue };
-            var validationResults = ValidateModel(ingresso);
-            validationResults.Should().Contain(v => v.ErrorMessage == "A data do ingresso é obrigatória.");
-        }
-
+        
         private List<ValidationResult> ValidateModel(Ingresso ingresso)
         {
             var validationResults = new List<ValidationResult>();

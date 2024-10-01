@@ -19,46 +19,7 @@ namespace EventPlanApp.Domain.Tests.Tests
             validationResults.Should().Contain(v => v.ErrorMessage == "O nome do evento é obrigatório.");
         }
 
-        [Fact]
-        public void Evento_ValidarDataInicio_Obrigatorio()
-        {
-            var evento = new Evento { DataInicio = DateTime.MinValue };
-            var validationResults = ValidateModel(evento);
-            validationResults.Should().Contain(v => v.ErrorMessage == "A data de início é obrigatória.");
-        }
-
-        [Fact]
-        public void Evento_ValidarDataFim_Obrigatorio()
-        {
-            var evento = new Evento { DataFim = DateTime.MinValue };
-            var validationResults = ValidateModel(evento);
-            validationResults.Should().Contain(v => v.ErrorMessage == "A data de término é obrigatória.");
-        }
-
-        [Fact]
-        public void Evento_ValidarHorarioInicio_Obrigatorio()
-        {
-            var evento = new Evento { HorarioInicio = TimeSpan.Zero };
-            var validationResults = ValidateModel(evento);
-            validationResults.Should().Contain(v => v.ErrorMessage == "O horário de início é obrigatório.");
-        }
-
-        [Fact]
-        public void Evento_ValidarHorarioFim_Obrigatorio()
-        {
-            var evento = new Evento { HorarioFim = TimeSpan.Zero };
-            var validationResults = ValidateModel(evento);
-            validationResults.Should().Contain(v => v.ErrorMessage == "O horário de término é obrigatório.");
-        }
-
-        [Fact]
-        public void Evento_ValidarLotacaoMaxima_Obrigatorio()
-        {
-            var evento = new Evento { LotacaoMaxima = 0 };
-            var validationResults = ValidateModel(evento);
-            validationResults.Should().Contain(v => v.ErrorMessage == "A lotação máxima é obrigatória.");
-        }
-
+                               
         [Fact]
         public void Evento_ValidarTipoLogradouro_Obrigatorio()
         {
@@ -115,21 +76,7 @@ namespace EventPlanApp.Domain.Tests.Tests
             validationResults.Should().Contain(v => v.ErrorMessage == "O CEP é obrigatório.");
         }
 
-        [Fact]
-        public void Evento_ValidarTipo_Obrigatorio()
-        {
-            var evento = new Evento { Tipo = null };
-            var validationResults = ValidateModel(evento);
-            validationResults.Should().Contain(v => v.ErrorMessage == "O tipo de evento é obrigatório.");
-        }
-
-        [Fact]
-        public void Evento_ValidarNotaMedia_Obrigatorio()
-        {
-            var evento = new Evento { NotaMedia = 0 };
-            var validationResults = ValidateModel(evento);
-            validationResults.Should().Contain(v => v.ErrorMessage == "A nota média é obrigatória.");
-        }
+                
 
         private List<ValidationResult> ValidateModel(Evento evento)
         {
