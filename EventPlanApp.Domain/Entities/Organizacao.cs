@@ -9,50 +9,190 @@ namespace EventPlanApp.Domain.Entities
 {
     public class Organizacao
     {
-        [Key]
         public int OrganizacaoId { get; set; }
 
-        [Required(ErrorMessage = "O CNPJ é obrigatório.")]
-        [RegularExpression(@"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}", ErrorMessage = "O CNPJ deve estar no formato 00.000.000/0000-00.")]
-        public string CNPJ { get; set; }
+        private string _cnpj;
+        public string CNPJ
+        {
+            get => _cnpj;
+            set
+            {
+                ValidateCNPJ(value);
+                _cnpj = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O tipo de logradouro é obrigatório.")]
-        [StringLength(50, ErrorMessage = "O tipo de logradouro não pode exceder 50 caracteres.")]
-        public string TipoLogradouro { get; set; }
+        private string _tipoLogradouro;
+        public string TipoLogradouro
+        {
+            get => _tipoLogradouro;
+            set
+            {
+                ValidateTipoLogradouro(value);
+                _tipoLogradouro = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O logradouro é obrigatório.")]
-        [StringLength(150, ErrorMessage = "O logradouro não pode exceder 150 caracteres.")]
-        public string Logradouro { get; set; }
+        private string _logradouro;
+        public string Logradouro
+        {
+            get => _logradouro;
+            set
+            {
+                ValidateLogradouro(value);
+                _logradouro = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O número do prédio é obrigatório.")]
-        [StringLength(10, ErrorMessage = "O número do prédio não pode exceder 10 caracteres.")]
-        public string NumeroPredio { get; set; }
+        private string _numeroPredio;
+        public string NumeroPredio
+        {
+            get => _numeroPredio;
+            set
+            {
+                ValidateNumeroPredio(value);
+                _numeroPredio = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O bairro é obrigatório.")]
-        [StringLength(100, ErrorMessage = "O bairro não pode exceder 100 caracteres.")]
-        public string Bairro { get; set; }
+        private string _bairro;
+        public string Bairro
+        {
+            get => _bairro;
+            set
+            {
+                ValidateBairro(value);
+                _bairro = value;
+            }
+        }
 
-        [Required(ErrorMessage = "A cidade é obrigatória.")]
-        [StringLength(100, ErrorMessage = "A cidade não pode exceder 100 caracteres.")]
-        public string Cidade { get; set; }
+        private string _cidade;
+        public string Cidade
+        {
+            get => _cidade;
+            set
+            {
+                ValidateCidade(value);
+                _cidade = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O estado é obrigatório.")]
-        [StringLength(2, ErrorMessage = "O estado deve conter 2 caracteres.")]
-        public string Estado { get; set; }
+        private string _estado;
+        public string Estado
+        {
+            get => _estado;
+            set
+            {
+                ValidateEstado(value);
+                _estado = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O CEP é obrigatório.")]
-        [RegularExpression(@"^\d{5}-\d{3}$", ErrorMessage = "O CEP deve estar no formato 00000-000.")]
-        public string CEP { get; set; }
+        private string _cep;
+        public string CEP
+        {
+            get => _cep;
+            set
+            {
+                ValidateCEP(value);
+                _cep = value;
+            }
+        }
 
-        [Range(0, 5, ErrorMessage = "A nota média deve estar entre 0 e 5.")]
-        public decimal NotaMedia { get; set; }
+        private decimal _notaMedia;
+        public decimal NotaMedia
+        {
+            get => _notaMedia;
+            set
+            {
+                ValidateNotaMedia(value);
+                _notaMedia = value;
+            }
+        }
 
-
-        [Required]
         public int UsuarioAdmId { get; set; }
-
         public virtual ICollection<UsuarioAdm> UsuariosAdm { get; set; } = new List<UsuarioAdm>();
-
         public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
+
+        // Validações
+        private void ValidateCNPJ(string cnpj)
+        {
+            if (string.IsNullOrWhiteSpace(cnpj))
+            {
+                throw new ArgumentException("O CNPJ é obrigatório.");
+            }
+            if (cnpj.Length != 14)
+            {
+                throw new ArgumentException("O CNPJ deve ter 14 caracteres.");
+            }
+        }
+
+        private void ValidateTipoLogradouro(string tipoLogradouro)
+        {
+            if (string.IsNullOrWhiteSpace(tipoLogradouro))
+            {
+                throw new ArgumentException("O tipo de logradouro é obrigatório.");
+            }
+        }
+
+        private void ValidateLogradouro(string logradouro)
+        {
+            if (string.IsNullOrWhiteSpace(logradouro))
+            {
+                throw new ArgumentException("O logradouro é obrigatório.");
+            }
+        }
+
+        private void ValidateNumeroPredio(string numeroPredio)
+        {
+            if (string.IsNullOrWhiteSpace(numeroPredio))
+            {
+                throw new ArgumentException("O número do prédio é obrigatório.");
+            }
+        }
+
+        private void ValidateBairro(string bairro)
+        {
+            if (string.IsNullOrWhiteSpace(bairro))
+            {
+                throw new ArgumentException("O bairro é obrigatório.");
+            }
+        }
+
+        private void ValidateCidade(string cidade)
+        {
+            if (string.IsNullOrWhiteSpace(cidade))
+            {
+                throw new ArgumentException("A cidade é obrigatória.");
+            }
+        }
+
+        private void ValidateEstado(string estado)
+        {
+            if (estado.Length != 2)
+            {
+                throw new ArgumentException("O estado deve ter 2 caracteres.");
+            }
+        }
+
+        private void ValidateCEP(string cep)
+        {
+            if (string.IsNullOrWhiteSpace(cep))
+            {
+                throw new ArgumentException("O CEP é obrigatório.");
+            }
+            if (cep.Length != 8)
+            {
+                throw new ArgumentException("O CEP deve ter 8 caracteres.");
+            }
+        }
+
+        private void ValidateNotaMedia(decimal notaMedia)
+        {
+            if (notaMedia < 0 || notaMedia > 10)
+            {
+                throw new ArgumentException("A nota média deve estar entre 0 e 10.");
+            }
+        }
     }
 }

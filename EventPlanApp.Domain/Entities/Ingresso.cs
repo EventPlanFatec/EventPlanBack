@@ -10,35 +10,90 @@ namespace EventPlanApp.Domain.Entities
 {
     public class Ingresso
     {
-        [Key]
         public int IngressoId { get; set; }
 
-        [Required(ErrorMessage = "O valor do ingresso é obrigatório.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "O valor do ingresso deve ser maior que zero.")]
-        public decimal Valor { get; set; }
+        private decimal _valor;
+        public decimal Valor
+        {
+            get => _valor;
+            set
+            {
+                ValidateValor(value);
+                _valor = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O QR Code é obrigatório.")]
-        [StringLength(200, ErrorMessage = "O QR Code não pode exceder 200 caracteres.")]
-        public string QRCode { get; set; }
+        private string _qrCode;
+        public string QRCode
+        {
+            get => _qrCode;
+            set
+            {
+                ValidateQRCode(value);
+                _qrCode = value;
+            }
+        }
 
-        [Required(ErrorMessage = "O nome do evento é obrigatório.")]
-        public string NomeEvento { get; set; }
+        private string _nomeEvento;
+        public string NomeEvento
+        {
+            get => _nomeEvento;
+            set
+            {
+                ValidateNomeEvento(value);
+                _nomeEvento = value;
+            }
+        }
 
-        [Required(ErrorMessage = "A data do ingresso é obrigatória.")]
-        public DateTime Data { get; set; }
-
-        public bool VIP { get; set; }
+        private DateTime _data;
+        public DateTime Data
+        {
+            get => _data;
+            set
+            {
+                ValidateData(value);
+                _data = value;
+            }
+        }
 
         public int UsuarioFinalId { get; set; }
+        public virtual UsuarioFinal UsuarioFinal { get; set; }
 
-        [ForeignKey("UsuarioFinalId")]
-        public UsuarioFinal UsuarioFinal { get; set; }
+        // Adicionando a propriedade Evento
+        public int EventoId { get; set; } // ID do evento associado
+        public virtual Evento Evento { get; set; } // Propriedade de navegação
 
-        [Required(ErrorMessage = "O evento é obrigatório.")]
-        public int EventoId { get; set; }
+        // Validações
+        private void ValidateValor(decimal valor)
+        {
+            if (valor <= 0)
+            {
+                throw new ArgumentException("O valor deve ser maior que zero.");
+            }
+        }
 
-        [ForeignKey("EventoId")]
-        public Evento Evento { get; set; }
+        private void ValidateQRCode(string qrCode)
+        {
+            if (string.IsNullOrWhiteSpace(qrCode))
+            {
+                throw new ArgumentException("O QRCode é obrigatório.");
+            }
+        }
+
+        private void ValidateNomeEvento(string nomeEvento)
+        {
+            if (string.IsNullOrWhiteSpace(nomeEvento))
+            {
+                throw new ArgumentException("O nome do evento é obrigatório.");
+            }
+        }
+
+        private void ValidateData(DateTime data)
+        {
+            if (data < DateTime.Now)
+            {
+                throw new ArgumentException("A data não pode ser no passado.");
+            }
+        }
     }
-
 }
