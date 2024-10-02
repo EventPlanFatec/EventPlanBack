@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EventPlanApp.Application\EventPlanApp.Application.csproj" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EventPlanApp.Domain\EventPlanApp.Domain.csproj" />
-    <ProjectReference Include="..\EventPlanApp.Infra.Data\EventPlanApp.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>
