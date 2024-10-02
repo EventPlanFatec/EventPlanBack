@@ -41,12 +41,11 @@ namespace EventPlanApp.API.Controllers
         public async Task<ActionResult<EventoDTO>> CreateEvent([FromBody] EventoDTO eventoDto)
         {
             var createdEvent = await _eventoService.Add(eventoDto);
-
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.EventoId }, createdEvent);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EventoDTO>> GetEventById(Guid id)
+        public async Task<ActionResult<EventoDTO>> GetEventById(int id)
         {
             var evento = await _eventoService.GetById(id);
 
@@ -56,6 +55,19 @@ namespace EventPlanApp.API.Controllers
             }
 
             return Ok(evento);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<EventoDTO>> UpdateEvent(int id, [FromBody] EventoDTO eventoDto)
+        {
+            var existingEvent = await _eventoService.GetById(id);
+            if (existingEvent == null)
+            {
+                return NotFound($"Event with ID {id} not found.");
+            }
+
+            var updatedEvent = await _eventoService.Update(id, eventoDto);
+            return Ok(updatedEvent);
         }
     }
 }
