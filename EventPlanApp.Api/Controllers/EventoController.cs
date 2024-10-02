@@ -1,10 +1,6 @@
 ﻿using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EventPlanApp.API.Controllers
 {
@@ -68,6 +64,24 @@ namespace EventPlanApp.API.Controllers
 
             var updatedEvent = await _eventoService.Update(id, eventoDto);
             return Ok(updatedEvent);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvent(int id)
+        {
+            var existingEvent = await _eventoService.GetById(id);
+            if (existingEvent == null)
+            {
+                return NotFound($"Event with ID {id} not found.");
+            }
+
+            var deleted = await _eventoService.Delete(id);
+            if (!deleted)
+            {
+                return BadRequest("Failed to delete the event.");
+            }
+
+            return NoContent();
         }
     }
 }
