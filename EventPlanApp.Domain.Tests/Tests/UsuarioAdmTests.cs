@@ -1,4 +1,6 @@
 ﻿using EventPlanApp.Domain.Entities;
+using EventPlanApp.Domain.Validation;
+using FluentValidation.TestHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,88 +8,108 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventPlanApp.Domain.Tests.Tests
+namespace EventPlanApp.Domain.Tests
 {
     public class UsuarioAdmTests
     {
-        [Fact]
-        public void UsuarioAdm_ValidarEmail_Obrigatorio()
+        private readonly UsuarioAdmValidator _validator;
+
+        public UsuarioAdmTests()
         {
-            var usuarioAdm = new UsuarioAdm { Email = null };
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O email é obrigatório.");
+            _validator = new UsuarioAdmValidator();
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarEmail_FormatoInvalido()
+        public void Email_Nulo_Should_Have_Error()
         {
-            var usuarioAdm = new UsuarioAdm { Email = "emailinvalido" };
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O email fornecido é inválido.");
+            var usuarioAdm = new UsuarioAdm();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Email = null);
+            Assert.Equal("O e-mail é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Email = string.Empty);
+            Assert.Equal("O e-mail é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarSenha_Obrigatoria()
+        public void Email_Invalid_Should_Have_Error()
         {
-            var usuarioAdm = new UsuarioAdm { Senha = null };
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A senha é obrigatória.");
+            var usuarioAdm = new UsuarioAdm();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Email = "invalidemail");
+            Assert.Equal("O e-mail deve ser válido.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarSenha_TamanhoMinimo()
+        public void Senha_Nula_Should_Have_Error()
         {
-            var usuarioAdm = new UsuarioAdm { Senha = "123" }; // Menos de 6 caracteres
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A senha deve ter entre 6 e 100 caracteres.");
+            var usuarioAdm = new UsuarioAdm();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Senha = null);
+            Assert.Equal("A senha é obrigatória.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Senha = string.Empty);
+            Assert.Equal("A senha é obrigatória.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarSenha_TamanhoMaximo()
+        public void Senha_Too_Short_Should_Have_Error()
         {
-            var usuarioAdm = new UsuarioAdm { Senha = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A senha deve ter entre 6 e 100 caracteres.");
+            var usuarioAdm = new UsuarioAdm();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Senha = "12345");
+            Assert.Equal("A senha deve ter pelo menos 6 caracteres.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarNomeUsuario_Obrigatorio()
+        public void NomeUsuario_Nulo_Should_Have_Error()
         {
-            var usuarioAdm = new UsuarioAdm { NomeUsuario = null };
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O nome de usuário é obrigatório.");
+            var usuarioAdm = new UsuarioAdm();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.NomeUsuario = null);
+            Assert.Equal("O nome de usuário é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.NomeUsuario = string.Empty);
+            Assert.Equal("O nome de usuário é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarNomeUsuario_TamanhoMaximo()
+        public void Telefone_Nulo_Should_Have_Error()
         {
-            var usuarioAdm = new UsuarioAdm { NomeUsuario = new string('A', 51) }; // Mais de 50 caracteres
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O nome de usuário não pode exceder 50 caracteres.");
+            var usuarioAdm = new UsuarioAdm();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = null);
+            Assert.Equal("O telefone é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = string.Empty);
+            Assert.Equal("O telefone é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarTelefone_Obrigatorio()
+        public void Telefone_Invalid_Length_Should_Have_Error()
         {
-            var usuarioAdm = new UsuarioAdm { Telefone = null };
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O telefone é obrigatório.");
+            var usuarioAdm = new UsuarioAdm();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = "123456");
+            Assert.Equal("O telefone deve ter entre 10 e 15 caracteres.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = "1234567890123456");
+            Assert.Equal("O telefone deve ter entre 10 e 15 caracteres.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioAdm_ValidarTelefone_FormatoInvalido()
+        public void UsuarioAdm_Valido_Should_Not_Have_Errors()
         {
-            var usuarioAdm = new UsuarioAdm { Telefone = "telefoneinvalido" };
-            var validationResults = ValidateModel(usuarioAdm);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O telefone fornecido é inválido.");
-        }
+            var usuarioAdm = new UsuarioAdm
+            {
+                Email = "usuario@exemplo.com",
+                Senha = "senha123",
+                NomeUsuario = "UsuarioTeste",
+                Telefone = "1234567890"
+            };
 
-        private List<ValidationResult> ValidateModel(UsuarioAdm usuarioAdm)
-        {
-            var validationResults = new List<ValidationResult>();
-            var validationContext = new ValidationContext(usuarioAdm, null, null);
-            Validator.TryValidateObject(usuarioAdm, validationContext, validationResults, true);
-            return validationResults;
+            var validationResult = _validator.TestValidate(usuarioAdm);
+            validationResult.ShouldNotHaveAnyValidationErrors();
         }
     }
 }

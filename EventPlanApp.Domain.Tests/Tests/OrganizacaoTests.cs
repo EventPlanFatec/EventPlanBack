@@ -1,4 +1,6 @@
 ﻿using EventPlanApp.Domain.Entities;
+using EventPlanApp.Domain.Validation;
+using FluentValidation.TestHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,152 +8,135 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventPlanApp.Domain.Tests.Tests
+namespace EventPlanApp.Domain.Tests
 {
     public class OrganizacaoTests
     {
-        [Fact]
-        public void Organizacao_ValidarCNPJ_Obrigatorio()
+        private readonly OrganizacaoValidator _validator;
+
+        public OrganizacaoTests()
         {
-            var organizacao = new Organizacao { CNPJ = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O CNPJ é obrigatório.");
+            _validator = new OrganizacaoValidator();
         }
 
         [Fact]
-        public void Organizacao_ValidarCNPJ_FormatoInvalido()
+        public void CNPJ_Invalido_Should_Have_Error()
         {
-            var organizacao = new Organizacao { CNPJ = "12345678000195" }; // Formato inválido
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O CNPJ deve estar no formato 00.000.000/0000-00.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.CNPJ = "123");
+            Assert.Equal("O CNPJ deve ter 14 caracteres.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarTipoLogradouro_Obrigatorio()
+        public void TipoLogradouro_Nulo_Should_Have_Error()
         {
-            var organizacao = new Organizacao { TipoLogradouro = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O tipo de logradouro é obrigatório.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.TipoLogradouro = null);
+            Assert.Equal("O tipo de logradouro é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => organizacao.TipoLogradouro = string.Empty);
+            Assert.Equal("O tipo de logradouro é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarTipoLogradouro_TamanhoMaximo()
+        public void Logradouro_Nulo_Should_Have_Error()
         {
-            var organizacao = new Organizacao { TipoLogradouro = new string('A', 51) }; // Mais de 50 caracteres
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O tipo de logradouro não pode exceder 50 caracteres.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.Logradouro = null);
+            Assert.Equal("O logradouro é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => organizacao.Logradouro = string.Empty);
+            Assert.Equal("O logradouro é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarLogradouro_Obrigatorio()
+        public void NumeroPredio_Nulo_Should_Have_Error()
         {
-            var organizacao = new Organizacao { Logradouro = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O logradouro é obrigatório.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.NumeroPredio = null);
+            Assert.Equal("O número do prédio é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => organizacao.NumeroPredio = string.Empty);
+            Assert.Equal("O número do prédio é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarLogradouro_TamanhoMaximo()
+        public void Bairro_Nulo_Should_Have_Error()
         {
-            var organizacao = new Organizacao { Logradouro = new string('A', 151) }; // Mais de 150 caracteres
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O logradouro não pode exceder 150 caracteres.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.Bairro = null);
+            Assert.Equal("O bairro é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => organizacao.Bairro = string.Empty);
+            Assert.Equal("O bairro é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarNumeroPredio_Obrigatorio()
+        public void Cidade_Nulo_Should_Have_Error()
         {
-            var organizacao = new Organizacao { NumeroPredio = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O número do prédio é obrigatório.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.Cidade = null);
+            Assert.Equal("A cidade é obrigatória.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => organizacao.Cidade = string.Empty);
+            Assert.Equal("A cidade é obrigatória.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarNumeroPredio_TamanhoMaximo()
+        public void Estado_Invalido_Should_Have_Error()
         {
-            var organizacao = new Organizacao { NumeroPredio = new string('A', 11) }; // Mais de 10 caracteres
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O número do prédio não pode exceder 10 caracteres.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.Estado = "ABC");
+            Assert.Equal("O estado deve ter 2 caracteres.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarBairro_Obrigatorio()
+        public void CEP_Nulo_Should_Have_Error()
         {
-            var organizacao = new Organizacao { Bairro = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O bairro é obrigatório.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.CEP = null);
+            Assert.Equal("O CEP é obrigatório.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => organizacao.CEP = string.Empty);
+            Assert.Equal("O CEP é obrigatório.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarBairro_TamanhoMaximo()
+        public void NotaMedia_Invalida_Should_Have_Error()
         {
-            var organizacao = new Organizacao { Bairro = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O bairro não pode exceder 100 caracteres.");
+            var organizacao = new Organizacao();
+
+            var exception = Assert.Throws<ArgumentException>(() => organizacao.NotaMedia = 11);
+            Assert.Equal("A nota média deve estar entre 0 e 10.", exception.Message);
         }
 
         [Fact]
-        public void Organizacao_ValidarCidade_Obrigatoria()
+        public void Organizacao_Valida_Should_Not_Have_Errors()
         {
-            var organizacao = new Organizacao { Cidade = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A cidade é obrigatória.");
-        }
+            var organizacao = new Organizacao
+            {
+                CNPJ = "12345678000195", // CNPJ válido
+                TipoLogradouro = "Rua",
+                Logradouro = "Testes",
+                NumeroPredio = "123",
+                Bairro = "Centro",
+                Cidade = "Cidade Exemplo",
+                Estado = "SP",
+                CEP = "12345678",
+                NotaMedia = 8, // Nota média válida
+                UsuarioAdmId = 1 // ID de administrador válido
+            };
 
-        [Fact]
-        public void Organizacao_ValidarCidade_TamanhoMaximo()
-        {
-            var organizacao = new Organizacao { Cidade = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A cidade não pode exceder 100 caracteres.");
-        }
-
-        [Fact]
-        public void Organizacao_ValidarEstado_Obrigatorio()
-        {
-            var organizacao = new Organizacao { Estado = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O estado é obrigatório.");
-        }
-
-        [Fact]
-        public void Organizacao_ValidarEstado_TamanhoInvalido()
-        {
-            var organizacao = new Organizacao { Estado = "ABC" }; // Mais de 2 caracteres
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O estado deve conter 2 caracteres.");
-        }
-
-        [Fact]
-        public void Organizacao_ValidarCEP_Obrigatorio()
-        {
-            var organizacao = new Organizacao { CEP = null };
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O CEP é obrigatório.");
-        }
-
-        [Fact]
-        public void Organizacao_ValidarCEP_FormatoInvalido()
-        {
-            var organizacao = new Organizacao { CEP = "12345678" }; // Formato inválido
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O CEP deve estar no formato 00000-000.");
-        }
-
-        [Fact]
-        public void Organizacao_ValidarNotaMedia_ValorValido()
-        {
-            var organizacao = new Organizacao { NotaMedia = 6 }; // Fora do intervalo
-            var validationResults = ValidateModel(organizacao);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A nota média deve estar entre 0 e 5.");
-        }
-
-        private List<ValidationResult> ValidateModel(Organizacao organizacao)
-        {
-            var validationResults = new List<ValidationResult>();
-            var validationContext = new ValidationContext(organizacao, null, null);
-            Validator.TryValidateObject(organizacao, validationContext, validationResults, true);
-            return validationResults;
+            var validationResult = _validator.TestValidate(organizacao);
+            validationResult.ShouldNotHaveAnyValidationErrors();
         }
     }
 }

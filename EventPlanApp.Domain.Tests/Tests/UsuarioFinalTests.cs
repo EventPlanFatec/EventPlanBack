@@ -1,4 +1,6 @@
 ﻿using EventPlanApp.Domain.Entities;
+using EventPlanApp.Domain.Validation;
+using FluentValidation.TestHelper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,227 +8,217 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventPlanApp.Domain.Tests.Tests
+namespace EventPlanApp.Domain.Tests
 {
     public class UsuarioFinalTests
     {
-        [Fact]
-        public void UsuarioFinal_ValidarNome_Obrigatorio()
+        private readonly UsuarioFinalValidator _validator;
+
+        public UsuarioFinalTests()
         {
-            var usuario = new UsuarioFinal { Nome = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O nome é obrigatório.");
+            _validator = new UsuarioFinalValidator();
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarNome_TamanhoMaximo()
+        public void Nome_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Nome = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O nome não pode exceder 100 caracteres.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Nome = "");
+            Assert.Equal("Nome não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Nome = null);
+            Assert.Equal("Nome não pode ser nulo ou vazio.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarSobrenome_Obrigatorio()
+        public void Sobrenome_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Sobrenome = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O sobrenome é obrigatório.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Sobrenome = "");
+            Assert.Equal("Sobrenome não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Sobrenome = null);
+            Assert.Equal("Sobrenome não pode ser nulo ou vazio.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarSobrenome_TamanhoMaximo()
+        public void TipoLogradouro_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Sobrenome = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O sobrenome não pode exceder 100 caracteres.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.TipoLogradouro = "");
+            Assert.Equal("Tipo de logradouro não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.TipoLogradouro = null);
+            Assert.Equal("Tipo de logradouro não pode ser nulo ou vazio.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarTipoLogradouro_Obrigatorio()
+        public void Logradouro_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { TipoLogradouro = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O tipo de logradouro é obrigatório.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Logradouro = "");
+            Assert.Equal("Logradouro não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Logradouro = null);
+            Assert.Equal("Logradouro não pode ser nulo ou vazio.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarTipoLogradouro_TamanhoMaximo()
+        public void NumeroCasa_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { TipoLogradouro = new string('A', 51) }; // Mais de 50 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O tipo de logradouro não pode exceder 50 caracteres.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.NumeroCasa = "");
+            Assert.Equal("Número da casa não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.NumeroCasa = null);
+            Assert.Equal("Número da casa não pode ser nulo ou vazio.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarLogradouro_Obrigatorio()
+        public void Bairro_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Logradouro = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O logradouro é obrigatório.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Bairro = "");
+            Assert.Equal("Bairro não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Bairro = null);
+            Assert.Equal("Bairro não pode ser nulo ou vazio.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarLogradouro_TamanhoMaximo()
+        public void Cidade_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Logradouro = new string('A', 151) }; // Mais de 150 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O logradouro não pode exceder 150 caracteres.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Cidade = "");
+            Assert.Equal("Cidade não pode ser nula ou vazia.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Cidade = null);
+            Assert.Equal("Cidade não pode ser nula ou vazia.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarNumeroCasa_Obrigatorio()
+        public void Estado_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { NumeroCasa = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O número da casa é obrigatório.");
+            // Arrange
+            var usuario = new UsuarioFinal();
+
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => usuario.Estado = "SPBR"); // Estado inválido
+            Assert.Equal("Estado deve ter exatamente 2 caracteres.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarNumeroCasa_TamanhoMaximo()
+        public void CEP_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { NumeroCasa = new string('A', 11) }; // Mais de 10 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O número da casa não pode exceder 10 caracteres.");
+            // Arrange
+            var usuario = new UsuarioFinal();
+
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => usuario.CEP = "123456");
+            Assert.Equal("CEP deve ser um formato válido (XXXXX-XXX).", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarBairro_Obrigatorio()
+        public void Email_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Bairro = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O bairro é obrigatório.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Email = "");
+            Assert.Equal("Email não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Email = null);
+            Assert.Equal("Email não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Email = "email.invalido");
+            Assert.Equal("Email deve ser um formato válido.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarBairro_TamanhoMaximo()
+        public void Telefone_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Bairro = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O bairro não pode exceder 100 caracteres.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Telefone = "");
+            Assert.Equal("Telefone não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Telefone = null);
+            Assert.Equal("Telefone não pode ser nulo ou vazio.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarCidade_Obrigatoria()
+        public void DDD_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Cidade = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A cidade é obrigatória.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = "");
+            Assert.Equal("DDD não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = null);
+            Assert.Equal("DDD não pode ser nulo ou vazio.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = "1");
+            Assert.Equal("DDD deve ter exatamente 2 caracteres.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = "123");
+            Assert.Equal("DDD deve ter exatamente 2 caracteres.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarCidade_TamanhoMaximo()
+        public void DataNascimento_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Cidade = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A cidade não pode exceder 100 caracteres.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DataNascimento = DateTime.Now.AddDays(1));
+            Assert.Equal("Data de nascimento não pode ser uma data futura.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarEstado_Obrigatorio()
+        public void Preferencias_Invalid_Should_Have_Error()
         {
-            var usuario = new UsuarioFinal { Estado = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O estado é obrigatório.");
+            var usuarioFinal = new UsuarioFinal();
+
+            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Preferencias01 = new string('A', 101));
+            Assert.Equal("As preferências não podem exceder 100 caracteres.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Preferencias02 = new string('A', 101));
+            Assert.Equal("As preferências não podem exceder 100 caracteres.", exception.Message);
+
+            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Preferencias03 = new string('A', 101));
+            Assert.Equal("As preferências não podem exceder 100 caracteres.", exception.Message);
         }
 
         [Fact]
-        public void UsuarioFinal_ValidarEstado_TamanhoInvalido()
+        public void UsuarioFinal_Valido_Should_Not_Have_Errors()
         {
-            var usuario = new UsuarioFinal { Estado = "ABC" }; // Mais de 2 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O estado deve conter 2 caracteres.");
-        }
+            var usuarioFinal = new UsuarioFinal
+            {
+                Nome = "João",
+                Sobrenome = "Silva",
+                TipoLogradouro = "Rua",
+                Logradouro = "Avenida Brasil",
+                NumeroCasa = "123",
+                Bairro = "Centro",
+                Cidade = "São Paulo",
+                Estado = "SP",
+                CEP = "12345-678",
+                Email = "joao.silva@exemplo.com",
+                Telefone = "11987654321",
+                DDD = "11",
+                DataNascimento = new DateTime(2000, 1, 1),
+                Preferencias01 = "Música",
+                Preferencias02 = "Esportes",
+                Preferencias03 = "Viagens"
+            };
 
-        [Fact]
-        public void UsuarioFinal_ValidarCEP_Obrigatorio()
-        {
-            var usuario = new UsuarioFinal { CEP = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O CEP é obrigatório.");
-        }
-
-        [Fact]
-        public void UsuarioFinal_ValidarCEP_FormatoInvalido()
-        {
-            var usuario = new UsuarioFinal { CEP = "12345678" }; // Formato inválido
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O CEP deve estar no formato 00000-000.");
-        }
-
-        [Fact]
-        public void UsuarioFinal_ValidarEmail_Obrigatorio()
-        {
-            var usuario = new UsuarioFinal { Email = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O email é obrigatório.");
-        }
-
-        [Fact]
-        public void UsuarioFinal_ValidarEmail_FormatoInvalido()
-        {
-            var usuario = new UsuarioFinal { Email = "emailinvalido" }; // Formato inválido
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O email fornecido é inválido.");
-        }
-
-        [Fact]
-        public void UsuarioFinal_ValidarTelefone_Obrigatorio()
-        {
-            var usuario = new UsuarioFinal { Telefone = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O telefone é obrigatório.");
-        }
-
-        
-        [Fact]
-        public void UsuarioFinal_ValidarDDD_Obrigatorio()
-        {
-            var usuario = new UsuarioFinal { DDD = null };
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O DDD é obrigatório.");
-        }
-
-        [Fact]
-        public void UsuarioFinal_ValidarDDD_TamanhoInvalido()
-        {
-            var usuario = new UsuarioFinal { DDD = "1234" }; // Mais de 3 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "O DDD deve ter 2 ou 3 dígitos.");
-        }
-
-        
-        [Fact]
-        public void UsuarioFinal_ValidarPreferencias01_TamanhoMaximo()
-        {
-            var usuario = new UsuarioFinal { Preferencias01 = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A preferência não pode exceder 100 caracteres.");
-        }
-
-        [Fact]
-        public void UsuarioFinal_ValidarPreferencias02_TamanhoMaximo()
-        {
-            var usuario = new UsuarioFinal { Preferencias02 = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A preferência não pode exceder 100 caracteres.");
-        }
-
-        [Fact]
-        public void UsuarioFinal_ValidarPreferencias03_TamanhoMaximo()
-        {
-            var usuario = new UsuarioFinal { Preferencias03 = new string('A', 101) }; // Mais de 100 caracteres
-            var validationResults = ValidateModel(usuario);
-            Assert.Contains(validationResults, v => v.ErrorMessage == "A preferência não pode exceder 100 caracteres.");
-        }
-
-        private IList<ValidationResult> ValidateModel(UsuarioFinal usuario)
-        {
-            var context = new ValidationContext(usuario);
-            var results = new List<ValidationResult>();
-            Validator.TryValidateObject(usuario, context, results, true);
-            return results;
+            var validationResult = _validator.TestValidate(usuarioFinal);
+            validationResult.ShouldNotHaveAnyValidationErrors();
         }
     }
-
 }
