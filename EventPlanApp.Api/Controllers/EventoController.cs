@@ -3,11 +3,12 @@ using EventPlanApp.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EventPlanApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/events")]
     [ApiController]
     public class EventoController : ControllerBase
     {
@@ -18,7 +19,7 @@ namespace EventPlanApp.API.Controllers
             _eventoService = eventoService;
         }
 
-        [HttpGet("events")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<EventoDTO>>> GetEvents()
         {
             var events = await _eventoService.GetAll();
@@ -28,16 +29,33 @@ namespace EventPlanApp.API.Controllers
                 return NotFound("No events found.");
             }
 
-            var formattedEvents = events.Select(e => new
+            return Ok(events.Select(e => new
             {
-                nome = e.Nome,
-                dataInicio = e.DataInicio,
-                dataFim = e.DataFim,
-                local = e.Local,
-                descricao = e.Descricao 
-            });
+                e.NomeEvento,
+                e.DataInicio,
+                e.DataFim
+            }));
+        }
 
-            return Ok(formattedEvents);
+        [HttpPost]
+        public async Task<ActionResult<EventoDTO>> CreateEvent([FromBody] EventoDTO eventoDto)
+        {
+            var createdEvent = await _eventoService.Add(eventoDto);
+
+            return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.EventoId }, createdEvent);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EventoDTO>> GetEventById(Guid id)
+        {
+            var evento = await _eventoService.GetById(id);
+
+            if (evento == null)
+            {
+                return NotFound($"Event with ID {id} not found.");
+            }
+
+            return Ok(evento);
         }
     }
 }
