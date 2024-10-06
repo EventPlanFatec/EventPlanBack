@@ -5,74 +5,72 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EventPlanApp.Infra.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class correcaoCascata : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Endereco",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TipoLogradouro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Logradouro = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    NumeroCasa = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Estado = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    CEP = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Endereco", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Organizacoes",
                 columns: table => new
                 {
                     OrganizacaoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CNPJ = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TipoLogradouro = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Logradouro = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    NumeroPredio = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
-                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NotaMedia = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    UsuarioAdmId = table.Column<int>(type: "int", nullable: false)
+                    CNPJ = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
+                    NotaMedia = table.Column<decimal>(type: "decimal(3,1)", precision: 3, scale: 1, nullable: false),
+                    EnderecoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Organizacoes", x => x.OrganizacaoId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsuariosAdm",
-                columns: table => new
-                {
-                    AdmId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Senha = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    NomeUsuario = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsuariosAdm", x => x.AdmId);
+                    table.ForeignKey(
+                        name: "FK_Organizacoes_Endereco_EnderecoId",
+                        column: x => x.EnderecoId,
+                        principalTable: "Endereco",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UsuariosFinais",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Sobrenome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TipoLogradouro = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Logradouro = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    NumeroCasa = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
-                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EnderecoId = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DDD = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
-                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Preferencias01 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Preferencias02 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Preferencias03 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    DDD = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UsuariosFinais", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UsuariosFinais_Endereco_EnderecoId",
+                        column: x => x.EnderecoId,
+                        principalTable: "Endereco",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,25 +79,17 @@ namespace EventPlanApp.Infra.Data.Migrations
                 {
                     EventoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NomeEvento = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    NomeEvento = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     DataInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataFim = table.Column<DateTime>(type: "datetime2", nullable: false),
                     HorarioInicio = table.Column<TimeSpan>(type: "time", nullable: false),
                     HorarioFim = table.Column<TimeSpan>(type: "time", nullable: false),
                     LotacaoMaxima = table.Column<int>(type: "int", nullable: false),
-                    TipoLogradouro = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Logradouro = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    NumeroCasa = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Bairro = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
-                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tipo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Imagem01 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Imagem02 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Imagem03 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Video = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NotaMedia = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EnderecoId = table.Column<int>(type: "int", nullable: false),
+                    Imagens = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Video = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    NotaMedia = table.Column<decimal>(type: "decimal(3,1)", precision: 3, scale: 1, nullable: false),
                     Genero = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     OrganizacaoId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -107,34 +97,37 @@ namespace EventPlanApp.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_Eventos", x => x.EventoId);
                     table.ForeignKey(
+                        name: "FK_Eventos_Endereco_EnderecoId",
+                        column: x => x.EnderecoId,
+                        principalTable: "Endereco",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Eventos_Organizacoes_OrganizacaoId",
                         column: x => x.OrganizacaoId,
                         principalTable: "Organizacoes",
-                        principalColumn: "OrganizacaoId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "OrganizacaoId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrganizacaoUsuarioAdm",
+                name: "UsuariosAdm",
                 columns: table => new
                 {
-                    OrganizacoesOrganizacaoId = table.Column<int>(type: "int", nullable: false),
-                    UsuariosAdmAdmId = table.Column<int>(type: "int", nullable: false)
+                    AdmId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Senha = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NomeUsuario = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    OrganizacaoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrganizacaoUsuarioAdm", x => new { x.OrganizacoesOrganizacaoId, x.UsuariosAdmAdmId });
+                    table.PrimaryKey("PK_UsuariosAdm", x => x.AdmId);
                     table.ForeignKey(
-                        name: "FK_OrganizacaoUsuarioAdm_Organizacoes_OrganizacoesOrganizacaoId",
-                        column: x => x.OrganizacoesOrganizacaoId,
+                        name: "FK_UsuariosAdm_Organizacoes_OrganizacaoId",
+                        column: x => x.OrganizacaoId,
                         principalTable: "Organizacoes",
                         principalColumn: "OrganizacaoId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrganizacaoUsuarioAdm_UsuariosAdm_UsuariosAdmAdmId",
-                        column: x => x.UsuariosAdmAdmId,
-                        principalTable: "UsuariosAdm",
-                        principalColumn: "AdmId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -143,7 +136,7 @@ namespace EventPlanApp.Infra.Data.Migrations
                 columns: table => new
                 {
                     EventosEventoId = table.Column<int>(type: "int", nullable: false),
-                    UsuariosFinaisId = table.Column<int>(type: "int", nullable: false)
+                    UsuariosFinaisId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,14 +161,12 @@ namespace EventPlanApp.Infra.Data.Migrations
                 {
                     IngressoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     QRCode = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    NomeEvento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NomeEvento = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Data = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VIP = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioFinalId = table.Column<int>(type: "int", nullable: false),
-                    EventoId = table.Column<int>(type: "int", nullable: false),
-                    EventoId1 = table.Column<int>(type: "int", nullable: true)
+                    UsuarioFinalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,17 +178,17 @@ namespace EventPlanApp.Infra.Data.Migrations
                         principalColumn: "EventoId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Ingressos_Eventos_EventoId1",
-                        column: x => x.EventoId1,
-                        principalTable: "Eventos",
-                        principalColumn: "EventoId");
-                    table.ForeignKey(
                         name: "FK_Ingressos_UsuariosFinais_UsuarioFinalId",
                         column: x => x.UsuarioFinalId,
                         principalTable: "UsuariosFinais",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Eventos_EnderecoId",
+                table: "Eventos",
+                column: "EnderecoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Eventos_OrganizacaoId",
@@ -215,19 +206,24 @@ namespace EventPlanApp.Infra.Data.Migrations
                 column: "EventoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingressos_EventoId1",
-                table: "Ingressos",
-                column: "EventoId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Ingressos_UsuarioFinalId",
                 table: "Ingressos",
                 column: "UsuarioFinalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrganizacaoUsuarioAdm_UsuariosAdmAdmId",
-                table: "OrganizacaoUsuarioAdm",
-                column: "UsuariosAdmAdmId");
+                name: "IX_Organizacoes_EnderecoId",
+                table: "Organizacoes",
+                column: "EnderecoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsuariosAdm_OrganizacaoId",
+                table: "UsuariosAdm",
+                column: "OrganizacaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsuariosFinais_EnderecoId",
+                table: "UsuariosFinais",
+                column: "EnderecoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -239,7 +235,7 @@ namespace EventPlanApp.Infra.Data.Migrations
                 name: "Ingressos");
 
             migrationBuilder.DropTable(
-                name: "OrganizacaoUsuarioAdm");
+                name: "UsuariosAdm");
 
             migrationBuilder.DropTable(
                 name: "Eventos");
@@ -248,10 +244,10 @@ namespace EventPlanApp.Infra.Data.Migrations
                 name: "UsuariosFinais");
 
             migrationBuilder.DropTable(
-                name: "UsuariosAdm");
+                name: "Organizacoes");
 
             migrationBuilder.DropTable(
-                name: "Organizacoes");
+                name: "Endereco");
         }
     }
 }

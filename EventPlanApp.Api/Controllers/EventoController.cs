@@ -1,5 +1,7 @@
-﻿using EventPlanApp.Application.DTOs;
+﻿using AutoMapper;
+using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventPlanApp.API.Controllers
@@ -9,14 +11,16 @@ namespace EventPlanApp.API.Controllers
     public class EventoController : ControllerBase
     {
         private readonly IEventoService _eventoService;
+        private readonly IMapper _mapper;
 
-        public EventoController(IEventoService eventoService)
+        public EventoController(IEventoService eventoService, IMapper mapper)
         {
             _eventoService = eventoService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventoDTO>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<EventoDto>>> GetEvents()
         {
             var events = await _eventoService.GetAll();
 
@@ -34,14 +38,14 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<EventoDTO>> CreateEvent([FromBody] EventoDTO eventoDto)
+        public async Task<ActionResult<EventoDto>> CreateEvent([FromBody] EventoDto eventoDto)
         {
             var createdEvent = await _eventoService.Add(eventoDto);
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.EventoId }, createdEvent);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EventoDTO>> GetEventById(int id)
+        public async Task<ActionResult<EventoDto>> GetEventById(int id)
         {
             var evento = await _eventoService.GetById(id);
 
@@ -54,7 +58,7 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<EventoDTO>> UpdateEvent(int id, [FromBody] EventoDTO eventoDto)
+        public async Task<ActionResult<EventoDto>> UpdateEvent(int id, [FromBody] EventoDto eventoDto)
         {
             var existingEvent = await _eventoService.GetById(id);
             if (existingEvent == null)
@@ -83,5 +87,25 @@ namespace EventPlanApp.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("{eventoId}/lista-espera")]
+        public async Task<IActionResult> InscreverNaListaEspera(int eventoId, [FromBody] InscricaoListaEsperaDTO inscricao)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            inscricao.EventoId = eventoId; 
+
+            var resultado = await _eventoService.InscreverNaListaDeEspera(eventoId, inscricao);
+            if (resultado)
+            {
+                return Ok("Inscrição na lista de espera realizada com sucesso.");
+            }
+
+            return NotFound("Evento não encontrado ou já está cheio.");
+        }
+
     }
 }

@@ -1,115 +1,56 @@
-﻿using EventPlanApp.Domain.Entities;
-using EventPlanApp.Domain.Validation;
-using FluentValidation.TestHelper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Xunit;
+using EventPlanApp.Domain.Entities;
 
-namespace EventPlanApp.Domain.Tests
+namespace EventPlanApp.Tests.Domain.Entities
 {
     public class UsuarioAdmTests
     {
-        private readonly UsuarioAdmValidator _validator;
-
-        public UsuarioAdmTests()
+        [Fact]
+        public void CriarUsuarioAdm_Valido_DeveFuncionar()
         {
-            _validator = new UsuarioAdmValidator();
+            // Act
+            var usuarioAdm = new UsuarioAdm("usuario@exemplo.com", "senha123", "Nome do Usuário", "1234567890");
+
+            // Assert
+            Assert.NotNull(usuarioAdm);
+            Assert.Equal("usuario@exemplo.com", usuarioAdm.Email);
+            Assert.Equal("senha123", usuarioAdm.Senha);
+            Assert.Equal("Nome do Usuário", usuarioAdm.NomeUsuario);
+            Assert.Equal("1234567890", usuarioAdm.Telefone);
         }
 
-        [Fact]
-        public void Email_Nulo_Should_Have_Error()
+        [Theory]
+        [InlineData("", "senha123", "Nome do Usuário", "1234567890")] // Email vazio
+        [InlineData("usuario@exemplo.com", "", "Nome do Usuário", "1234567890")] // Senha vazia
+        [InlineData("usuario@exemplo.com", "123", "Nome do Usuário", "1234567890")] // Senha muito curta
+        [InlineData("usuario@exemplo.com", "senha123", "", "1234567890")] // Nome de usuário vazio
+        [InlineData("usuario@exemplo.com", "senha123", "Nome do Usuário", "")] // Telefone vazio
+        [InlineData("usuario@exemplo.com", "senha123", "Nome do Usuário", "123456")] // Telefone curto
+        [InlineData("usuario@exemplo.com", "senha123", "Nome do Usuário", "1234567890123456")] // Telefone longo
+        public void CriarUsuarioAdm_Invalido_NaoDeveFuncionar(string email, string senha, string nomeUsuario, string telefone)
         {
-            var usuarioAdm = new UsuarioAdm();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Email = null);
-            Assert.Equal("O e-mail é obrigatório.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Email = string.Empty);
-            Assert.Equal("O e-mail é obrigatório.", exception.Message);
-        }
-
-        [Fact]
-        public void Email_Invalid_Should_Have_Error()
-        {
-            var usuarioAdm = new UsuarioAdm();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Email = "invalidemail");
-            Assert.Equal("O e-mail deve ser válido.", exception.Message);
-        }
-
-        [Fact]
-        public void Senha_Nula_Should_Have_Error()
-        {
-            var usuarioAdm = new UsuarioAdm();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Senha = null);
-            Assert.Equal("A senha é obrigatória.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Senha = string.Empty);
-            Assert.Equal("A senha é obrigatória.", exception.Message);
-        }
-
-        [Fact]
-        public void Senha_Too_Short_Should_Have_Error()
-        {
-            var usuarioAdm = new UsuarioAdm();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Senha = "12345");
-            Assert.Equal("A senha deve ter pelo menos 6 caracteres.", exception.Message);
-        }
-
-        [Fact]
-        public void NomeUsuario_Nulo_Should_Have_Error()
-        {
-            var usuarioAdm = new UsuarioAdm();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.NomeUsuario = null);
-            Assert.Equal("O nome de usuário é obrigatório.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.NomeUsuario = string.Empty);
-            Assert.Equal("O nome de usuário é obrigatório.", exception.Message);
-        }
-
-        [Fact]
-        public void Telefone_Nulo_Should_Have_Error()
-        {
-            var usuarioAdm = new UsuarioAdm();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = null);
-            Assert.Equal("O telefone é obrigatório.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = string.Empty);
-            Assert.Equal("O telefone é obrigatório.", exception.Message);
-        }
-
-        [Fact]
-        public void Telefone_Invalid_Length_Should_Have_Error()
-        {
-            var usuarioAdm = new UsuarioAdm();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = "123456");
-            Assert.Equal("O telefone deve ter entre 10 e 15 caracteres.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioAdm.Telefone = "1234567890123456");
-            Assert.Equal("O telefone deve ter entre 10 e 15 caracteres.", exception.Message);
-        }
-
-        [Fact]
-        public void UsuarioAdm_Valido_Should_Not_Have_Errors()
-        {
-            var usuarioAdm = new UsuarioAdm
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(() =>
             {
-                Email = "usuario@exemplo.com",
-                Senha = "senha123",
-                NomeUsuario = "UsuarioTeste",
-                Telefone = "1234567890"
-            };
+                // Act
+                new UsuarioAdm(email, senha, nomeUsuario, telefone);
+            });
 
-            var validationResult = _validator.TestValidate(usuarioAdm);
-            validationResult.ShouldNotHaveAnyValidationErrors();
+            Assert.NotNull(exception);
+        }
+
+        [Fact]
+        public void CriarUsuarioAdm_EmailInvalido_NaoDeveFuncionar()
+        {
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(() =>
+            {
+                // Act
+                new UsuarioAdm("usuarioexemplo.com", "senha123", "Nome do Usuário", "1234567890");
+            });
+
+            Assert.Equal("O e-mail deve ser válido.", exception.Message);
         }
     }
 }

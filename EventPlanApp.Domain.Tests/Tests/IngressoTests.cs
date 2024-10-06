@@ -1,90 +1,73 @@
 ﻿using EventPlanApp.Domain.Entities;
-using EventPlanApp.Domain.Validation;
-using FluentAssertions;
-using FluentValidation.TestHelper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EventPlanApp.Domain.Tests
+namespace EventPlanApp.Tests.Domain.Entities
 {
     public class IngressoTests
     {
-        private readonly IngressoValidator _validator;
-
-        public IngressoTests()
+        [Fact]
+        public void CriarIngresso_Valido_DeveFuncionar()
         {
-            _validator = new IngressoValidator();
+            // Act
+            var ingresso = new Ingresso(100, "QRCode", "Evento Teste", DateTime.Now.AddDays(1));
+
+            // Assert
+            Assert.NotNull(ingresso);
         }
 
         [Fact]
-        public void Valor_Negativo_Should_Have_Error()
+        public void CriarIngresso_ValorNegativo_DeveLancarExcecao()
         {
-            var ingresso = new Ingresso();
-
-            var exception = Assert.Throws<ArgumentException>(() => ingresso.Valor = -1);
-            Assert.Equal("O valor deve ser maior que zero.", exception.Message);
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Ingresso(-1, "QRCode", "Evento Teste", DateTime.Now.AddDays(1)));
+            Assert.Equal("O valor deve ser maior que zero.", ex.Message);
         }
 
         [Fact]
-        public void Valor_Zero_Should_Have_Error()
+        public void CriarIngresso_ValorZero_DeveLancarExcecao()
         {
-            var ingresso = new Ingresso();
-
-            var exception = Assert.Throws<ArgumentException>(() => ingresso.Valor = 0);
-            Assert.Equal("O valor deve ser maior que zero.", exception.Message);
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Ingresso(0, "QRCode", "Evento Teste", DateTime.Now.AddDays(1)));
+            Assert.Equal("O valor deve ser maior que zero.", ex.Message);
         }
 
         [Fact]
-        public void QRCode_Nulo_Should_Have_Error()
+        public void CriarIngresso_QRCodeNulo_DeveLancarExcecao()
         {
-            var ingresso = new Ingresso();
-
-            var exception = Assert.Throws<ArgumentException>(() => ingresso.QRCode = null);
-            Assert.Equal("O QRCode é obrigatório.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => ingresso.QRCode = string.Empty);
-            Assert.Equal("O QRCode é obrigatório.", exception.Message);
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Ingresso(100, null, "Evento Teste", DateTime.Now.AddDays(1)));
+            Assert.Equal("O QRCode é obrigatório.", ex.Message);
         }
 
         [Fact]
-        public void NomeEvento_Nulo_Should_Have_Error()
+        public void CriarIngresso_QRCodeVazio_DeveLancarExcecao()
         {
-            var ingresso = new Ingresso();
-
-            var exception = Assert.Throws<ArgumentException>(() => ingresso.NomeEvento = null);
-            Assert.Equal("O nome do evento é obrigatório.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => ingresso.NomeEvento = string.Empty);
-            Assert.Equal("O nome do evento é obrigatório.", exception.Message);
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Ingresso(100, string.Empty, "Evento Teste", DateTime.Now.AddDays(1)));
+            Assert.Equal("O QRCode é obrigatório.", ex.Message);
         }
 
         [Fact]
-        public void Data_Passada_Should_Have_Error()
+        public void CriarIngresso_NomeEventoNulo_DeveLancarExcecao()
         {
-            var ingresso = new Ingresso();
-
-            var exception = Assert.Throws<ArgumentException>(() => ingresso.Data = DateTime.Now.AddDays(-1));
-            Assert.Equal("A data não pode ser no passado.", exception.Message);
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Ingresso(100, "QRCode", null, DateTime.Now.AddDays(1)));
+            Assert.Equal("O nome do evento é obrigatório.", ex.Message);
         }
 
         [Fact]
-        public void Ingresso_Valido_Should_Not_Have_Errors()
+        public void CriarIngresso_NomeEventoVazio_DeveLancarExcecao()
         {
-            var ingresso = new Ingresso
-            {
-                Valor = 100,
-                QRCode = "1234567890",
-                NomeEvento = "Evento Teste",
-                Data = DateTime.Now.AddDays(1), // Data no futuro
-                UsuarioFinalId = 1 // ID de usuário válido
-            };
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Ingresso(100, "QRCode", string.Empty, DateTime.Now.AddDays(1)));
+            Assert.Equal("O nome do evento é obrigatório.", ex.Message);
+        }
 
-            var validationResult = _validator.TestValidate(ingresso);
-            validationResult.ShouldNotHaveAnyValidationErrors();
+        [Fact]
+        public void CriarIngresso_DataPassada_DeveLancarExcecao()
+        {
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Ingresso(100, "QRCode", "Evento Teste", DateTime.Now.AddDays(-1)));
+            Assert.Equal("A data não pode ser no passado.", ex.Message);
         }
     }
 }

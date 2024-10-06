@@ -1,99 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventPlanApp.Domain.Entities
 {
     public class Ingresso
     {
-        public int IngressoId { get; set; }
-
-        private decimal _valor;
-        public decimal Valor
-        {
-            get => _valor;
-            set
-            {
-                ValidateValor(value);
-                _valor = value;
-            }
-        }
-
-        private string _qrCode;
-        public string QRCode
-        {
-            get => _qrCode;
-            set
-            {
-                ValidateQRCode(value);
-                _qrCode = value;
-            }
-        }
-
-        private string _nomeEvento;
-        public string NomeEvento
-        {
-            get => _nomeEvento;
-            set
-            {
-                ValidateNomeEvento(value);
-                _nomeEvento = value;
-            }
-        }
-
-        private DateTime _data;
-        public DateTime Data
-        {
-            get => _data;
-            set
-            {
-                ValidateData(value);
-                _data = value;
-            }
-        }
-
-        public int UsuarioFinalId { get; set; }
+        public int IngressoId { get; private set; }
+        public decimal Valor { get; private set; }
+        public string QRCode { get; private set; }
+        public string NomeEvento { get; private set; }
+        public DateTime Data { get; private set; }
+        public Guid UsuarioFinalId { get; set; }
         public virtual UsuarioFinal UsuarioFinal { get; set; }
 
-        // Adicionando a propriedade Evento
-        public int EventoId { get; set; } // ID do evento associado
-        public virtual Evento Evento { get; set; } // Propriedade de navegação
+        public int EventoId { get; set; } 
+        public virtual Evento Evento { get; set; } 
 
-        // Validações
-        private void ValidateValor(decimal valor)
+        public Ingresso(decimal valor, string qrCode, string nomeEvento, DateTime data)
+        {
+            ValidateDomain(valor, qrCode, nomeEvento, data);
+            IngressoId = new Random().Next(1, 1000); 
+        }
+
+        public Ingresso() { }
+
+        private void ValidateDomain(decimal valor, string qrCode, string nomeEvento, DateTime data)
         {
             if (valor <= 0)
-            {
                 throw new ArgumentException("O valor deve ser maior que zero.");
-            }
-        }
 
-        private void ValidateQRCode(string qrCode)
-        {
             if (string.IsNullOrWhiteSpace(qrCode))
-            {
                 throw new ArgumentException("O QRCode é obrigatório.");
-            }
-        }
 
-        private void ValidateNomeEvento(string nomeEvento)
-        {
             if (string.IsNullOrWhiteSpace(nomeEvento))
-            {
                 throw new ArgumentException("O nome do evento é obrigatório.");
-            }
-        }
 
-        private void ValidateData(DateTime data)
-        {
             if (data < DateTime.Now)
-            {
                 throw new ArgumentException("A data não pode ser no passado.");
-            }
+
+            Valor = valor;
+            QRCode = qrCode;
+            NomeEvento = nomeEvento;
+            Data = data;
         }
     }
 }
