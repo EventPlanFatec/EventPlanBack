@@ -1,6 +1,6 @@
 ﻿using EventPlanApp.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class EventoConfiguration : IEntityTypeConfiguration<Evento>
 {
@@ -37,18 +37,20 @@ public class EventoConfiguration : IEntityTypeConfiguration<Evento>
             .HasMaxLength(50);
 
         builder.HasOne(t => t.Organizacao)
-               .WithMany(o => o.Eventos)
-               .HasForeignKey(t => t.OrganizacaoId)
-               .OnDelete(DeleteBehavior.ClientNoAction); // Ajuste para evitar múltiplos Cascade Deletes
+            .WithMany(o => o.Eventos)
+            .HasForeignKey(t => t.OrganizacaoId)
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.HasOne(t => t.Endereco)
             .WithMany()
             .HasForeignKey(t => t.EnderecoId)
-            .OnDelete(DeleteBehavior.ClientNoAction); // Mantém o Cascade no Endereco (ou vice-versa)
-
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.Property(t => t.NotaMedia)
-            .HasColumnType("decimal(3,1)")
-            .HasPrecision(3, 1);
+            .HasColumnType("decimal(3,1)");
+
+        builder.HasMany(t => t.UsuariosFinais)
+            .WithMany(u => u.Eventos)
+            .UsingEntity(j => j.ToTable("UsuarioFinalEvento"));
     }
 }

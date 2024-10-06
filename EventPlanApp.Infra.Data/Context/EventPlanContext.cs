@@ -12,6 +12,8 @@ namespace EventPlanApp.Infra.Data
         public DbSet<Organizacao> Organizacoes { get; set; }
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Ingresso> Ingressos { get; set; }
+        public DbSet<Endereco> Enderecos { get; set; }
+        public DbSet<ListaEspera> ListasEspera { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

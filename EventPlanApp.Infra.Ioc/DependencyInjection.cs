@@ -14,6 +14,7 @@ namespace EventPlanApp.Infra.Ioc
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<IEventoRepository, EventoRepository>();
+            services.AddScoped<IUsuarioFinalRepository, UsuarioFinalRepository>();
 
             return services;
         }

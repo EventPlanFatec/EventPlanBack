@@ -28,6 +28,7 @@ namespace EventPlanApp.Domain.Entities
         public decimal NotaMedia { get; set; }
         public string Genero { get; private set; }
         public ICollection<Ingresso> Ingressos { get; private set; } = new List<Ingresso>();
+        public virtual ICollection<ListaEspera> ListasEspera { get; private set; } = new List<ListaEspera>();
         public virtual ICollection<UsuarioFinal> UsuariosFinais { get; private set; } = new List<UsuarioFinal>();
         public int OrganizacaoId { get; private set; }
         public Organizacao Organizacao { get; private set; }
@@ -49,12 +50,19 @@ namespace EventPlanApp.Domain.Entities
             LotacaoMaxima = lotacaoMaxima;
             Endereco = endereco;
             Imagens = string.Join(",", imagens);
-
             Video = video;
             Genero = genero;
         }
 
         public Evento() { }
+
+        public void AdicionarUsuarioListaEspera(UsuarioFinal usuario)
+        {
+            if (!ListasEspera.Any(l => l.UsuarioFinalId == usuario.Id)) 
+            {
+                ListasEspera.Add(new ListaEspera { UsuarioFinal = usuario, Evento = this });
+            }
+        }
 
         private void ValidateDomain(string nomeEvento, string descricao, DateTime dataInicio,
                                     DateTime dataFim, TimeSpan horarioInicio, TimeSpan horarioFim,

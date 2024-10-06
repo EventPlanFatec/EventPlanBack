@@ -1,5 +1,7 @@
-﻿using EventPlanApp.Application.DTOs;
+﻿using AutoMapper;
+using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventPlanApp.API.Controllers
@@ -9,10 +11,12 @@ namespace EventPlanApp.API.Controllers
     public class EventoController : ControllerBase
     {
         private readonly IEventoService _eventoService;
+        private readonly IMapper _mapper;
 
-        public EventoController(IEventoService eventoService)
+        public EventoController(IEventoService eventoService, IMapper mapper)
         {
             _eventoService = eventoService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -83,5 +87,25 @@ namespace EventPlanApp.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("{eventoId}/lista-espera")]
+        public async Task<IActionResult> InscreverNaListaEspera(int eventoId, [FromBody] InscricaoListaEsperaDTO inscricao)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            inscricao.EventoId = eventoId; 
+
+            var resultado = await _eventoService.InscreverNaListaDeEspera(eventoId, inscricao);
+            if (resultado)
+            {
+                return Ok("Inscrição na lista de espera realizada com sucesso.");
+            }
+
+            return NotFound("Evento não encontrado ou já está cheio.");
+        }
+
     }
 }

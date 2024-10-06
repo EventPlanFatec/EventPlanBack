@@ -17,6 +17,7 @@ namespace EventPlanApp.Application.DTOs
         public string DDD { get; set; }
         public DateTime DataNascimento { get; set; }
         public ICollection<IngressoDto> Ingressos { get; set; }
+
     }
 
 }

@@ -14,24 +14,23 @@ namespace EventPlanApp.Domain.Entities
         public string Sobrenome { get; private set; }
 
         public int EnderecoId { get; private set; }
-        public Endereco Endereco { get; private set; } 
+        public Endereco Endereco { get; private set; }
 
         public string Email { get; private set; }
 
         public string Telefone { get; private set; }
 
         public string DDD { get; private set; }
+        public virtual ICollection<Evento> Eventos { get; private set; } = new List<Evento>();
 
         public DateTime DataNascimento { get; private set; }
 
         public ICollection<Ingresso> Ingressos { get; set; } = new List<Ingresso>();
-        public virtual ICollection<Evento> Eventos { get; set; } = new List<Evento>();
-
+        public virtual ICollection<ListaEspera> ListasEspera { get; set; } = new List<ListaEspera>(); 
         public UsuarioFinal(string nome, string sobrenome, Endereco endereco, string email,
                             string telefone, string ddd, DateTime dataNascimento)
         {
             ValidateDomain(nome, sobrenome, endereco, email, telefone, ddd, dataNascimento);
-            Id = Guid.NewGuid();
         }
 
         public UsuarioFinal() { }
