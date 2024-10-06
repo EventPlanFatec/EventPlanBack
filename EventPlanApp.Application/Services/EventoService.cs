@@ -6,7 +6,7 @@ using EventPlanApp.Domain.Interfaces;
 
 namespace EventPlanApp.Application.Services
 {
-    public class EventoService : ServiceBase<EventoDTO, Evento>, IEventoService
+    public class EventoService : ServiceBase<EventoDto, Evento>, IEventoService
     {
         private readonly IEventoRepository _eventoRepository;
 

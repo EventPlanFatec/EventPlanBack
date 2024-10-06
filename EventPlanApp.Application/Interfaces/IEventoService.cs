@@ -2,7 +2,7 @@
 
 namespace EventPlanApp.Application.Interfaces
 {
-    public interface IEventoService:IService<EventoDTO>
+    public interface IEventoService:IService<EventoDto>
     {
     }
 }

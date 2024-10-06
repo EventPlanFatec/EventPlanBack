@@ -16,7 +16,7 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventoDTO>>> GetEvents()
+        public async Task<ActionResult<IEnumerable<EventoDto>>> GetEvents()
         {
             var events = await _eventoService.GetAll();
 
@@ -34,14 +34,14 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<EventoDTO>> CreateEvent([FromBody] EventoDTO eventoDto)
+        public async Task<ActionResult<EventoDto>> CreateEvent([FromBody] EventoDto eventoDto)
         {
             var createdEvent = await _eventoService.Add(eventoDto);
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.EventoId }, createdEvent);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<EventoDTO>> GetEventById(int id)
+        public async Task<ActionResult<EventoDto>> GetEventById(int id)
         {
             var evento = await _eventoService.GetById(id);
 
@@ -54,7 +54,7 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<EventoDTO>> UpdateEvent(int id, [FromBody] EventoDTO eventoDto)
+        public async Task<ActionResult<EventoDto>> UpdateEvent(int id, [FromBody] EventoDto eventoDto)
         {
             var existingEvent = await _eventoService.GetById(id);
             if (existingEvent == null)

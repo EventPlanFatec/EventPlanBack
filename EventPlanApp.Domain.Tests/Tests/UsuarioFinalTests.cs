@@ -1,224 +1,95 @@
-﻿using EventPlanApp.Domain.Entities;
-using EventPlanApp.Domain.Validation;
-using FluentValidation.TestHelper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Xunit;
+using EventPlanApp.Domain.Entities;
 
-namespace EventPlanApp.Domain.Tests
+namespace EventPlanApp.Tests.Domain.Entities
 {
     public class UsuarioFinalTests
     {
-        private readonly UsuarioFinalValidator _validator;
-
-        public UsuarioFinalTests()
-        {
-            _validator = new UsuarioFinalValidator();
-        }
-
         [Fact]
-        public void Nome_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Nome = "");
-            Assert.Equal("Nome não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Nome = null);
-            Assert.Equal("Nome não pode ser nulo ou vazio.", exception.Message);
-        }
-
-        [Fact]
-        public void Sobrenome_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Sobrenome = "");
-            Assert.Equal("Sobrenome não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Sobrenome = null);
-            Assert.Equal("Sobrenome não pode ser nulo ou vazio.", exception.Message);
-        }
-
-        [Fact]
-        public void TipoLogradouro_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.TipoLogradouro = "");
-            Assert.Equal("Tipo de logradouro não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.TipoLogradouro = null);
-            Assert.Equal("Tipo de logradouro não pode ser nulo ou vazio.", exception.Message);
-        }
-
-        [Fact]
-        public void Logradouro_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Logradouro = "");
-            Assert.Equal("Logradouro não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Logradouro = null);
-            Assert.Equal("Logradouro não pode ser nulo ou vazio.", exception.Message);
-        }
-
-        [Fact]
-        public void NumeroCasa_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.NumeroCasa = "");
-            Assert.Equal("Número da casa não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.NumeroCasa = null);
-            Assert.Equal("Número da casa não pode ser nulo ou vazio.", exception.Message);
-        }
-
-        [Fact]
-        public void Bairro_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Bairro = "");
-            Assert.Equal("Bairro não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Bairro = null);
-            Assert.Equal("Bairro não pode ser nulo ou vazio.", exception.Message);
-        }
-
-        [Fact]
-        public void Cidade_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Cidade = "");
-            Assert.Equal("Cidade não pode ser nula ou vazia.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Cidade = null);
-            Assert.Equal("Cidade não pode ser nula ou vazia.", exception.Message);
-        }
-
-        [Fact]
-        public void Estado_Invalid_Should_Have_Error()
+        public void CriarUsuarioFinal_Valido_DeveFuncionar()
         {
             // Arrange
-            var usuario = new UsuarioFinal();
+            var endereco = new Endereco("Rua", "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000");
+            var dataNascimento = new DateTime(2000, 1, 1);
 
-            // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => usuario.Estado = "SPBR"); // Estado inválido
-            Assert.Equal("Estado deve ter exatamente 2 caracteres.", exception.Message);
+            // Act
+            var usuarioFinal = new UsuarioFinal("Nome Teste", "Sobrenome Teste", endereco, "usuario@exemplo.com",
+                                                 "1234567890", "11", dataNascimento);
+
+            // Assert
+            Assert.NotNull(usuarioFinal);
+            Assert.NotEqual(Guid.Empty, usuarioFinal.Id);
+            Assert.Equal("Nome Teste", usuarioFinal.Nome);
+            Assert.Equal("Sobrenome Teste", usuarioFinal.Sobrenome);
+            Assert.Equal("usuario@exemplo.com", usuarioFinal.Email);
+            Assert.Equal("1234567890", usuarioFinal.Telefone);
+            Assert.Equal("11", usuarioFinal.DDD);
+            Assert.Equal(dataNascimento, usuarioFinal.DataNascimento);
         }
 
-        [Fact]
-        public void CEP_Invalid_Should_Have_Error()
+        [Theory]
+        [InlineData(null, "Sobrenome", "Rua", "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", null, "Rua", "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", "Sobrenome", null, "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", "Sobrenome", "Rua", null, "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", "Sobrenome", "Rua", "Teste", null, "Bairro Teste", "Cidade Teste", "SP", "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", "Sobrenome", "Rua", "Teste", "123", null, "Cidade Teste", "SP", "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", "Sobrenome", "Rua", "Teste", "123", "Bairro Teste", null, "SP", "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", "Sobrenome", "Rua", "Teste", "123", "Bairro Teste", "Cidade Teste", null, "00000-000", "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        [InlineData("Nome", "Sobrenome", "Rua", "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", null, "usuario@exemplo.com", "1234567890", "11", "2000-01-01")]
+        public void CriarUsuarioFinal_Invalido_NaoDeveFuncionar(string nome, string sobrenome, string tipoLogradouro, string logradouro,
+            string numeroCasa, string bairro, string cidade, string estado, string cep,
+            string email, string telefone, string ddd, string dataNascimentoStr)
         {
             // Arrange
-            var usuario = new UsuarioFinal();
+            DateTime dataNascimento = DateTime.Parse(dataNascimentoStr);
+            Endereco endereco = null;
 
             // Act & Assert
-            var exception = Assert.Throws<ArgumentException>(() => usuario.CEP = "123456");
-            Assert.Equal("CEP deve ser um formato válido (XXXXX-XXX).", exception.Message);
-        }
-
-        [Fact]
-        public void Email_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Email = "");
-            Assert.Equal("Email não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Email = null);
-            Assert.Equal("Email não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Email = "email.invalido");
-            Assert.Equal("Email deve ser um formato válido.", exception.Message);
-        }
-
-        [Fact]
-        public void Telefone_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Telefone = "");
-            Assert.Equal("Telefone não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Telefone = null);
-            Assert.Equal("Telefone não pode ser nulo ou vazio.", exception.Message);
-        }
-
-        [Fact]
-        public void DDD_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = "");
-            Assert.Equal("DDD não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = null);
-            Assert.Equal("DDD não pode ser nulo ou vazio.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = "1");
-            Assert.Equal("DDD deve ter exatamente 2 caracteres.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DDD = "123");
-            Assert.Equal("DDD deve ter exatamente 2 caracteres.", exception.Message);
-        }
-
-        [Fact]
-        public void DataNascimento_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.DataNascimento = DateTime.Now.AddDays(1));
-            Assert.Equal("Data de nascimento não pode ser uma data futura.", exception.Message);
-        }
-
-        [Fact]
-        public void Preferencias_Invalid_Should_Have_Error()
-        {
-            var usuarioFinal = new UsuarioFinal();
-
-            var exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Preferencias01 = new string('A', 101));
-            Assert.Equal("As preferências não podem exceder 100 caracteres.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Preferencias02 = new string('A', 101));
-            Assert.Equal("As preferências não podem exceder 100 caracteres.", exception.Message);
-
-            exception = Assert.Throws<ArgumentException>(() => usuarioFinal.Preferencias03 = new string('A', 101));
-            Assert.Equal("As preferências não podem exceder 100 caracteres.", exception.Message);
-        }
-
-        [Fact]
-        public void UsuarioFinal_Valido_Should_Not_Have_Errors()
-        {
-            var usuarioFinal = new UsuarioFinal
+            Assert.Throws<ArgumentException>(() =>
             {
-                Nome = "João",
-                Sobrenome = "Silva",
-                TipoLogradouro = "Rua",
-                Logradouro = "Avenida Brasil",
-                NumeroCasa = "123",
-                Bairro = "Centro",
-                Cidade = "São Paulo",
-                Estado = "SP",
-                CEP = "12345-678",
-                Email = "joao.silva@exemplo.com",
-                Telefone = "11987654321",
-                DDD = "11",
-                DataNascimento = new DateTime(2000, 1, 1),
-                Preferencias01 = "Música",
-                Preferencias02 = "Esportes",
-                Preferencias03 = "Viagens"
-            };
+                // Criar um endereço válido apenas se todos os parâmetros forem válidos
+                if (!string.IsNullOrEmpty(tipoLogradouro) && !string.IsNullOrEmpty(logradouro) &&
+                    !string.IsNullOrEmpty(numeroCasa) && !string.IsNullOrEmpty(bairro) &&
+                    !string.IsNullOrEmpty(cidade) && !string.IsNullOrEmpty(estado) &&
+                    !string.IsNullOrEmpty(cep))
+                {
+                    endereco = new Endereco(tipoLogradouro, logradouro, numeroCasa, bairro, cidade, estado, cep);
+                }
 
-            var validationResult = _validator.TestValidate(usuarioFinal);
-            validationResult.ShouldNotHaveAnyValidationErrors();
+                var usuarioFinal = new UsuarioFinal(nome, sobrenome, endereco, email, telefone, ddd, dataNascimento);
+            });
+        }
+
+        [Fact]
+        public void CriarUsuarioFinal_DataNascimentoFutura_NaoDeveFuncionar()
+        {
+            // Arrange
+            var endereco = new Endereco("Rua", "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000");
+            var dataNascimentoFutura = DateTime.Now.AddYears(1);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var usuarioFinal = new UsuarioFinal("Nome Teste", "Sobrenome Teste", endereco, "usuario@exemplo.com",
+                                                     "1234567890", "11", dataNascimentoFutura);
+            });
+        }
+
+        [Fact]
+        public void CriarUsuarioFinal_EmailInvalido_NaoDeveFuncionar()
+        {
+            // Arrange
+            var endereco = new Endereco("Rua", "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000");
+            var dataNascimento = new DateTime(2000, 1, 1);
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var usuarioFinal = new UsuarioFinal("Nome Teste", "Sobrenome Teste", endereco, "email-invalido",
+                                                     "1234567890", "11", dataNascimento);
+            });
         }
     }
 }

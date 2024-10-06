@@ -1,5 +1,7 @@
 using EventPlanApp.Infra.Ioc;
 using Microsoft.EntityFrameworkCore;
+using EventPlanApp.Infra.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
