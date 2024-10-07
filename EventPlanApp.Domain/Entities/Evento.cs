@@ -32,6 +32,9 @@ namespace EventPlanApp.Domain.Entities
         public virtual ICollection<UsuarioFinal> UsuariosFinais { get; private set; } = new List<UsuarioFinal>();
         public int OrganizacaoId { get; private set; }
         public Organizacao Organizacao { get; private set; }
+        public int IngressosVendidos => Ingressos.Count;
+        public int VagasDisponiveis => LotacaoMaxima - IngressosVendidos;
+
 
         // Construtor
         public Evento(string nomeEvento, string descricao, DateTime dataInicio, DateTime dataFim,
