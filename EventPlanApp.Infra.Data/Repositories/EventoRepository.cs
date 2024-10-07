@@ -26,6 +26,10 @@ namespace EventPlanApp.Infra.Data.Repositories
                                  .Where(u => u.ListasEspera.Any(l => l.EventoId == eventoId))
                                  .ToListAsync();
         }
-
+        public async Task RemoverListaEsperaAsync(ListaEspera listaEspera)
+        {
+            _context.ListasEspera.Remove(listaEspera);
+            await _context.SaveChangesAsync();
+        }
     }
 }

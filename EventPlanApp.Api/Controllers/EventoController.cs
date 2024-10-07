@@ -106,6 +106,20 @@ namespace EventPlanApp.API.Controllers
 
             return NotFound("Evento não encontrado ou já está cheio.");
         }
+        [HttpDelete("{eventoId}/usuario/{usuarioId}")]
+        public async Task<IActionResult> RemoverInscricao(int eventoId, int usuarioId)
+        {
+            try
+            {
+                await _eventoService.RemoverInscricaoAsync(usuarioId, eventoId);
+                return NoContent(); 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
     }
 }
