@@ -43,6 +43,16 @@ namespace EventPlanApp.Application.Services
 
             return false;
         }
+        public async Task RemoverInscricaoAsync(int usuarioId, int eventoId)
+    {
+        var listaEspera = await _eventoRepository.ObterUsuariosListaEsperaAsync(usuarioId, eventoId);
+        if (listaEspera == null)
+        {
+            throw new Exception("Inscrição não encontrada.");
+        }
+
+        await _eventoRepository.RemoverListaEsperaAsync(listaEspera);
+    }
 
 
     }
