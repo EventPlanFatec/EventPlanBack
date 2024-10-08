@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
-using EventPlanApp.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventPlanApp.API.Controllers
@@ -40,6 +39,16 @@ namespace EventPlanApp.API.Controllers
         [HttpPost]
         public async Task<ActionResult<EventoDto>> CreateEvent([FromBody] EventoDto eventoDto)
         {
+            if (eventoDto.IsPrivate)
+            {
+                if (string.IsNullOrEmpty(eventoDto.Senha))
+                {
+                    return BadRequest("A senha é obrigatória para eventos privados.");
+                }
+
+                eventoDto.Senha = _eventoService.HashPassword(eventoDto.Senha);
+            }
+
             var createdEvent = await _eventoService.Add(eventoDto);
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.EventoId }, createdEvent);
         }
@@ -55,19 +64,6 @@ namespace EventPlanApp.API.Controllers
             }
 
             return Ok(evento);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<EventoDto>> UpdateEvent(int id, [FromBody] EventoDto eventoDto)
-        {
-            var existingEvent = await _eventoService.GetById(id);
-            if (existingEvent == null)
-            {
-                return NotFound($"Event with ID {id} not found.");
-            }
-
-            var updatedEvent = await _eventoService.Update(id, eventoDto);
-            return Ok(updatedEvent);
         }
 
         [HttpDelete("{id}")]
@@ -119,7 +115,5 @@ namespace EventPlanApp.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
     }
 }

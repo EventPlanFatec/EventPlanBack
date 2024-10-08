@@ -20,6 +20,8 @@ namespace EventPlanApp.Application.DTOs
         public string? Genero { get; set; }      
         public ICollection<UsuarioFinalDto>? UsuariosFinais { get; set; } 
         public ICollection<IngressoDto>? Ingressos { get; set; }     
-        public int OrganizacaoId { get; set; }     
+        public int OrganizacaoId { get; set; }
+        public bool IsPrivate { get; set; }
+        public string? Senha { get; set; }
     }
 }

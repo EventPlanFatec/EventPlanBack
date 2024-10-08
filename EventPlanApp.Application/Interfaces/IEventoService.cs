@@ -7,6 +7,8 @@ namespace EventPlanApp.Application.Interfaces
     {
         Task<bool> InscreverNaListaDeEspera(int eventoId, InscricaoListaEsperaDTO inscricao);
         Task<bool> RemoverInscricaoAsync(int eventoId, int usuarioFinalId);
+        Task<bool> ValidarSenha(int eventoId, string senha);
+        string HashPassword(string senha);
     }
 
 }
