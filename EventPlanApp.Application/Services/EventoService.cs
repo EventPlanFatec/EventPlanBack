@@ -43,7 +43,54 @@ namespace EventPlanApp.Application.Services
 
             return false;
         }
+        public async Task<List<UsuarioFinal>> ObterUsuariosDaListaEspera(int eventoId)
+        {
+            var usuariosNaListaEspera = await _eventoRepository.ObterUsuariosListaEsperaAsync(eventoId);
+            return usuariosNaListaEspera.ToList();
+        }
 
+        public async Task<bool> RemoverInscricaoAsync(int eventoId, int usuarioFinalId)
+        {
+            var evento = await _eventoRepository.GetById(eventoId);
+            if (evento == null)
+            {
+                return false;
+            }
 
+            var usuarioExistente = await _usuarioFinalRepository.GetById(usuarioFinalId);
+            if (usuarioExistente != null && evento.UsuariosFinais.Any(u => u.Id == usuarioExistente.Id))
+            {
+                evento.UsuariosFinais.Remove(usuarioExistente);
+                await _eventoRepository.Update(eventoId, evento);
+                return true;
+            }
+
+            return false;
+        }
+        public async Task CriarEvento(Evento evento, string senha)
+        {
+            if (evento.IsPrivate && !string.IsNullOrEmpty(senha))
+            {
+                evento.PasswordHash = BCrypt.Net.BCrypt.HashPassword(senha);
+            }
+
+            await _eventoRepository.Add(evento);
+        }
+
+        public async Task<bool> ValidarSenha(int eventoId, string senha)
+        {
+            var evento = await _eventoRepository.GetById(eventoId);
+            if (evento == null || !evento.IsPrivate)
+            {
+                return false; 
+            }
+
+            return BCrypt.Net.BCrypt.Verify(senha, evento.PasswordHash);
+        }
+
+        public string HashPassword(string senha)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(senha);
+        }
     }
 }

@@ -34,6 +34,8 @@ namespace EventPlanApp.Domain.Entities
         public Organizacao Organizacao { get; private set; }
         public int IngressosVendidos => Ingressos.Count;
         public int VagasDisponiveis => LotacaoMaxima - IngressosVendidos;
+        public bool IsPrivate { get; set; }
+        public string PasswordHash { get; set; }
 
 
         // Construtor
