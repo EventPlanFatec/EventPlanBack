@@ -1,4 +1,3 @@
-
 ## **Documentação da API - Evento**
 
 ### **Operações da API - Evento**
@@ -18,27 +17,33 @@ POST /api/events
 
 ```json
 {
-  "nomeEvento": "Nome do Evento",
-  "dataInicio": "2024-10-02T19:30:18.647Z",
-  "dataFim": "2024-10-02T19:30:18.647Z",
-  "horarioInicio": "14:00:00",
-  "horarioFim": "16:00:00",
+  "nomeEvento": "Workshop de Programação",
+  "descricao": "Evento focado em boas práticas de Clean Code.",
+  "dataInicio": "2024-11-08T09:00:00",
+  "dataFim": "2024-11-08T18:00:00",
+  "horarioInicio": "09:00:00",
+  "horarioFim": "18:00:00",
   "lotacaoMaxima": 100,
-  "tipoLogradouro": "Rua",
-  "logradouro": "Rua Exemplo",
-  "numeroCasa": "123",
-  "bairro": "Centro",
-  "cidade": "Cidade Exemplo",
-  "estado": "SP",
-  "cep": "01234-567",
-  "tipo": "Cultural",
-  "imagem01": "http://exemplo.com/imagem1.jpg",
-  "imagem02": "http://exemplo.com/imagem2.jpg",
-  "imagem03": "http://exemplo.com/imagem3.jpg",
-  "video": "http://exemplo.com/video.mp4",
-  "notaMedia": 4.5,
-  "genero": "Música",
-  "organizacaoId": 1
+  "endereco": {
+    "tipoLogradouro": "Rua",
+    "logradouro": "Av. Paulista",
+    "numeroCasa": "1000",
+    "bairro": "Bela Vista",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "01310-100"
+  },
+  "imagens": [
+    "https://exemplo.com/imagem1.jpg"
+  ],
+  "video": "https://exemplo.com/video.mp4",
+  "notaMedia": 4.8,
+  "genero": "Tecnologia",
+  "usuariosFinais": [],
+  "ingressos": [],
+  "organizacaoId": 4,
+  "isPrivate": true,
+  "senha": "eventoSegreto123"
 }
 ```
 
@@ -170,8 +175,6 @@ DELETE /api/events/{id}
 204 No Content
 ```
 
-
-
 **Resposta se o evento não for encontrado**
 
 ```json
@@ -179,7 +182,6 @@ DELETE /api/events/{id}
   "message": "Event with ID {id} not found."
 }
 ```
-
 
 ## **Modelo - EventoDTO**
 

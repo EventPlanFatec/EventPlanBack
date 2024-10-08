@@ -91,6 +91,24 @@ namespace EventPlanApp.Application.Services
         public string HashPassword(string senha)
         {
             return BCrypt.Net.BCrypt.HashPassword(senha);
+
+        public async Task<bool> RemoverInscricaoAsync(int eventoId, int usuarioFinalId)
+        {
+            var evento = await _eventoRepository.GetById(eventoId);
+            if (evento == null)
+            {
+                return false;
+            }
+
+            var usuarioExistente = await _usuarioFinalRepository.GetById(usuarioFinalId);
+            if (usuarioExistente != null && evento.UsuariosFinais.Any(u => u.Id == usuarioExistente.Id))
+            {
+                evento.UsuariosFinais.Remove(usuarioExistente);
+                await _eventoRepository.Update(eventoId, evento);
+                return true;
+            }
+
+            return false;
         }
     }
 }

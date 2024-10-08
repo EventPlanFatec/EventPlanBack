@@ -10,5 +10,6 @@ namespace EventPlanApp.Domain.Interfaces
         Task<bool> ValidarSenhaEventoAsync(int eventoId, string senha);
         Task<IEnumerable<Evento>> ObterEventosLotadosAsync();
         Task<IEnumerable<UsuarioFinal>> ObterUsuariosListaEsperaAsync(int eventoId);
+        Task RemoverListaEsperaAsync(ListaEspera listaEspera);
     }
 }
