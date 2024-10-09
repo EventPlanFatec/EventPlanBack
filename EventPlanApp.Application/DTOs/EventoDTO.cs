@@ -23,5 +23,6 @@ namespace EventPlanApp.Application.DTOs
         public int OrganizacaoId { get; set; }
         public bool IsPrivate { get; set; }
         public string? Senha { get; set; }
+        public List<string>? EmailsConvidados { get; set; }
     }
 }
