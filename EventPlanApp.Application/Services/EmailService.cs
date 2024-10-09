@@ -11,12 +11,9 @@ public class EmailService : IEmailService
 
     public EmailService(string apiKey)
     {
-        if (string.IsNullOrEmpty(apiKey))
-        {
-            throw new ArgumentNullException(nameof(apiKey), "SendGrid API Key não foi fornecida.");
-        }
 
-        _apiKey = apiKey;
+        apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
     }
 
     public async Task SendEmailAsync(MensagemEmail mensagemEmail)
