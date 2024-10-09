@@ -11,11 +11,13 @@ namespace EventPlanApp.API.Controllers
     {
         private readonly IEventoService _eventoService;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
 
-        public EventoController(IEventoService eventoService, IMapper mapper)
+        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService)
         {
             _eventoService = eventoService;
             _mapper = mapper;
+            _emailService = emailService; 
         }
 
         [HttpGet]
@@ -50,8 +52,28 @@ namespace EventPlanApp.API.Controllers
             }
 
             var createdEvent = await _eventoService.Add(eventoDto);
+
+            if (eventoDto.EmailsConvidados != null && eventoDto.EmailsConvidados.Count > 0)
+            {
+                var subject = $"Convite para o evento: {eventoDto.NomeEvento}";
+                var body = $"Você está convidado para o evento '{eventoDto.NomeEvento}' que ocorrerá em {eventoDto.DataInicio}.";
+
+                foreach (var email in eventoDto.EmailsConvidados)
+                {
+                    var mensagemEmail = new MensagemEmail
+                    {
+                        Destinatario = email,
+                        Assunto = subject,
+                        Conteudo = body
+                    };
+
+                    await _emailService.SendEmailAsync(mensagemEmail);
+                }
+            }
+
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.EventoId }, createdEvent);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<EventoDto>> GetEventById(int id)
@@ -82,38 +104,6 @@ namespace EventPlanApp.API.Controllers
             }
 
             return NoContent();
-        }
-
-        [HttpPost("{eventoId}/lista-espera")]
-        public async Task<IActionResult> InscreverNaListaEspera(int eventoId, [FromBody] InscricaoListaEsperaDTO inscricao)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            inscricao.EventoId = eventoId; 
-
-            var resultado = await _eventoService.InscreverNaListaDeEspera(eventoId, inscricao);
-            if (resultado)
-            {
-                return Ok("Inscrição na lista de espera realizada com sucesso.");
-            }
-
-            return NotFound("Evento não encontrado ou já está cheio.");
-        }
-        [HttpDelete("{eventoId}/usuario/{usuarioId}")]
-        public async Task<IActionResult> RemoverInscricao(int eventoId, int usuarioId)
-        {
-            try
-            {
-                await _eventoService.RemoverInscricaoAsync(usuarioId, eventoId);
-                return NoContent(); 
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
     }
 }

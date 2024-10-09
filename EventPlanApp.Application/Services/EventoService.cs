@@ -13,12 +13,17 @@ namespace EventPlanApp.Application.Services
     {
         private readonly IEventoRepository _eventoRepository;
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
+        private readonly IEmailService _emailService;
 
-        public EventoService(IEventoRepository eventoRepository, IMapper mapper, IUsuarioFinalRepository usuarioFinalRepository)
+        public EventoService(IEventoRepository eventoRepository,
+                             IMapper mapper,
+                             IUsuarioFinalRepository usuarioFinalRepository,
+                             IEmailService emailService)
             : base(eventoRepository, mapper)
         {
             _eventoRepository = eventoRepository;
             _usuarioFinalRepository = usuarioFinalRepository;
+            _emailService = emailService;
         }
 
         public async Task<bool> InscreverNaListaDeEspera(int eventoId, InscricaoListaEsperaDTO inscricao)
@@ -83,6 +88,32 @@ namespace EventPlanApp.Application.Services
         public string HashPassword(string senha)
         {
             return BCrypt.Net.BCrypt.HashPassword(senha);
+        }
+        public async Task CriarEventoComConvidados(EventoDto eventoDto, string senha)
+        {
+            var evento = _mapper.Map<Evento>(eventoDto);
+
+            if (eventoDto.EmailsConvidados != null && eventoDto.EmailsConvidados.Any())
+            {
+                foreach (var email in eventoDto.EmailsConvidados)
+                {
+                    var mensagem = new MensagemEmail
+                    {
+                        Destinatario = email,
+                        Assunto = $"Convite para o evento {evento.NomeEvento}",
+                        Conteudo = $"Você foi convidado para o evento {evento.NomeEvento}. " +
+                                   $"A senha do evento é: {senha}."
+                    };
+                    await _emailService.SendEmailAsync(mensagem);
+                }
+            }
+
+            if (evento.IsPrivate && !string.IsNullOrEmpty(senha))
+            {
+                evento.PasswordHash = HashPassword(senha);
+            }
+
+            await _eventoRepository.Add(evento);
         }
 
     }

@@ -1,35 +1,39 @@
-﻿using SendGrid;
+﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
+using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Threading.Tasks;
 
-public class EmailService
+public class EmailService : IEmailService
 {
-    private readonly string apiKey;
+    private readonly string _apiKey;
 
-    public EmailService()
+    public EmailService(string apiKey)
     {
-        apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-
         if (string.IsNullOrEmpty(apiKey))
         {
-            throw new Exception("SendGrid API Key não foi configurada corretamente.");
+            throw new ArgumentNullException(nameof(apiKey), "SendGrid API Key não foi fornecida.");
         }
+
+        _apiKey = apiKey;
     }
 
-    public async Task SendEmailAsync(string toEmail, string subject, string message)
+    public async Task SendEmailAsync(MensagemEmail mensagemEmail)
     {
-        var client = new SendGridClient(apiKey);
+        var client = new SendGridClient(_apiKey);
         var from = new EmailAddress("EventPlanFatec@outlook.com", "EventPlan");
-        var to = new EmailAddress(toEmail);
-        var plainTextContent = message;
-        var htmlContent = $"<strong>{message}</strong>";
-        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+        var to = new EmailAddress(mensagemEmail.Destinatario);
+        var plainTextContent = mensagemEmail.Conteudo;
+        var htmlContent = $"<strong>{mensagemEmail.Conteudo}</strong>";
+        var msg = MailHelper.CreateSingleEmail(from, to, mensagemEmail.Assunto, plainTextContent, htmlContent);
 
         var response = await client.SendEmailAsync(msg);
-        if (response.StatusCode != System.Net.HttpStatusCode.OK)
+        if (!response.IsSuccessStatusCode)
         {
-            throw new Exception("Erro ao enviar email.");
+            var errorMessage = $"Erro ao enviar email: {response.StatusCode}. Detalhes: {await response.Body.ReadAsStringAsync()}";
+            throw new Exception(errorMessage);
         }
     }
+
 }
