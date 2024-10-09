@@ -105,5 +105,40 @@ namespace EventPlanApp.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{id}/senha")]
+        public async Task<IActionResult> UpdateEventPassword(int id, [FromBody] string novaSenha)
+        {
+            if (string.IsNullOrEmpty(novaSenha))
+            {
+                return BadRequest("A nova senha é obrigatória.");
+            }
+
+            var resultado = await _eventoService.UpdateEventPassword(id, novaSenha);
+            if (!resultado)
+            {
+                return NotFound($"Evento com ID {id} não encontrado.");
+            }
+
+            var evento = await _eventoService.GetById(id);
+            if (evento?.EmailsConvidados != null && evento.EmailsConvidados.Count > 0)
+            {
+                var subject = $"Atualização da senha do evento: {evento.NomeEvento}";
+                var body = $"A senha do evento '{evento.NomeEvento}' foi alterada. A nova senha é: {novaSenha}";
+
+                foreach (var email in evento.EmailsConvidados)
+                {
+                    await _emailService.SendEmailAsync(new MensagemEmail
+                    {
+                        Destinatario = email,
+                        Assunto = subject,
+                        Conteudo = body
+                    });
+                }
+            }
+
+            return NoContent(); 
+        }
+
     }
 }

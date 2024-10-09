@@ -116,5 +116,20 @@ namespace EventPlanApp.Application.Services
             await _eventoRepository.Add(evento);
         }
 
+        public async Task<bool> UpdateEventPassword(int eventoId, string novaSenha)
+        {
+            var evento = await _eventoRepository.GetById(eventoId);
+            if (evento == null)
+            {
+                return false;
+            }
+
+            evento.PasswordHash = HashPassword(novaSenha);
+            await _eventoRepository.Update(eventoId, evento);
+
+            return true;
+        }
+
+
     }
 }
