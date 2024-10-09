@@ -12,6 +12,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  sendGridApiKey: $(SENDGRID_API_KEY)  # Adicione a variável de ambiente aqui
 
 jobs:
   - job: BuildTestProd
@@ -37,6 +38,6 @@ jobs:
 
     - task: PublishBuildArtifacts@1
       inputs:
-        targetPath: '$(Build.ArtifactStagingDiretory)'
+        targetPath: '$(Build.ArtifactStagingDirectory)'
         artifact: 'dotnet-core-eventplan'
         publishLocation: 'pipeline-prod'
