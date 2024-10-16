@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EventPlanApp.Application\EventPlanApp.Application.csproj" />
     <ProjectReference Include="..\EventPlanApp.Domain\EventPlanApp.Domain.csproj" />
     <ProjectReference Include="..\EventPlanApp.Infra.Data\EventPlanApp.Infra.Data.csproj" />
