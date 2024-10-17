@@ -1,17 +1,14 @@
 ﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EventPlanApp.Application.Services
 {
-    public interface IIngressoService
-    {
-        Task<bool> CreateTicket(IngressoDto ingressoDto);
-        Task<IEnumerable<TicketDto>> GetAllTicketsAsync();
-    }
-
+    
     public class IngressoService : IIngressoService
     {
         private readonly IIngressoRepository _ingressoRepository;
@@ -35,6 +32,23 @@ namespace EventPlanApp.Application.Services
             return true;
         }
 
+        public async Task<SalesReportDto> GetSalesReportAsync()
+        {
+            var ingressos = await _ingressoRepository.GetAllAsync();
+            var totalRevenue = ingressos.Sum(i => i.Valor); 
+            var vipCount = ingressos.Count(i => i.Vip); 
+            var generalCount = ingressos.Count(i => !i.Vip); 
+
+            
+            return new SalesReportDto
+            {
+                TotalRevenue = totalRevenue,
+                VipTicketsSold = vipCount,
+                GeneralTicketsSold = generalCount,
+                TotalTicketsSold = vipCount + generalCount
+            };
+        }
+
         public async Task<IEnumerable<TicketDto>> GetAllTicketsAsync()
         {
             var ingressos = await _ingressoRepository.GetAllAsync();
@@ -42,13 +56,14 @@ namespace EventPlanApp.Application.Services
 
             foreach (var ingresso in ingressos)
             {
+            
                 ticketDtos.Add(new TicketDto
                 {
                     IngressoId = ingresso.IngressoId,
                     Valor = ingresso.Valor,
                     NomeEvento = ingresso.NomeEvento,
-                    Vip = ingresso.Vip, 
-                    QuantidadeDisponivel = 10 
+                    Vip = ingresso.Vip,
+                    QuantidadeDisponivel = 10
                 });
             }
 
