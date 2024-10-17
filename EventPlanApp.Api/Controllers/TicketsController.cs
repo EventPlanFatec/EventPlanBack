@@ -39,5 +39,13 @@ namespace EventPlanApp.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TicketDto>>> GetAllTickets()
+        {
+            var tickets = await _ingressoService.GetAllTicketsAsync();
+            return Ok(tickets);
+        }
     }
+    
 }
+
