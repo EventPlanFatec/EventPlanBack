@@ -1,17 +1,15 @@
 ﻿using EventPlanApp.Application.DTOs;
-using EventPlanApp.Domain.Entities;
+using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace EventPlanApp.Application.Services
+namespace EventPlanApp.Application.Interfaces
 {
-    public interface IIngressoService
-    {
-        Task<bool> CreateTicket(IngressoDto ingressoDto);
-        Task<IEnumerable<TicketDto>> GetAllTicketsAsync();
-    }
-
+    
     public class IngressoService : IIngressoService
     {
         private readonly IIngressoRepository _ingressoRepository;
@@ -21,18 +19,9 @@ namespace EventPlanApp.Application.Services
             _ingressoRepository = ingressoRepository;
         }
 
-        public async Task<bool> CreateTicket(IngressoDto ingressoDto)
+        public Task<bool> CreateTicket(IngressoDto ingressoDto)
         {
-            var ingresso = new Ingresso(
-                ingressoDto.Valor,
-                ingressoDto.QRCode,
-                ingressoDto.NomeEvento,
-                ingressoDto.Data,
-                ingressoDto.Vip
-            );
-
-            await _ingressoRepository.AddAsync(ingresso);
-            return true;
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<TicketDto>> GetAllTicketsAsync()
