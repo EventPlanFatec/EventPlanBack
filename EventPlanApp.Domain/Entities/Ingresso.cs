@@ -14,17 +14,19 @@ namespace EventPlanApp.Domain.Entities
         public virtual UsuarioFinal UsuarioFinal { get; set; }
 
         public int EventoId { get; set; } 
-        public virtual Evento Evento { get; set; } 
+        public virtual Evento Evento { get; set; }
 
-        public Ingresso(decimal valor, string qrCode, string nomeEvento, DateTime data)
+        public bool Vip { get; private set; }
+
+        public Ingresso(decimal valor, string qrCode, string nomeEvento, DateTime data, bool vip)
         {
-            ValidateDomain(valor, qrCode, nomeEvento, data);
+            ValidateDomain(valor, qrCode, nomeEvento, data, vip);
             IngressoId = new Random().Next(1, 1000); 
         }
 
         public Ingresso() { }
 
-        private void ValidateDomain(decimal valor, string qrCode, string nomeEvento, DateTime data)
+        private void ValidateDomain(decimal valor, string qrCode, string nomeEvento, DateTime data, bool vip)
         {
             if (valor <= 0)
                 throw new ArgumentException("O valor deve ser maior que zero.");
@@ -42,6 +44,7 @@ namespace EventPlanApp.Domain.Entities
             QRCode = qrCode;
             NomeEvento = nomeEvento;
             Data = data;
+            Vip = vip;
         }
     }
 }

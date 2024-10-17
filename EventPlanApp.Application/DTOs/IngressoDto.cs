@@ -9,6 +9,7 @@
         public DateTime Data { get; set; }
         public Guid UsuarioFinalId { get; set; }
         public int EventoId { get; set; }
+        public bool Vip { get; set; }
     }
 
 }
