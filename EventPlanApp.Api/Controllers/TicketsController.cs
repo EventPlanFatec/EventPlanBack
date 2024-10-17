@@ -1,4 +1,5 @@
 ﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
