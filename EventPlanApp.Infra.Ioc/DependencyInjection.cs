@@ -15,6 +15,8 @@ namespace EventPlanApp.Infra.Ioc
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<IEventoRepository, EventoRepository>();
             services.AddScoped<IUsuarioFinalRepository, UsuarioFinalRepository>();
+            services.AddScoped<IIngressoRepository, IngressoRepository>();
+            services.AddScoped<IIngressoService, IngressoService>();
 
             var sendGridApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             services.AddScoped<IEmailService>(provider => new EmailService(sendGridApiKey));

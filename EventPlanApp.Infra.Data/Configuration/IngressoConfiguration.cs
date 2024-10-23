@@ -25,6 +25,9 @@ namespace EventPlanApp.Infra.Data.EntityConfiguration
             builder.Property(i => i.Data)
                 .IsRequired();
 
+            builder.Property(i => i.Vip)
+                .IsRequired();
+
             builder.HasOne(i => i.UsuarioFinal)
                 .WithMany(u => u.Ingressos)
                 .HasForeignKey(i => i.UsuarioFinalId);
