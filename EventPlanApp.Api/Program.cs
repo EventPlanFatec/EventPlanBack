@@ -1,6 +1,10 @@
 using EventPlanApp.Infra.Ioc;
 using Microsoft.EntityFrameworkCore;
 using EventPlanApp.Infra.Data;
+using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Application.Services;
+using EventPlanApp.Domain.Interfaces;
+using EventPlanApp.Infra.Data.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +28,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 var app = builder.Build();
 

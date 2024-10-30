@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EventPlanApp.Domain.Entities;
+using System.Data;
 
 namespace EventPlanApp.Infra.Data
 {
@@ -14,6 +15,7 @@ namespace EventPlanApp.Infra.Data
         public DbSet<Ingresso> Ingressos { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<ListaEspera> ListasEspera { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
