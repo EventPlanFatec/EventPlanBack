@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Domain.Entities;
+using EventPlanApp.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventPlanApp.API.Controllers
@@ -12,12 +14,17 @@ namespace EventPlanApp.API.Controllers
         private readonly IEventoService _eventoService;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly IEventoRepository _eventoRepository;
 
         public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService)
         {
             _eventoService = eventoService;
             _mapper = mapper;
             _emailService = emailService; 
+        }
+        public EventoController(IEventoRepository eventoRepository)
+        {
+            _eventoRepository = eventoRepository ?? throw new ArgumentNullException(nameof(eventoRepository));
         }
 
         [HttpGet]
@@ -88,6 +95,8 @@ namespace EventPlanApp.API.Controllers
             return Ok(evento);
         }
 
+
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
@@ -104,6 +113,48 @@ namespace EventPlanApp.API.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEvent(int id, [FromBody] Evento eventoAtualizado)
+        {
+            if (id != eventoAtualizado.EventoId)
+            {
+                return BadRequest("O ID do evento na URL não corresponde ao ID do evento no corpo da requisição.");
+            }
+
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var eventoExistente = await _eventoRepository.GetByIdAsync(id);
+                if (eventoExistente == null)
+                {
+                    return NotFound("Evento não encontrado.");
+                }
+
+                // Use o método de atualização
+                eventoExistente.AtualizarEvento(
+                    eventoAtualizado.NomeEvento,
+                    eventoAtualizado.DataInicio,
+                    eventoAtualizado.DataFim,
+                    eventoAtualizado.HorarioInicio,
+                    eventoAtualizado.HorarioFim,
+                    eventoAtualizado.LotacaoMaxima
+                );
+
+                // Salvar as alterações no banco de dados
+                await _eventoRepository.UpdateAsync(eventoExistente);
+
+                return NoContent(); // 204 No Content
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao atualizar o evento: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}/senha")]
