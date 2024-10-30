@@ -15,5 +15,6 @@ namespace EventPlanApp.Domain.Interfaces
         Task UpdateAsync(Ingresso ingresso);
         Task DeleteAsync(int ingressoId);
 
+        
     }
 }
