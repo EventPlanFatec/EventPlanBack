@@ -12,6 +12,7 @@ namespace EventPlanApp.Infra.Data.Repositories
     {
         public EventoRepository(EventPlanContext context) : base(context)
         {
+
         }
 
         public async Task<Evento> AdicionarEventoComSenhaAsync(Evento evento, string senha)
@@ -55,6 +56,11 @@ namespace EventPlanApp.Infra.Data.Repositories
         {
             _context.ListasEspera.Remove(listaEspera);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Evento> GetByIdAsync(int eventoId)
+        {
+            return await _context.Eventos.FindAsync(eventoId);
         }
     }
 }

@@ -10,5 +10,8 @@ namespace EventPlanApp.Application.Interfaces
     public interface IEmailService
     {
         Task SendEmailAsync(MensagemEmail mensagemEmail);
+
+        Task SendEmailWithAttachmentAsync(string to, string subject, string body, byte[] attachment);
+
     }
 }

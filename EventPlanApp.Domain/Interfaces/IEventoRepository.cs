@@ -11,5 +11,6 @@ namespace EventPlanApp.Domain.Interfaces
         Task<IEnumerable<Evento>> ObterEventosLotadosAsync();
         Task<IEnumerable<UsuarioFinal>> ObterUsuariosListaEsperaAsync(int eventoId);
         Task RemoverListaEsperaAsync(ListaEspera listaEspera);
+        Task<Evento> GetByIdAsync(int eventoId);
     }
 }
