@@ -3,7 +3,9 @@ using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
+using EventPlanApp.Infra.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace EventPlanApp.API.Controllers
 {
@@ -15,12 +17,16 @@ namespace EventPlanApp.API.Controllers
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly IEventoRepository _eventoRepository;
+        private readonly IIngressoRepository _ingressoRepository;
+        private readonly ILogger<EventoController> _logger;
 
-        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService)
+        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService, IIngressoRepository ingressoRepository, ILogger<EventoController> logger)
         {
             _eventoService = eventoService;
             _mapper = mapper;
-            _emailService = emailService; 
+            _emailService = emailService;
+            _ingressoRepository = ingressoRepository;
+            _logger = logger;
         }
         public EventoController(IEventoRepository eventoRepository)
         {
@@ -93,6 +99,40 @@ namespace EventPlanApp.API.Controllers
             }
 
             return Ok(evento);
+        }
+
+        [HttpDelete("{id1}")]
+        public async Task<IActionResult> CancelarEvento(int id)
+        {
+            var evento = await _eventoRepository.GetByIdAsync(id);
+            if (evento == null)
+            {
+                return NotFound("Evento não encontrado.");
+            }
+
+            // Atualizar status do evento para cancelado
+            evento.Cancelar();
+            await _eventoRepository.UpdateAsync(evento);
+
+            // Obter todos os ingressos do evento
+            var ingressos = await _ingressoRepository.GetByEventoIdAsync(id);
+            foreach (var ingresso in ingressos)
+            {
+                // Enviar notificação de cancelamento
+                var mensagemEmail = new MensagemEmail
+                {
+                    Destinatario = ingresso.UsuarioFinal.Email,
+                    Assunto = $"Cancelamento do Evento: {evento.NomeEvento}",
+                    Conteudo = $"O evento {evento.NomeEvento} foi cancelado. Detalhes sobre o reembolso: ... "
+                };
+
+                await _emailService.SendEmailAsync(mensagemEmail);
+
+                // Registrar log do envio
+                _logger.LogInformation($"Notificação enviada para {ingresso.UsuarioFinal.Email} sobre o cancelamento do evento {evento.NomeEvento}.");
+            }
+
+            return Ok("Evento cancelado e notificações enviadas.");
         }
 
 

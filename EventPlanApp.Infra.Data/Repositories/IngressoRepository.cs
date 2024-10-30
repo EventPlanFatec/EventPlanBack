@@ -49,5 +49,11 @@ namespace EventPlanApp.Infra.Data.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<IEnumerable<Ingresso>> GetByEventoIdAsync(int eventoId)
+        {
+            return await _context.Ingressos
+                .Where(i => i.EventoId == eventoId)
+                .ToListAsync();
+        }
     }
 }
