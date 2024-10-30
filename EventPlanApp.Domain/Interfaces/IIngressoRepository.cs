@@ -14,7 +14,8 @@ namespace EventPlanApp.Domain.Interfaces
         Task<IEnumerable<Ingresso>> GetAllAsync();
         Task UpdateAsync(Ingresso ingresso);
         Task DeleteAsync(int ingressoId);
+        Task<IEnumerable<Ingresso>> GetByEventoIdAsync(int eventoId);
 
-        
+
     }
 }

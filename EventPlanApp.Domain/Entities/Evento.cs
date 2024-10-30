@@ -16,11 +16,19 @@ namespace EventPlanApp.Domain.Entities
         public int LotacaoMaxima { get; private set; }
         public int EnderecoId { get; private set; }
         public Endereco Endereco { get; private set; }
+        public EventoStatus Status { get; private set; }
         public string Imagens
         {
             get => string.Join(",", _imagens);
             private set => _imagens = value?.Split(',').ToList() ?? new List<string>();
         }
+
+        public enum EventoStatus
+        {
+            Ativo,
+            Cancelado
+        }
+
 
         private List<string> _imagens = new List<string>();
 
@@ -54,9 +62,14 @@ namespace EventPlanApp.Domain.Entities
             HorarioFim = horarioFim;
             LotacaoMaxima = lotacaoMaxima;
             Endereco = endereco;
+            Status = EventoStatus.Ativo;
             Imagens = string.Join(",", imagens);
             Video = video;
             Genero = genero;
+        }
+        public void Cancelar()
+        {
+            Status = EventoStatus.Cancelado;
         }
 
         public Evento() { }
