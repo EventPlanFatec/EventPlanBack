@@ -68,6 +68,16 @@ namespace EventPlanApp.Domain.Entities
                 ListasEspera.Add(new ListaEspera { UsuarioFinal = usuario, Evento = this });
             }
         }
+        public void AtualizarEvento(string nomeEvento, DateTime dataInicio, DateTime dataFim, TimeSpan horarioInicio, TimeSpan horarioFim, int lotacaoMaxima)
+        {
+            NomeEvento = nomeEvento;
+            DataInicio = dataInicio;
+            DataFim = dataFim;
+            HorarioInicio = horarioInicio;
+            HorarioFim = horarioFim;
+            LotacaoMaxima = lotacaoMaxima;
+            
+        }
 
         private void ValidateDomain(string nomeEvento, string descricao, DateTime dataInicio,
                                     DateTime dataFim, TimeSpan horarioInicio, TimeSpan horarioFim,
