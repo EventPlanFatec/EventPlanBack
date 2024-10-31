@@ -5,15 +5,19 @@ using BCrypt.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace EventPlanApp.Infra.Data.Repositories
 {
     public class EventoRepository : BaseRepository<Evento>, IEventoRepository
     {
+        private readonly EventPlanContext _context;
         public EventoRepository(EventPlanContext context) : base(context)
         {
+            _context = context;
 
         }
+
 
         public async Task<Evento> AdicionarEventoComSenhaAsync(Evento evento, string senha)
         {
@@ -68,5 +72,12 @@ namespace EventPlanApp.Infra.Data.Repositories
             _context.Eventos.Update(evento);
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<Evento>> FindAsync(Expression<Func<Evento, bool>> predicate)
+        {
+            return await _context.Eventos
+                .Where(predicate)
+                .ToListAsync();
+        }
+
     }
 }

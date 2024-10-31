@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace EventPlanApp.Infra.Data.Repositories
 {
@@ -48,6 +49,10 @@ namespace EventPlanApp.Infra.Data.Repositories
             _context.Entry(existingEntity).CurrentValues.SetValues(entity);
             await _context.SaveChangesAsync();
             return existingEntity;
+        }
+        public async Task<TEntity> GetByIdAsync(int id)
+        {
+            return await _context.Set<TEntity>().FindAsync(id);
         }
     }
 }
