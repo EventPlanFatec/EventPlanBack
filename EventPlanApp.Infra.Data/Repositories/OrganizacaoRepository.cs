@@ -40,6 +40,12 @@ namespace EventPlanApp.Infra.Data.Repositories
 
         public async Task UpdateAsync(Organizacao entity)
         {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity), "A organização não pode ser nula.");
+            }
+
+            // Se necessário, você pode adicionar lógica para verificar se a entidade existe no banco de dados antes de atualizar.
             _context.Organizacoes.Update(entity);
             await _context.SaveChangesAsync();
         }
