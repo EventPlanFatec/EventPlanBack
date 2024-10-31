@@ -1,5 +1,6 @@
 ﻿using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace EventPlanApp.Infra.Data.Repositories
 {
-    public class RoleRepository : IRoleRepository
+    public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
         private readonly EventPlanContext _context;
 
-        public RoleRepository(EventPlanContext context)
+        public RoleRepository(EventPlanContext context) : base(context)
         {
             _context = context;
         }
@@ -22,6 +23,10 @@ namespace EventPlanApp.Infra.Data.Repositories
         {
             await _context.Roles.AddAsync(role);
             await _context.SaveChangesAsync();
+        }
+        public async Task<bool> RoleExistsAsync(Guid roleId)
+        {
+            return await _context.Roles.AnyAsync(role => role.Id == roleId);
         }
     }
 }
