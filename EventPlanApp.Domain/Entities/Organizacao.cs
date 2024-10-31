@@ -1,21 +1,24 @@
 ﻿using EventPlanApp.Domain.Entities;
+using System.Net.NetworkInformation;
 
 public class Organizacao
 {
     public int OrganizacaoId { get; private set; }
     public string CNPJ { get; private set; }
     public decimal NotaMedia { get; private set; }
+    public string Status { get; private set; }
     public virtual Endereco Endereco { get; private set; } 
     public virtual ICollection<UsuarioAdm> UsuariosAdm { get; private set; } = new List<UsuarioAdm>();
     public virtual ICollection<Evento> Eventos { get; private set; } = new List<Evento>();
 
-    public Organizacao(string cnpj, Endereco endereco, decimal notaMedia)
+    public Organizacao(string cnpj, Endereco endereco, decimal notaMedia, string status)
     {
         ValidateDomain(cnpj, notaMedia);
         OrganizacaoId = new Random().Next(1, 1000);
         CNPJ = cnpj; 
         Endereco = endereco; 
-        NotaMedia = notaMedia; 
+        NotaMedia = notaMedia;
+        Status = status;
     }
 
     public Organizacao() { }

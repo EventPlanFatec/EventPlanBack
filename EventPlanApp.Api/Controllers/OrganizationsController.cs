@@ -1,5 +1,6 @@
 ﻿using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventPlanApp.Api.Controllers
@@ -9,6 +10,7 @@ namespace EventPlanApp.Api.Controllers
     public class OrganizationsController : ControllerBase
     {
         private readonly IOrganizacaoService _organizacaoService;
+        private readonly IOrganizacaoRepository _organizacaoRepository;
 
         public OrganizationsController(IOrganizacaoService organizacaoService)
         {
@@ -30,6 +32,18 @@ namespace EventPlanApp.Api.Controllers
             }
 
             return BadRequest(result.Message);
+        }
+
+        [HttpGet("{id}/status")]
+        public async Task<IActionResult> GetStatus(int id)
+        {
+            var organizacao = await _organizacaoRepository.GetByIdAsync(id);
+            if (organizacao == null)
+            {
+                return NotFound("Organização não encontrada.");
+            }
+
+            return Ok(new { Status = organizacao.Status }); // Retornar o status
         }
     }
 }

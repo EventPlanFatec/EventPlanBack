@@ -10,13 +10,15 @@ namespace EventPlanApp.Tests.Domain.Entities
         {
             // Arrange
             var endereco = new Endereco("Rua", "Logradouro Teste", "123", "Centro", "Cidade Teste", "SP", "00000000");
+            var status = "Aprovado";
             // Act
-            var organizacao = new Organizacao("12345678000195", endereco, 8.5m);
+            var organizacao = new Organizacao("12345678000195", endereco, 8.5m, status);
 
             // Assert
             Assert.NotNull(organizacao);
             Assert.Equal("12345678000195", organizacao.CNPJ);
-            Assert.Equal(endereco, organizacao.Endereco); // Verifica se o endereço foi atribuído corretamente
+            Assert.Equal(endereco, organizacao.Endereco);
+            Assert.Equal(status, organizacao.Status);
         }
 
         [Fact]
@@ -24,8 +26,9 @@ namespace EventPlanApp.Tests.Domain.Entities
         {
             // Arrange
             var endereco = new Endereco("Rua", "Logradouro Teste", "123", "Centro", "Cidade Teste", "SP", "00000000");
+            var status = "Aprovado";
             // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => new Organizacao("", endereco, 8.5m));
+            var ex = Assert.Throws<ArgumentException>(() => new Organizacao("", endereco, 8.5m, status));
             Assert.Equal("O CNPJ deve ter 14 caracteres e é obrigatório.", ex.Message);
         }
 
@@ -34,9 +37,11 @@ namespace EventPlanApp.Tests.Domain.Entities
         {
             // Arrange
             var endereco = new Endereco("Rua", "Logradouro Teste", "123", "Centro", "Cidade Teste", "SP", "00000000");
+            var status = "Aprovado";
             // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => new Organizacao("12345678000195", endereco, 11));
+            var ex = Assert.Throws<ArgumentException>(() => new Organizacao("12345678000195", endereco, 11, status));
             Assert.Equal("A nota média deve estar entre 0 e 10.", ex.Message);
         }
+        
     }
 }
