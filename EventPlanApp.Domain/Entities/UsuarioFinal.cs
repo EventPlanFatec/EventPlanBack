@@ -26,7 +26,8 @@ namespace EventPlanApp.Domain.Entities
         public DateTime DataNascimento { get; private set; }
 
         public ICollection<Ingresso> Ingressos { get; set; } = new List<Ingresso>();
-        public virtual ICollection<ListaEspera> ListasEspera { get; set; } = new List<ListaEspera>(); 
+        public virtual ICollection<ListaEspera> ListasEspera { get; set; } = new List<ListaEspera>();
+        public Guid? RoleId { get; private set; }
         public UsuarioFinal(string nome, string sobrenome, Endereco endereco, string email,
                             string telefone, string ddd, DateTime dataNascimento)
         {
@@ -70,6 +71,10 @@ namespace EventPlanApp.Domain.Entities
             Telefone = telefone;
             DDD = ddd;
             DataNascimento = dataNascimento;
+        }
+        public void AssignRole(Guid roleId)
+        {
+            RoleId = roleId;
         }
     }
 }
