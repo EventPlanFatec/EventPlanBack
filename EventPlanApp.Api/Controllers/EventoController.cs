@@ -6,6 +6,9 @@ using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventPlanApp.API.Controllers
 {
@@ -27,6 +30,27 @@ namespace EventPlanApp.API.Controllers
             _emailService = emailService;
             _ingressoRepository = ingressoRepository;
             _logger = logger;
+        }
+
+        [HttpGet("{id}/compartilhar/facebook")]
+        public IActionResult CompartilharNoFacebook(int id)
+        {
+            var eventoUrl = GerarLinkDoEvento(id);
+            var facebookShareUrl = $"https://www.facebook.com/sharer/sharer.php?u={Uri.EscapeDataString(eventoUrl)}";
+            return Redirect(facebookShareUrl);
+        }
+
+        [HttpGet("{id}/compartilhar/whatsapp")]
+        public IActionResult CompartilharNoWhatsapp(int id)
+        {
+            var eventoUrl = GerarLinkDoEvento(id);
+            var whatsappShareUrl = $"https://wa.me/?text={Uri.EscapeDataString(eventoUrl)}";
+            return Redirect(whatsappShareUrl);
+        }
+
+        private string GerarLinkDoEvento(int id)
+        {
+            return $"http://{id}/evento";
         }
         public EventoController(IEventoRepository eventoRepository)
         {
