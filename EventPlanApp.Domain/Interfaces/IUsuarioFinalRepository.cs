@@ -6,5 +6,7 @@ namespace EventPlanApp.Domain.Interfaces
     {
         Task<UsuarioFinal> GetByEmailAsync(string email);
         Task<IEnumerable<UsuarioFinal>> GetByNameAsync(string nome);
+        Task<UsuarioFinal> GetByIdAsync(Guid id); // Adicionando o método para buscar usuário pelo ID
+        Task UpdateAsync(UsuarioFinal usuarioFinal);
     }
 }
