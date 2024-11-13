@@ -1,4 +1,5 @@
-﻿using EventPlanApp.Domain.Interfaces;
+﻿using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace EventPlanApp.Api.Controllers
     public class FavoritesController : Controller
     {
         private readonly IFavoritesRepository _favoritesRepository;
+        private readonly FavoriteService _favoriteService;
 
-        public FavoritesController(IFavoritesRepository favoritesRepository)
+        public FavoritesController(IFavoritesRepository favoritesRepository, FavoriteService favoriteService)
         {
             _favoritesRepository = favoritesRepository;
+            _favoriteService = favoriteService;
         }
 
         [HttpPost]
@@ -36,6 +39,19 @@ namespace EventPlanApp.Api.Controllers
             // Adiciona o evento aos favoritos
             await _favoritesRepository.AddToFavoritesAsync(userId, eventId);
             return Ok("Evento adicionado aos favoritos.");
+        }
+        [HttpGet]
+        [Route("{userId}")]
+        public async Task<IActionResult> GetFavorites(string userId)
+        {
+            var favorites = await _favoriteService.GetFavoritesByUserIdAsync(userId);
+
+            if (favorites == null || !favorites.Any())
+            {
+                return NotFound("Nenhum favorito encontrado.");
+            }
+
+            return Ok(favorites);
         }
     }
 }

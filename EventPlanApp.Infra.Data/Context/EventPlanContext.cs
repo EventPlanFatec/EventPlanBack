@@ -16,6 +16,7 @@ namespace EventPlanApp.Infra.Data
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<ListaEspera> ListasEspera { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
