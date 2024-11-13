@@ -28,6 +28,7 @@ namespace EventPlanApp.Domain.Entities
         public ICollection<Ingresso> Ingressos { get; set; } = new List<Ingresso>();
         public virtual ICollection<ListaEspera> ListasEspera { get; set; } = new List<ListaEspera>();
         public Guid? RoleId { get; private set; }
+        public string Tema { get; private set; } = "light"; // Padrão: "light"
         public UsuarioFinal(string nome, string sobrenome, Endereco endereco, string email,
                             string telefone, string ddd, DateTime dataNascimento)
         {
@@ -75,6 +76,14 @@ namespace EventPlanApp.Domain.Entities
         public void AssignRole(Guid roleId)
         {
             RoleId = roleId;
+        }
+
+        public void SetTema(string tema)
+        {
+            if (tema != "light" && tema != "dark")
+                throw new ArgumentException("Tema inválido. Escolha entre 'light' ou 'dark'.");
+
+            Tema = tema;
         }
     }
 }

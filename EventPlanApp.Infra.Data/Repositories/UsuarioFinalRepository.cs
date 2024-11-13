@@ -25,5 +25,16 @@ namespace EventPlanApp.Infra.Data.Repositories
         {
             return await _context.Set<UsuarioFinal>().Where(predicate).ToListAsync();
         }
+
+        public async Task<UsuarioFinal> GetByIdAsync(Guid id)
+        {
+            return await _context.UsuariosFinais.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(UsuarioFinal usuarioFinal)
+        {
+            _context.UsuariosFinais.Update(usuarioFinal);
+            await _context.SaveChangesAsync();
+        }
     }
 }
