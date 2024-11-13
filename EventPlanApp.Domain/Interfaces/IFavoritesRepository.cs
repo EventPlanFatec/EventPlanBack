@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventPlanApp.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,8 @@ namespace EventPlanApp.Domain.Interfaces
 {
     public interface IFavoritesRepository
     {
-        Task<bool> IsEventFavoritedByUserAsync(string userId, int eventId);
-        Task AddToFavoritesAsync(string userId, int eventId);
+        Task<bool> IsEventFavoritedByUserAsync(string userId, int eventoId);
+        Task AddToFavoritesAsync(string userId, int eventoId);
+        Task<IEnumerable<Favorite>> GetFavoritesByUserIdAsync(string userId);
     }
 }
