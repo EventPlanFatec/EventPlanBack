@@ -12,5 +12,6 @@ namespace EventPlanApp.Domain.Interfaces
         Task<Volunteer> AddAsync(Volunteer volunteer);
         Task<Volunteer> GetByIdAsync(int id);
         Task<IEnumerable<Volunteer>> GetAllAsync();
+        Task<Volunteer> UpdateAsync(Volunteer volunteer);
     }
 }
