@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using EventPlanApp.Application.DTOs;
 using EventPlanApp.Domain.Interfaces;
+using EventPlanApp.Infra.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventPlanApp.Application.Interfaces
+namespace EventPlanApp.Application.Services
 {
     public class FavoriteService
     {
@@ -26,6 +27,12 @@ namespace EventPlanApp.Application.Interfaces
 
             // Retorna os eventos favoritos mapeados para DTOs
             return favorites.Select(f => _mapper.Map<EventoDto>(f.Evento)).ToList();
+        }
+        public async Task<bool> RemoveFromFavoritesAsync(string userId, int eventId)
+        {
+            // Remove a relação entre o usuário e o evento no banco de dados
+            var success = await _favoriteRepository.RemoveFavoriteAsync(userId, eventId);
+            return success;
         }
     }
 }

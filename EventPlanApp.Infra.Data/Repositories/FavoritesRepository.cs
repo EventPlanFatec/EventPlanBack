@@ -44,5 +44,16 @@ namespace EventPlanApp.Infra.Data.Repositories
                 .OrderBy(f => f.Evento.DataInicio)  // Ordenar pela data de início do evento
                 .ToListAsync();
         }
+        public async Task<bool> RemoveFavoriteAsync(string userId, int eventoId)
+        {
+            // Remove a relação entre o usuário e o evento
+            var favorite = await _context.Favorites
+                                          .FirstOrDefaultAsync(f => f.UserId == userId && f.EventoId == eventoId);
+            if (favorite == null) return false;
+
+            _context.Favorites.Remove(favorite);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
