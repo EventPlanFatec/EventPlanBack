@@ -18,6 +18,7 @@ namespace EventPlanApp.Infra.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Volunteer> Volunteers { get; set; }
+        public DbSet<UserPreferences> UserPreferences { get; set; }
 
 
 
