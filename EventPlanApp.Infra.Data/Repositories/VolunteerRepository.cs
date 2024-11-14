@@ -38,5 +38,14 @@ namespace EventPlanApp.Infra.Data.Repositories
         {
             return await _context.Volunteers.ToListAsync();
         }
+
+        // Atualiza as informações do voluntário
+        public async Task<Volunteer> UpdateAsync(Volunteer volunteer)
+        {
+            _context.Volunteers.Update(volunteer);
+            await _context.SaveChangesAsync();
+            return volunteer;
+        }
+
     }
 }
