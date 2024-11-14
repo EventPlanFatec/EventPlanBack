@@ -12,5 +12,8 @@ namespace EventPlanApp.Domain.Interfaces
         Task<bool> IsEventFavoritedByUserAsync(string userId, int eventoId);
         Task AddToFavoritesAsync(string userId, int eventoId);
         Task<IEnumerable<Favorite>> GetFavoritesByUserIdAsync(string userId);
+
+        Task<bool> RemoveFavoriteAsync(string userId, int eventoId);
     }
+
 }

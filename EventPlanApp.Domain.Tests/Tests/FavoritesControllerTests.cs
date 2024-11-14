@@ -1,6 +1,6 @@
 ﻿using EventPlanApp.Api.Controllers;
 using EventPlanApp.Application.DTOs;
-using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -120,5 +120,64 @@ namespace EventPlanApp.Domain.Tests
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("Nenhum favorito encontrado.", notFoundResult.Value);
         }
+
+        [Fact]
+        public async Task RemoveFromFavorites_EventNotFavorited_ShouldReturnBadRequest()
+        {
+            // Arrange
+            var userId = "user123";
+            var eventId = 1;
+            _favoritesRepositoryMock.Setup(r => r.IsEventFavoritedByUserAsync(userId, eventId))
+                                    .ReturnsAsync(false);
+
+            _controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext()
+            {
+                HttpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext()
+                {
+                    User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(new System.Security.Claims.Claim[]
+                    {
+                        new System.Security.Claims.Claim("userId", userId)
+                    }))
+                }
+            };
+
+            // Act
+            var result = await _controller.RemoveFromFavorites(eventId);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Este evento não está nos favoritos.", badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task RemoveFromFavorites_SuccessfullyRemoved_ShouldReturnOk()
+        {
+            // Arrange
+            var userId = "user123";
+            var eventId = 1;
+            _favoritesRepositoryMock.Setup(r => r.IsEventFavoritedByUserAsync(userId, eventId))
+                                    .ReturnsAsync(true);
+            _favoritesRepositoryMock.Setup(r => r.RemoveFavoriteAsync(userId, eventId))
+                                    .ReturnsAsync(true);
+
+            _controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext()
+            {
+                HttpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext()
+                {
+                    User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(new System.Security.Claims.Claim[]
+                    {
+                        new System.Security.Claims.Claim("userId", userId)
+                    }))
+                }
+            };
+
+            // Act
+            var result = await _controller.RemoveFromFavorites(eventId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("Evento removido dos favoritos.", okResult.Value);
+        }
+
     }
 }

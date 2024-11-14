@@ -1,4 +1,4 @@
-﻿using EventPlanApp.Application.Interfaces;
+﻿using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +52,28 @@ namespace EventPlanApp.Api.Controllers
             }
 
             return Ok(favorites);
+        }
+        [HttpDelete("{eventId}")]
+        public async Task<IActionResult> RemoveFromFavorites(int eventoId)
+        {
+            // Recupera o ID do usuário autenticado
+            var userId = User.Identity.Name;
+
+            // Verifica se o evento está nos favoritos
+            var isFavorited = await _favoritesRepository.IsEventFavoritedByUserAsync(userId, eventoId);
+            if (!isFavorited)
+            {
+                return BadRequest("Este evento não está nos favoritos.");
+            }
+
+            // Remove o evento dos favoritos
+            var result = await _favoriteService.RemoveFromFavoritesAsync(userId, eventoId);
+            if (result)
+            {
+                return Ok("Evento removido dos favoritos.");
+            }
+
+            return StatusCode(500, "Erro ao remover o evento dos favoritos.");
         }
     }
 }
