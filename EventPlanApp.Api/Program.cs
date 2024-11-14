@@ -5,6 +5,7 @@ using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data.Repositories;
+using FluentValidation.AspNetCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EventPlanContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddApplicationServices(); 
+builder.Services.AddApplicationServices();
+
 
 builder.Services.AddCors(options =>
 {
