@@ -60,5 +60,10 @@ namespace EventPlanApp.Application.Services
 
             return volunteer;
         }
+        public async Task<bool> DeleteVolunteerAsync(int id)
+        {
+            // Chama o repositório para excluir o voluntário
+            return await _repository.DeleteAsync(id);
+        }
     }
 }

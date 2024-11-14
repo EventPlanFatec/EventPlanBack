@@ -68,5 +68,19 @@ namespace EventPlanApp.Api.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVolunteerAsync(int id)
+        {
+            // Chama o serviço para excluir o voluntário
+            var result = await _volunteerService.DeleteVolunteerAsync(id);
+
+            if (!result)
+            {
+                return NotFound(new { message = "Voluntário não encontrado." });
+            }
+
+            return NoContent(); // Retorna 204 No Content se a remoção for bem-sucedida
+        }
     }
 }

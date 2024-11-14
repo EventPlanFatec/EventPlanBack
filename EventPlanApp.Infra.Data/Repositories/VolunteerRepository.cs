@@ -47,5 +47,22 @@ namespace EventPlanApp.Infra.Data.Repositories
             return volunteer;
         }
 
+
+        // Implementação do método DeleteAsync
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var volunteer = await _context.Volunteers
+                .FirstOrDefaultAsync(v => v.Id == id);
+
+            if (volunteer == null)
+            {
+                return false; // Voluntário não encontrado
+            }
+
+            _context.Volunteers.Remove(volunteer);
+            await _context.SaveChangesAsync();
+            return true; // Remoção bem-sucedida
+        }
+
     }
 }
