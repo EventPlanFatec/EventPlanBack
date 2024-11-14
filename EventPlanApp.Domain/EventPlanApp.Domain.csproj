@@ -11,4 +11,12 @@
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\EventPlan\EventPlanBack\EventPlanApp.Domain\Interfaces\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\EventPlan\EventPlanBack\EventPlanApp.Domain\Interfaces\.editorconfig" />
+  </ItemGroup>
+
 </Project>

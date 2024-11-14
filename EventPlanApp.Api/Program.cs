@@ -32,6 +32,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IEventPreferenceRepository, EventPreferenceRepository>();
+builder.Services.AddScoped<IEventPreferenceService, EventPreferenceService>();
 
 var app = builder.Build();
 
