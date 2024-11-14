@@ -1,59 +1,56 @@
 ﻿using Moq;
+using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Domain.Entities;
+using EventPlanApp.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
-using FluentValidation;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using EventPlanApp.Domain.Entities;
-using Google;
-using EventPlanApp.Infra.Data;
 
 public class PreferencesControllerTests
 {
-    [Fact]
-    public async Task Post_ShouldReturnBadRequest_WhenValidationFails()
+    private readonly Mock<IEventPreferenceService> _mockEventPreferenceService;
+    private readonly Mock<UserPreferencesValidator> _mockUserPreferencesValidator;
+    private readonly EventPlanContext _context;
+    private readonly PreferencesController _controller;
+
+    public PreferencesControllerTests()
     {
-        var mockContext = new Mock<EventPlanContext>();
-        var validator = new UserPreferencesValidator();
+        // Criando um mock para o IEventPreferenceService
+        _mockEventPreferenceService = new Mock<IEventPreferenceService>();
 
-        var controller = new PreferencesController(mockContext.Object, validator);
+        // Criando um mock para o UserPreferencesValidator
+        _mockUserPreferencesValidator = new Mock<UserPreferencesValidator>();
 
-        var invalidPreferences = new UserPreferences
-        {
-            UserId = 1,
-            EventType = "", // Tipo de evento inválido
-            Location = "",
-            PriceRange = ""
-        };
+        // Criando uma instância do contexto de dados, simulando um banco de dados
+        var options = new DbContextOptionsBuilder<EventPlanContext>()
+            .UseInMemoryDatabase(databaseName: "EventPlanTestDb")
+            .Options;
+        _context = new EventPlanContext(options);
 
-        var result = await controller.Post(invalidPreferences);
-        Assert.IsType<BadRequestObjectResult>(result);
+        // Instanciando o controlador com as dependências mockadas
+        _controller = new PreferencesController(_context, _mockUserPreferencesValidator.Object, _mockEventPreferenceService.Object);
     }
 
     [Fact]
-    public async Task Post_ShouldReturnOk_WhenPreferencesAreSavedSuccessfully()
+    public async Task SavePreferences_ValidPreferences_ReturnsOk()
     {
-        var options = new DbContextOptionsBuilder<EventPlanContext>()
-            .UseInMemoryDatabase(databaseName: "PreferencesDb")
-        .Options;
-
-        using (var context = new EventPlanContext(options))
+        // Arrange: Preparar os dados de teste
+        var preferences = new UserPreferences
         {
-            var validator = new UserPreferencesValidator();
-            var controller = new PreferencesController(context, validator);
+            UserId = 1,
+            EventType = "Music",
+            Location = "NY",
+            PriceRange = "Mid"
+        };
 
-            var preferences = new UserPreferences
-            {
-                UserId = 1,
-                EventType = "Music",
-                Location = "New York",
-                PriceRange = "Medium"
-            };
+        // Simular o comportamento do serviço
+        _mockEventPreferenceService.Setup(x => x.SavePreferencesAsync(It.IsAny<EventPreference>())).ReturnsAsync(true);
 
-            var result = await controller.Post(preferences);
+        // Act: Chamar o método no controlador
+        var result = await _controller.SavePreferences(preferences);
 
-            Assert.IsType<OkObjectResult>(result);
-        }
+        // Assert: Verificar o resultado
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal("Preferências salvas com sucesso.", okResult.Value);
     }
 }
