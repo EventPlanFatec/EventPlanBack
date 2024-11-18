@@ -3,8 +3,10 @@ using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
+using EventPlanApp.Infra.Data;
 using EventPlanApp.Infra.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +24,17 @@ namespace EventPlanApp.API.Controllers
         private readonly IEventoRepository _eventoRepository;
         private readonly IIngressoRepository _ingressoRepository;
         private readonly ILogger<EventoController> _logger;
+        private readonly EventPlanContext _context;
 
-        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService, IIngressoRepository ingressoRepository, ILogger<EventoController> logger)
+
+        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService, IIngressoRepository ingressoRepository, ILogger<EventoController> logger, EventPlanContext context)
         {
             _eventoService = eventoService;
             _mapper = mapper;
             _emailService = emailService;
             _ingressoRepository = ingressoRepository;
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet("{id}/compartilhar/facebook")]
@@ -51,10 +56,6 @@ namespace EventPlanApp.API.Controllers
         private string GerarLinkDoEvento(int id)
         {
             return $"http://{id}/evento";
-        }
-        public EventoController(IEventoRepository eventoRepository)
-        {
-            _eventoRepository = eventoRepository ?? throw new ArgumentNullException(nameof(eventoRepository));
         }
 
         [HttpGet]
@@ -111,7 +112,6 @@ namespace EventPlanApp.API.Controllers
             return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.EventoId }, createdEvent);
         }
 
-
         [HttpGet("{id}")]
         public async Task<ActionResult<EventoDto>> GetEventById(int id)
         {
@@ -134,15 +134,12 @@ namespace EventPlanApp.API.Controllers
                 return NotFound("Evento não encontrado.");
             }
 
-            // Atualizar status do evento para cancelado
             evento.Cancelar();
             await _eventoRepository.UpdateAsync(evento);
 
-            // Obter todos os ingressos do evento
             var ingressos = await _ingressoRepository.GetByEventoIdAsync(id);
             foreach (var ingresso in ingressos)
             {
-                // Enviar notificação de cancelamento
                 var mensagemEmail = new MensagemEmail
                 {
                     Destinatario = ingresso.UsuarioFinal.Email,
@@ -151,15 +148,11 @@ namespace EventPlanApp.API.Controllers
                 };
 
                 await _emailService.SendEmailAsync(mensagemEmail);
-
-                // Registrar log do envio
                 _logger.LogInformation($"Notificação enviada para {ingresso.UsuarioFinal.Email} sobre o cancelamento do evento {evento.NomeEvento}.");
             }
 
             return Ok("Evento cancelado e notificações enviadas.");
         }
-
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(int id)
@@ -200,7 +193,6 @@ namespace EventPlanApp.API.Controllers
                     return NotFound("Evento não encontrado.");
                 }
 
-                // Use o método de atualização
                 eventoExistente.AtualizarEvento(
                     eventoAtualizado.NomeEvento,
                     eventoAtualizado.DataInicio,
@@ -210,9 +202,7 @@ namespace EventPlanApp.API.Controllers
                     eventoAtualizado.LotacaoMaxima
                 );
 
-                // Salvar as alterações no banco de dados
                 await _eventoRepository.UpdateAsync(eventoExistente);
-
                 return NoContent(); // 204 No Content
             }
             catch (Exception ex)
@@ -252,8 +242,44 @@ namespace EventPlanApp.API.Controllers
                 }
             }
 
-            return NoContent(); 
+            return NoContent();
         }
 
+        [HttpPut("{id}/categorias")]
+        public async Task<IActionResult> UpdateEventCategories(int id, [FromBody] EventoDto eventoDto)
+        {
+            if (eventoDto == null || eventoDto.CategoriaIds == null || eventoDto.CategoriaIds.Count == 0)
+            {
+                return BadRequest("Evento ou categorias não fornecidos.");
+            }
+
+            var evento = await _context.Eventos
+                .Include(e => e.EventoCategorias)
+                .ThenInclude(ec => ec.Categoria)
+                .FirstOrDefaultAsync(e => e.EventoId == id);
+
+            if (evento == null)
+            {
+                return NotFound($"Evento com ID {id} não encontrado.");
+            }
+
+            evento.EventoCategorias.Clear();
+
+            foreach (var categoriaId in eventoDto.CategoriaIds)
+            {
+                var categoria = await _context.Categorias.FindAsync(categoriaId);
+                if (categoria != null)
+                {
+                    evento.EventoCategorias.Add(new EventoCategoria
+                    {
+                        EventoId = evento.EventoId,
+                        CategoriaId = categoriaId
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok("Categorias do evento atualizadas com sucesso.");
+        }
     }
 }

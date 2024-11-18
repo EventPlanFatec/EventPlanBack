@@ -7,6 +7,7 @@ namespace EventPlanApp.Domain.Entities
         public int CategoriaId { get; private set; }
         public string Nome { get; private set; }
         public virtual ICollection<Evento> Eventos { get; private set; } = new List<Evento>();
+        public ICollection<EventoCategoria> EventoCategorias { get; set; }
 
         public Categoria(string nome)
         {

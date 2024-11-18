@@ -20,6 +20,8 @@ namespace EventPlanApp.Infra.Data
         public DbSet<Volunteer> Volunteers { get; set; }
         public DbSet<UserPreferences> UserPreferences { get; set; }
         public DbSet<EventPreference> EventPreferences { get; set; }
+        public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<EventoCategoria> EventoCategorias { get; set; }
 
 
 
@@ -27,6 +29,7 @@ namespace EventPlanApp.Infra.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(EventPlanContext).Assembly);
+
         }
     }
 }
