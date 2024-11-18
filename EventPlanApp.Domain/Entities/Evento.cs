@@ -17,6 +17,7 @@ namespace EventPlanApp.Domain.Entities
         public int EnderecoId { get; private set; }
         public Endereco Endereco { get; private set; }
         public EventoStatus Status { get; private set; }
+        public List<Tag> Tags { get; set; }
         public string Imagens
         {
             get => string.Join(",", _imagens);
