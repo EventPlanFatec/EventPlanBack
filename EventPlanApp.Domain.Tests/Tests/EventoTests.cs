@@ -176,5 +176,31 @@ namespace EventPlanApp.Tests.Domain.Entities
                 TimeSpan.FromHours(10), 100, endereco, imagens, video, "Música"));
             Assert.Equal("O link do vídeo não pode exceder 200 caracteres.", ex.Message);
         }
+        [Fact]
+        public void Deve_Adicionar_Categoria_Ao_Evento()
+        {
+            var evento = new Evento("Evento Teste", "Descrição", DateTime.Now.AddDays(1), DateTime.Now.AddDays(2),
+                                    TimeSpan.FromHours(10), TimeSpan.FromHours(12), 100, new Endereco(),
+                                    new List<string> { "imagem1.png" }, "video.mp4", "Gênero");
+            var categoria = new Categoria("Música");
+
+            evento.AdicionarCategoria(categoria);
+
+            Assert.Contains(categoria, evento.Categorias);
+        }
+
+        [Fact]
+        public void Deve_Remover_Categoria_Do_Evento()
+        {
+            var evento = new Evento("Evento Teste", "Descrição", DateTime.Now.AddDays(1), DateTime.Now.AddDays(2),
+                                    TimeSpan.FromHours(10), TimeSpan.FromHours(12), 100, new Endereco(),
+                                    new List<string> { "imagem1.png" }, "video.mp4", "Gênero");
+            var categoria = new Categoria("Música");
+            evento.AdicionarCategoria(categoria);
+
+            evento.RemoverCategoria(categoria);
+
+            Assert.DoesNotContain(categoria, evento.Categorias);
+        }
     }
 }
