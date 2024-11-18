@@ -24,13 +24,6 @@ namespace EventPlanApp.Domain.Entities
             private set => _imagens = value?.Split(',').ToList() ?? new List<string>();
         }
 
-        public enum EventoStatus
-        {
-            Ativo,
-            Cancelado
-        }
-
-
         private List<string> _imagens = new List<string>();
 
         public string Video { get; private set; }
@@ -48,6 +41,11 @@ namespace EventPlanApp.Domain.Entities
         public bool IsPrivate { get; set; }
         public string? PasswordHash { get; set; }
 
+        public enum EventoStatus
+        {
+            Ativo,
+            Cancelado
+        }
 
         // Construtor
         public Evento(string nomeEvento, string descricao, DateTime dataInicio, DateTime dataFim,
@@ -70,6 +68,7 @@ namespace EventPlanApp.Domain.Entities
             Video = video;
             Genero = genero;
         }
+
         public void Cancelar()
         {
             Status = EventoStatus.Cancelado;
@@ -79,11 +78,12 @@ namespace EventPlanApp.Domain.Entities
 
         public void AdicionarUsuarioListaEspera(UsuarioFinal usuario)
         {
-            if (!ListasEspera.Any(l => l.UsuarioFinalId == usuario.Id)) 
+            if (!ListasEspera.Any(l => l.UsuarioFinalId == usuario.Id))
             {
                 ListasEspera.Add(new ListaEspera { UsuarioFinal = usuario, Evento = this });
             }
         }
+
         public void AtualizarEvento(string nomeEvento, DateTime dataInicio, DateTime dataFim, TimeSpan horarioInicio, TimeSpan horarioFim, int lotacaoMaxima)
         {
             NomeEvento = nomeEvento;
@@ -92,7 +92,6 @@ namespace EventPlanApp.Domain.Entities
             HorarioInicio = horarioInicio;
             HorarioFim = horarioFim;
             LotacaoMaxima = lotacaoMaxima;
-            
         }
 
         public void AdicionarCategoria(Categoria categoria)
