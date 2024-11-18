@@ -281,5 +281,35 @@ namespace EventPlanApp.API.Controllers
             await _context.SaveChangesAsync();
             return Ok("Categorias do evento atualizadas com sucesso.");
         }
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<EventoDto>>> SearchEvents([FromQuery] string q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                return BadRequest("A palavra-chave de pesquisa não pode ser vazia.");
+            }
+
+            var events = await _context.Eventos
+                .Where(e => e.NomeEvento.Contains(q) ||
+                            e.Descricao.Contains(q) ||
+                            e.Tags.Any(t => t.Nome.Contains(q)))  // Verificando se o nome da tag contém a palavra-chave
+                .Select(e => new EventoDto
+                {
+                    EventoId = e.EventoId,
+                    NomeEvento = e.NomeEvento,
+                    Descricao = e.Descricao,
+                    Tags = e.Tags.Select(t => t.Nome).ToList(),  // Converte a lista de objetos Tag para uma lista de strings
+                    
+                })
+                .ToListAsync();
+
+            if (events == null || !events.Any())
+            {
+                return NotFound("Nenhum evento encontrado com a palavra-chave fornecida.");
+            }
+
+            return Ok(events);
+        }
+
     }
 }

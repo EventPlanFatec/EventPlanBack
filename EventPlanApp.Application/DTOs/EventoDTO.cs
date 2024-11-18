@@ -16,6 +16,7 @@ namespace EventPlanApp.Application.DTOs
         public EnderecoDto? Endereco { get; set; } 
         public List<string>? Imagens { get; set; }
         public List<int> CategoriaIds { get; set; }
+        public List<string> Tags { get; set; }
         public string? Video { get; set; }        
         public decimal? NotaMedia { get; set; }    
         public string? Genero { get; set; }      
