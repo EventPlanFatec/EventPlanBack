@@ -38,6 +38,7 @@ namespace EventPlanApp.Domain.Entities
         public ICollection<Ingresso> Ingressos { get; private set; } = new List<Ingresso>();
         public virtual ICollection<ListaEspera> ListasEspera { get; private set; } = new List<ListaEspera>();
         public virtual ICollection<UsuarioFinal> UsuariosFinais { get; private set; } = new List<UsuarioFinal>();
+        public virtual ICollection<Categoria> Categorias { get; private set; } = new List<Categoria>();
         public int OrganizacaoId { get; private set; }
         public Organizacao Organizacao { get; private set; }
         public int IngressosVendidos => Ingressos.Count;
@@ -90,6 +91,24 @@ namespace EventPlanApp.Domain.Entities
             HorarioFim = horarioFim;
             LotacaoMaxima = lotacaoMaxima;
             
+        }
+
+        public void AdicionarCategoria(Categoria categoria)
+        {
+            if (categoria == null)
+                throw new ArgumentException("Categoria não pode ser nula.");
+
+            if (!Categorias.Any(c => c.CategoriaId == categoria.CategoriaId))
+                Categorias.Add(categoria);
+        }
+
+        public void RemoverCategoria(Categoria categoria)
+        {
+            if (categoria == null)
+                throw new ArgumentException("Categoria não pode ser nula.");
+
+            if (Categorias.Any(c => c.CategoriaId == categoria.CategoriaId))
+                Categorias.Remove(categoria);
         }
 
         private void ValidateDomain(string nomeEvento, string descricao, DateTime dataInicio,
