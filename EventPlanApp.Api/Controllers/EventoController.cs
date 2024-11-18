@@ -311,5 +311,45 @@ namespace EventPlanApp.API.Controllers
             return Ok(events);
         }
 
+        // GET: api/events
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetEvents(
+            [FromQuery] DateTime? dataInicio,
+            [FromQuery] DateTime? dataFim,
+            [FromQuery] string localizacao,
+            [FromQuery] string tipoEvento)
+        {
+            var query = _context.Eventos.AsQueryable();
+
+            // Filtro por data de início
+            if (dataInicio.HasValue)
+            {
+                query = query.Where(e => e.DataInicio >= dataInicio.Value);
+            }
+
+            // Filtro por data de fim
+            if (dataFim.HasValue)
+            {
+                query = query.Where(e => e.DataFim <= dataFim.Value);
+            }
+
+            // Filtro por localização (cidade, estado)
+            if (!string.IsNullOrEmpty(localizacao))
+            {
+                query = query.Where(e => e.Endereco.Cidade.Contains(localizacao) || e.Endereco.Estado.Contains(localizacao));
+            }
+
+            // Filtro por tipo de evento (gênero)
+            if (!string.IsNullOrEmpty(tipoEvento))
+            {
+                query = query.Where(e => e.Genero.Contains(tipoEvento));
+            }
+
+            // Carregar os eventos filtrados
+            var eventos = await query.ToListAsync();
+
+            return Ok(eventos);
+        }
+
     }
 }
