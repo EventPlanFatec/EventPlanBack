@@ -52,10 +52,6 @@ namespace EventPlanApp.API.Controllers
         {
             return $"http://{id}/evento";
         }
-        public EventoController(IEventoRepository eventoRepository)
-        {
-            _eventoRepository = eventoRepository ?? throw new ArgumentNullException(nameof(eventoRepository));
-        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventoDto>>> GetEvents()
