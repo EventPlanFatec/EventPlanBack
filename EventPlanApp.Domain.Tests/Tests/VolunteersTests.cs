@@ -10,14 +10,14 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace EventPlanApp.Domain.Tests
+//namespace EventPlanApp.Tests.Domain.Entities
 //{
-//    public class VolunteersControllerTests : IClassFixture<WebApplicationFactory<Program>>  // Substitua Program pela sua classe de inicialização, se necessário
+//    public class VolunteersTests : IClassFixture<WebApplicationFactory<Program>>  // Substitua Program pela sua classe de inicialização, se necessário
 //    {
 //        private readonly HttpClient _client;
 //        private readonly TestServer _server;
 
-//        public VolunteersControllerTests(WebApplicationFactory<Program> factory)
+//        public VolunteersTests(WebApplicationFactory<Program> factory)
 //        {
 //            _server = new TestServer(new WebHostBuilder()
 //                .UseStartup<Program>());  // Configure o projeto para o seu Startup.cs

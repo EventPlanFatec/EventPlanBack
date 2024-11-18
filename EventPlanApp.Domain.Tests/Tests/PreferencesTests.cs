@@ -6,14 +6,15 @@
 //using Xunit;
 //using Microsoft.AspNetCore.Mvc;
 
-//public class PreferencesControllerTests
+//namespace EventPlanApp.Tests.Domain.Entities;
+//public class PreferencesTests
 //{
 //    private readonly Mock<IEventPreferenceService> _mockEventPreferenceService;
 //    private readonly Mock<UserPreferencesValidator> _mockUserPreferencesValidator;
 //    private readonly EventPlanContext _context;
 //    private readonly PreferencesController _controller;
 
-//    public PreferencesControllerTests()
+//    public PreferencesTests()
 //    {
 //        // Criando um mock para o IEventPreferenceService
 //        _mockEventPreferenceService = new Mock<IEventPreferenceService>();

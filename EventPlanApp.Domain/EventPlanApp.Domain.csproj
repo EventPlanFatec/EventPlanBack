@@ -15,8 +15,4 @@
     <EditorConfigFiles Remove="C:\EventPlan\EventPlanBack\EventPlanApp.Domain\Interfaces\.editorconfig" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="C:\EventPlan\EventPlanBack\EventPlanApp.Domain\Interfaces\.editorconfig" />
-  </ItemGroup>
-
 </Project>

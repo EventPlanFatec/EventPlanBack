@@ -9,15 +9,15 @@
 //using System.Threading.Tasks;
 //using Xunit;
 
-//namespace EventPlanApp.Domain.Tests
+//namespace EventPlanApp.Tests.Domain.Entities
 //{
-//    public class FavoritesControllerTests
+//    public class FavoritesTests
 //    {
 //        private readonly Mock<IFavoritesRepository> _favoritesRepositoryMock;
 //        private readonly Mock<FavoriteService> _favoriteServiceMock;
 //        private readonly FavoritesController _controller;
 
-//        public FavoritesControllerTests()
+//        public FavoritesTests()
 //        {
 //            // Mock do repositório
 //            _favoritesRepositoryMock = new Mock<IFavoritesRepository>();
