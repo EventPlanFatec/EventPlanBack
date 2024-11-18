@@ -350,6 +350,38 @@ namespace EventPlanApp.API.Controllers
 
             return Ok(eventos);
         }
+        [HttpPut("{id}/categories")]
+        public async Task<IActionResult> UpdateEventCategories(int id, [FromBody] int[] categoryIds)
+        {
+            // Validar se o evento existe
+            var evento = await _context.Eventos
+                .Include(e => e.Categorias) // Incluir as categorias associadas ao evento
+                .FirstOrDefaultAsync(e => e.EventoId == id);
+
+            if (evento == null)
+            {
+                return NotFound(new { message = "Evento não encontrado." });
+            }
+
+            // Validar se as categorias existem
+            var categorias = await _context.Categorias
+                .Where(c => categoryIds.Contains(c.CategoriaId))
+                .ToListAsync();
+
+            if (categorias.Count != categoryIds.Length)
+            {
+                return BadRequest(new { message = "Algumas categorias não foram encontradas." });
+            }
+
+            // Atualizar as categorias associadas ao evento
+            evento.Categorias.Clear(); // Remover categorias atuais
+            evento.Categorias.AddRange(categorias); // Adicionar novas categorias
+
+            // Salvar as mudanças no banco de dados
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Categorias atualizadas com sucesso!" });
+        }
 
     }
 }

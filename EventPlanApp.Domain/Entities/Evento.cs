@@ -32,7 +32,7 @@ namespace EventPlanApp.Domain.Entities
         public ICollection<Ingresso> Ingressos { get; private set; } = new List<Ingresso>();
         public virtual ICollection<ListaEspera> ListasEspera { get; private set; } = new List<ListaEspera>();
         public virtual ICollection<UsuarioFinal> UsuariosFinais { get; private set; } = new List<UsuarioFinal>();
-        public virtual ICollection<Categoria> Categorias { get; private set; } = new List<Categoria>();
+        public List<Categoria> Categorias { get; set; } = new List<Categoria>();
         public ICollection<EventoCategoria> EventoCategorias { get; set; }
         public int OrganizacaoId { get; private set; }
         public Organizacao Organizacao { get; private set; }
