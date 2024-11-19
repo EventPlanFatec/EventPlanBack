@@ -214,3 +214,165 @@ O `EventoDTO` é um objeto de transferência de dados que representa as informa�
 | `NotaMedia`       | `decimal`  | **Nota média** do evento, se aplicável.                             |
 | `Genero`          | `string`   | **Gênero** do evento, se aplicável (ex: Música, Teatro).            |
 | `OrganizacaoId`   | `int`      | **Identificador** da organização responsável pelo evento.            |
+
+## **Documentação da API - Favoritos**
+
+### **Operações da API - Favoritos**
+
+---
+
+#### **Adicionar um Evento aos Favoritos**
+
+**Descrição**  
+Adiciona um evento à lista de favoritos do usuário autenticado.
+
+**Requisição**
+
+```http
+POST /api/favorites
+```
+
+**Parâmetros da Query**
+
+| Parâmetro | Tipo   | Obrigatório | Descrição                          |
+| :-------- | :----- | :---------- | :--------------------------------- |
+| `eventId` | `int`  | Sim         | ID do evento a ser favoritado.     |
+
+**Cabeçalho**
+
+| Chave         | Obrigatório | Descrição                         |
+| :------------ | :---------- | :-------------------------------- |
+| `Authorization` | Sim         | Token de autenticação do usuário.|
+
+**Resposta de Sucesso**
+
+```json
+{
+  "status": "success",
+  "message": "Evento adicionado aos favoritos."
+}
+```
+
+**Resposta de Erro**
+
+- **401 Unauthorized**  
+  ```json
+  {
+    "status": "error",
+    "message": "Usuário não autenticado."
+  }
+  ```
+
+- **400 Bad Request**  
+  ```json
+  {
+    "status": "error",
+    "message": "Este evento já está nos favoritos."
+  }
+  ```
+
+---
+
+#### **Listar Favoritos de um Usuário**
+
+**Descrição**  
+Retorna a lista de eventos favoritados por um usuário específico.
+
+**Requisição**
+
+```http
+GET /api/favorites/{userId}
+```
+
+**Parâmetros**
+
+| Parâmetro | Tipo     | Obrigatório | Descrição                                   |
+| :-------- | :------- | :---------- | :----------------------------------------- |
+| `userId`  | `string` | Sim         | ID do usuário cujos favoritos serão listados. |
+
+**Resposta de Sucesso**
+
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "eventId": 1,
+      "nomeEvento": "Workshop de Programação",
+      "dataInicio": "2024-11-08T09:00:00",
+      "dataFim": "2024-11-08T18:00:00",
+      "local": "São Paulo - SP"
+    }
+  ]
+}
+```
+
+**Resposta de Erro**
+
+- **404 Not Found**  
+  ```json
+  {
+    "status": "error",
+    "message": "Nenhum favorito encontrado."
+  }
+  ```
+
+- **500 Internal Server Error**  
+  ```json
+  {
+    "status": "error",
+    "message": "Erro ao buscar favoritos."
+  }
+  ```
+
+---
+
+#### **Remover um Evento dos Favoritos**
+
+**Descrição**  
+Remove um evento da lista de favoritos do usuário autenticado.
+
+**Requisição**
+
+```http
+DELETE /api/favorites/{eventId}
+```
+
+**Parâmetros**
+
+| Parâmetro | Tipo   | Obrigatório | Descrição                          |
+| :-------- | :----- | :---------- | :--------------------------------- |
+| `eventId` | `int`  | Sim         | ID do evento a ser removido.       |
+
+**Cabeçalho**
+
+| Chave         | Obrigatório | Descrição                         |
+| :------------ | :---------- | :-------------------------------- |
+| `Authorization` | Sim         | Token de autenticação do usuário.|
+
+**Resposta de Sucesso**
+
+```json
+{
+  "status": "success",
+  "message": "Evento removido dos favoritos."
+}
+```
+
+**Resposta de Erro**
+
+- **400 Bad Request**  
+  ```json
+  {
+    "status": "error",
+    "message": "Este evento não está nos favoritos."
+  }
+  ```
+
+- **500 Internal Server Error**  
+  ```json
+  {
+    "status": "error",
+    "message": "Erro ao remover o evento dos favoritos."
+  }
+  ```
