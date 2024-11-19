@@ -20,5 +20,8 @@ namespace EventPlanApp.Domain.Entities
         // Caso o relacionamento seja desejado, você pode incluir a propriedade Evento
         // que representa o evento que o usuário favoritou.
         public virtual Evento Evento { get; set; }
+        public UsuarioFinal UsuarioFinal { get; set; }
+
+        public int UsuarioFinalId { get; set; }
     }
 }

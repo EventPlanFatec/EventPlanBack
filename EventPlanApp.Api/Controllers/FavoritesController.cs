@@ -1,4 +1,6 @@
-﻿using EventPlanApp.Application.Services;
+﻿using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Application.Services;
+using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -75,5 +77,6 @@ namespace EventPlanApp.Api.Controllers
 
             return StatusCode(500, "Erro ao remover o evento dos favoritos.");
         }
+                       
     }
 }

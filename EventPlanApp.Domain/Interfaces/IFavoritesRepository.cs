@@ -14,6 +14,11 @@ namespace EventPlanApp.Domain.Interfaces
         Task<IEnumerable<Favorite>> GetFavoritesByUserIdAsync(string userId);
 
         Task<bool> RemoveFavoriteAsync(string userId, int eventoId);
+
+        Task<List<Favorite>> GetFavoritosByUsuarioIdAsync(int usuarioId);
+        Task AddFavoritoAsync(Favorite favorite);
+        Task RemoveFavoritoAsync(int usuarioId, int eventoId);
+        Task<bool> EventoJaFavoritoAsync(int usuarioId, int eventoId);
     }
 
 }
