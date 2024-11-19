@@ -376,3 +376,129 @@ DELETE /api/favorites/{eventId}
     "message": "Erro ao remover o evento dos favoritos."
   }
   ```
+
+
+## **Documentação da API - Ingressos**
+
+### **Operações da API - Ingressos**
+
+---
+
+#### **Criar um Ingresso**
+
+**Descrição**  
+Cria um novo ingresso associado a um evento.
+
+**Requisição**
+
+```http
+POST /api/tickets
+```
+
+**Corpo da Requisição**
+
+```json
+{
+  "eventId": 1,
+  "price": 100.0,
+  "ticketType": "VIP",
+  "quantity": 2,
+  "validityDate": "2024-12-31T23:59:59"
+}
+```
+
+**Propriedades do Corpo**
+
+| Propriedade    | Tipo       | Obrigatório | Descrição                                   |
+| :------------- | :--------- | :---------- | :----------------------------------------- |
+| `eventId`      | `int`      | Sim         | ID do evento associado ao ingresso.        |
+| `price`        | `decimal`  | Sim         | Preço do ingresso.                         |
+| `ticketType`   | `string`   | Sim         | Tipo do ingresso (ex: VIP, Pista, etc.).   |
+| `quantity`     | `int`      | Sim         | Quantidade de ingressos disponíveis.       |
+| `validityDate` | `DateTime` | Sim         | Data de validade do ingresso.              |
+
+**Resposta de Sucesso**
+
+```json
+{
+  "status": "success",
+  "message": "Ingresso criado com sucesso."
+}
+```
+
+**Resposta de Erro**
+
+- **400 Bad Request** (Erro de validação ou ingresso inválido)  
+  ```json
+  {
+    "status": "error",
+    "message": "Erro ao criar o ingresso."
+  }
+  ```
+
+- **500 Internal Server Error**  
+  ```json
+  {
+    "status": "error",
+    "message": "Erro inesperado ao processar a solicitação."
+  }
+  ```
+
+---
+
+#### **Retornar Todos os Ingressos**
+
+**Descrição**  
+Retorna a lista de todos os ingressos disponíveis.
+
+**Requisição**
+
+```http
+GET /api/tickets
+```
+
+**Resposta de Sucesso**
+
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "ticketId": 1,
+      "eventId": 1,
+      "eventName": "Workshop de Programação",
+      "price": 100.0,
+      "ticketType": "VIP",
+      "quantity": 2,
+      "validityDate": "2024-12-31T23:59:59"
+    },
+    {
+      "ticketId": 2,
+      "eventId": 1,
+      "eventName": "Workshop de Programação",
+      "price": 50.0,
+      "ticketType": "Pista",
+      "quantity": 5,
+      "validityDate": "2024-12-31T23:59:59"
+    }
+  ]
+}
+```
+
+**Resposta de Erro**
+
+- **404 Not Found** (Caso não haja ingressos disponíveis)  
+  ```json
+  {
+    "status": "error",
+    "message": "Nenhum ingresso encontrado."
+  }
+  ```
+
+- **500 Internal Server Error**  
+  ```json
+  {
+    "status": "error",
+    "message": "Erro ao buscar ingressos."
+  }
+  ```
