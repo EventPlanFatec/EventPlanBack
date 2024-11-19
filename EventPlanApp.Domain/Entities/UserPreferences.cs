@@ -8,6 +8,7 @@ namespace EventPlanApp.Domain.Entities
 {
     public class UserPreferences
     {
+        public string Id { get; set; }
         public int UserId { get; set; }
         public string EventType { get; set; }
         public string Location { get; set; }

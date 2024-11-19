@@ -52,5 +52,6 @@ public class EventoConfiguration : IEntityTypeConfiguration<Evento>
         builder.HasMany(t => t.UsuariosFinais)
             .WithMany(u => u.Eventos)
             .UsingEntity(j => j.ToTable("UsuarioFinalEvento"));
+
     }
 }
