@@ -383,5 +383,6 @@ namespace EventPlanApp.API.Controllers
             return Ok(new { message = "Categorias atualizadas com sucesso!" });
         }
 
+
     }
 }

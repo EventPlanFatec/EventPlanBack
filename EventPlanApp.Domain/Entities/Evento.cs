@@ -11,6 +11,8 @@ namespace EventPlanApp.Domain.Entities
         public string Descricao { get; private set; }
         public DateTime DataInicio { get; private set; }
         public DateTime DataFim { get; private set; }
+        public string Tipo { get; set; }
+        public string Logradouro { get; set; }
         public TimeSpan HorarioInicio { get; private set; }
         public TimeSpan HorarioFim { get; private set; }
         public int LotacaoMaxima { get; private set; }
@@ -18,6 +20,8 @@ namespace EventPlanApp.Domain.Entities
         public Endereco Endereco { get; private set; }
         public EventoStatus Status { get; private set; }
         public List<Tag> Tags { get; set; }
+        public bool Privacidade { get; set; } // true = Público, false = Privado
+        public List<string> ListaConvidados { get; set; }
         public string Imagens
         {
             get => string.Join(",", _imagens);
