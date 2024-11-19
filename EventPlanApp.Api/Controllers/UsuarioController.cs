@@ -48,5 +48,6 @@ namespace EventPlanApp.Api.Controllers
 
             return NoContent();
         }
+        
     }
 }

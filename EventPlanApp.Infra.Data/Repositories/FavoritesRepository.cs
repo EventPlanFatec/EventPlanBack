@@ -55,5 +55,41 @@ namespace EventPlanApp.Infra.Data.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<Favorite>> GetFavoritosByUsuarioIdAsync(int usuarioId)
+        {
+            return await _context.Favorites
+                .Where(f => f.UsuarioFinalId == usuarioId)
+                .OrderBy(f => f.Evento.DataInicio)  // Exibindo favoritos de acordo com a data de início do evento
+                .Include(f => f.Evento)  // Incluindo informações do evento
+                .ToListAsync();
+        }
+
+        // Adiciona um evento à lista de favoritos do usuário
+        public async Task AddFavoritoAsync(Favorite favorite)
+        {
+            await _context.Favorites.AddAsync(favorite);
+            await _context.SaveChangesAsync();
+        }
+
+        // Remove um evento da lista de favoritos do usuário
+        public async Task RemoveFavoritoAsync(int usuarioId, int eventoId)
+        {
+            var favorito = await _context.Favorites
+                .FirstOrDefaultAsync(f => f.UsuarioFinalId == usuarioId && f.EventoId == eventoId);
+
+            if (favorito != null)
+            {
+                _context.Favorites.Remove(favorito);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        // Verifica se o evento já está na lista de favoritos do usuário
+        public async Task<bool> EventoJaFavoritoAsync(int usuarioId, int eventoId)
+        {
+            return await _context.Favorites
+                .AnyAsync(f => f.UsuarioFinalId == usuarioId && f.EventoId == eventoId);
+        }
     }
 }
