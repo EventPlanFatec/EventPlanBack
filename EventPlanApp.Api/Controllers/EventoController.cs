@@ -465,5 +465,6 @@ namespace EventPlanApp.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+           
     }
 }

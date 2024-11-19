@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 public class EmailService : IEmailService
 {
     private readonly string _apiKey;
+    private string _sendGridApiKey;
 
     public EmailService(string apiKey)
     {
@@ -56,6 +57,18 @@ public class EmailService : IEmailService
             var errorMessage = $"Erro ao enviar email com anexo: {response.StatusCode}. Detalhes: {await response.Body.ReadAsStringAsync()}";
             throw new Exception(errorMessage);
         }
+    }
+    public async Task EnviarNotificacaoPrivacidadeAlterada(string email)
+    {
+        var client = new SendGridClient(_sendGridApiKey);
+        var from = new EmailAddress("noreply@seusite.com", "Seu Site");
+        var subject = "Mudança na Privacidade do Evento";
+        var to = new EmailAddress(email);
+        var plainTextContent = "A privacidade do evento foi alterada. Agora é um evento privado.";
+        var htmlContent = "<strong>A privacidade do evento foi alterada. Agora é um evento privado.</strong>";
+        var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+
+        var response = await client.SendEmailAsync(msg);
     }
 
 }
