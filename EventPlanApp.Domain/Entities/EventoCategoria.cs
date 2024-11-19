@@ -2,6 +2,7 @@
 
 public class EventoCategoria
 {
+    public Guid Id { get; set; }
     public int EventoId { get; set; }
     public Evento Evento { get; set; }
 

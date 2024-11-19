@@ -1,4 +1,5 @@
 ﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,9 @@ namespace EventPlanApp.Api.Controllers
     [ApiController]
     public class VolunteersController : Controller
     {
-        private readonly VolunteerService _volunteerService;
+        private readonly IVolunteerService _volunteerService;
 
-        public VolunteersController(VolunteerService volunteerService)
+        public VolunteersController(IVolunteerService volunteerService)
         {
             _volunteerService = volunteerService;
         }

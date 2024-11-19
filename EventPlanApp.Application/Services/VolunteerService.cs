@@ -1,4 +1,5 @@
 ﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data.Repositories;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace EventPlanApp.Application.Services
 {
-    public class VolunteerService
+    public class VolunteerService : IVolunteerService
     {
         private readonly IVolunteerRepository _repository;
 

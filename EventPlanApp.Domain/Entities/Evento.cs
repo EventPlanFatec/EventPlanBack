@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace EventPlanApp.Domain.Entities
@@ -21,8 +22,16 @@ namespace EventPlanApp.Domain.Entities
         public EventoStatus Status { get; private set; }
         public List<Tag> Tags { get; set; }
         public bool Privacidade { get; set; } // true = Público, false = Privado
-        public List<string> ListaConvidados { get; set; }
-        
+        public string ListaConvidadosSerializada
+        {
+            get => string.Join(",", ListaConvidados ?? new List<string>());
+            set => ListaConvidados = value?.Split(',').ToList() ?? new List<string>();
+        }
+
+        [NotMapped]
+        public List<string> ListaConvidados { get; set; } = new List<string>();
+
+
         public string Imagens
         {
             get => string.Join(",", _imagens);

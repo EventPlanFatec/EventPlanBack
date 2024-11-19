@@ -60,71 +60,21 @@ namespace EventPlanApp.API.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EventoDto>>> GetEvents(
-            [FromQuery] DateTime? dataInicio,
-            [FromQuery] DateTime? dataFim,
-            [FromQuery] string bairro,
-            [FromQuery] string cidade,
-            [FromQuery] string tipo)
+        public async Task<ActionResult<IEnumerable<EventoDto>>> GetEvents()
         {
-            // Iniciar a consulta básica
-            var query = _context.Eventos.AsQueryable();
+            var events = await _eventoService.GetAll();
 
-            // Aplicar filtro por data de início, se fornecido
-            if (dataInicio.HasValue)
+            if (events == null || !events.Any())
             {
-                query = query.Where(e => e.DataInicio >= dataInicio.Value);
+                return NotFound("No events found.");
             }
 
-            // Aplicar filtro por data de fim, se fornecido
-            if (dataFim.HasValue)
+            return Ok(events.Select(e => new
             {
-                query = query.Where(e => e.DataFim <= dataFim.Value);
-            }
-
-            // Aplicar filtro por bairro, se fornecido
-            if (!string.IsNullOrEmpty(bairro))
-            {
-                query = query.Where(e => e.Endereco.Bairro.Contains(bairro));
-            }
-
-            // Aplicar filtro por cidade, se fornecido
-            if (!string.IsNullOrEmpty(cidade))
-            {
-                query = query.Where(e => e.Endereco.Cidade.Contains(cidade));
-            }
-
-            // Aplicar filtro por tipo de evento, se fornecido
-            if (!string.IsNullOrEmpty(tipo))
-            {
-                query = query.Where(e => e.Genero.Contains(tipo));
-            }
-
-            // Selecionar os eventos filtrados
-            var events = await query
-                .Select(e => new EventoDto
-                {
-                    EventoId = e.EventoId,
-                    NomeEvento = e.NomeEvento,
-                    Descricao = e.Descricao,
-                    DataInicio = e.DataInicio,
-                    DataFim = e.DataFim,
-                    HorarioInicio = e.HorarioInicio,
-                    HorarioFim = e.HorarioFim,
-                    LotacaoMaxima = e.LotacaoMaxima,                                        
-                    Video = e.Video,
-                    Genero = e.Genero,
-                    NotaMedia = e.NotaMedia
-                })
-                .ToListAsync();
-
-            // Verificar se encontrou algum evento
-            if (!events.Any())
-            {
-                return NotFound("Nenhum evento encontrado com os critérios fornecidos.");
-            }
-
-            return Ok(events);
+                e.NomeEvento,
+                e.DataInicio,
+                e.DataFim
+            }));
         }
 
         [HttpPost]
