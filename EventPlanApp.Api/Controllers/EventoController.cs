@@ -434,6 +434,36 @@ namespace EventPlanApp.API.Controllers
             return Ok(new { message = "Categorias atualizadas com sucesso!" });
         }
 
+        [HttpPut("api/events/{id}/guests")]
+        public async Task<IActionResult> AdicionarConvidados(int id, [FromBody] List<string> emails)
+        {
+            // Buscar o evento no banco de dados
+            var evento = await _context.Eventos.Include(e => e.ListaConvidados).FirstOrDefaultAsync(e => e.EventoId == id);
 
+            if (evento == null)
+            {
+                return NotFound("Evento não encontrado.");
+            }
+
+            try
+            {
+                // Chama o método para adicionar os convidados
+                evento.AdicionarConvidados(emails);
+
+                // Salvar as mudanças no banco de dados
+                _context.Eventos.Update(evento);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Convidados adicionados com sucesso." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
