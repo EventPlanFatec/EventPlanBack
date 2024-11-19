@@ -22,6 +22,7 @@ namespace EventPlanApp.Domain.Entities
         public List<Tag> Tags { get; set; }
         public bool Privacidade { get; set; } // true = Público, false = Privado
         public List<string> ListaConvidados { get; set; }
+        
         public string Imagens
         {
             get => string.Join(",", _imagens);
@@ -149,5 +150,23 @@ namespace EventPlanApp.Domain.Entities
             if (!string.IsNullOrWhiteSpace(genero) && genero.Length > 50)
                 throw new ArgumentException("O gênero não pode exceder 50 caracteres.");
         }
+        public void AdicionarConvidados(List<string> emails)
+        {
+            if (emails == null || emails.Count == 0)
+                throw new ArgumentException("A lista de e-mails não pode ser nula ou vazia.");
+
+            // Verifica se o evento é privado
+            if (Privacidade == false)
+                throw new InvalidOperationException("Este evento não é privado, portanto não pode ter convidados adicionados.");
+
+            foreach (var email in emails)
+            {
+                if (!ListaConvidados.Contains(email))
+                {
+                    ListaConvidados.Add(email);
+                }
+            }
+        }
+
     }
 }
