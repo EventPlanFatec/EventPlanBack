@@ -168,5 +168,29 @@ namespace EventPlanApp.Domain.Entities
             }
         }
 
+        public void AtualizarPrivacidade(bool novaPrivacidade)
+        {
+            // Atualiza a privacidade
+            Privacidade = novaPrivacidade;
+
+            // Notifica os convidados caso o evento tenha convidados e seja privado
+            if (!Privacidade && ListaConvidados.Any())
+            {
+                // Enviar notificação por e-mail para todos os convidados
+                foreach (var email in ListaConvidados)
+                {
+                    // Chamar a função de envio de e-mail
+                    EnviarNotificacaoPrivacidadeAlterada(email);
+                }
+            }
+        }
+
+        private void EnviarNotificacaoPrivacidadeAlterada(string email)
+        {
+            // Implementação para enviar e-mail informando sobre a mudança de privacidade
+            // (Aqui seria necessário integração com um serviço de e-mail, como SendGrid ou SMTP)
+            Console.WriteLine($"Notificando {email}: A privacidade do evento foi alterada.");
+        }
+
     }
 }
