@@ -95,5 +95,12 @@ namespace EventPlanApp.Infra.Data.Repositories
             return result > 0;
         }
 
+
+        public async Task SaveAsync(Evento evento)
+        {
+            _context.Eventos.Update(evento);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
