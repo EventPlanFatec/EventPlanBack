@@ -9,12 +9,22 @@ namespace EventPlanApp.Domain.Entities
 {
     public class Role
     {
-        [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public string Permissions { get; private set; }
 
-        [Required]
-        public string Name { get; set; }
+        public Role(string name, string permissions)
+        {
+            Id = Guid.NewGuid();
+            Name = name;
+            Permissions = permissions;
+        }
 
-        public string Permissions { get; set; } 
+        // Você pode criar métodos para manipular as permissões se necessário, por exemplo:
+        public bool HasPermission(string permission)
+        {
+            return Permissions.Contains(permission);
+        }
     }
+
 }

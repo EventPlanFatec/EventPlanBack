@@ -9,6 +9,9 @@
         public string Telefone { get; private set; }
 
         public int OrganizacaoId { get; private set; }
+        public Guid? RoleId { get; private set; }  // Adicionando RoleId
+        public virtual Role Role { get; private set; }  // Relacionamento com Role
+
 
         public virtual Organizacao Organizacao { get; private set; }
 

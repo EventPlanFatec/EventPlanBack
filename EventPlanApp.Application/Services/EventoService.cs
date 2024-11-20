@@ -29,18 +29,15 @@ namespace EventPlanApp.Application.Services
         public async Task<bool> InscreverNaListaDeEspera(int eventoId, InscricaoListaEsperaDTO inscricao)
         {
             var evento = await _eventoRepository.GetById(eventoId);
-            if (evento == null) return false;
-
-            if (evento.Ingressos.Count >= evento.LotacaoMaxima)
-            {
-                var usuarioExistente = await _usuarioFinalRepository.GetById(inscricao.UsuarioFinalId);
-                if (usuarioExistente != null && !evento.UsuariosFinais.Any(u => u.Id == usuarioExistente.Id))
-                {
-                    evento.UsuariosFinais.Add(usuarioExistente);
-                    await _eventoRepository.Update(eventoId, evento);
-                    return true;
-                }
+            if (evento == null || evento.Ingressos.Count < evento.LotacaoMaxima)
                 return false;
+
+            var usuarioExistente = await _usuarioFinalRepository.GetById(inscricao.UsuarioFinalId);
+            if (usuarioExistente != null && !evento.UsuariosFinais.Any(u => u.Id == usuarioExistente.Id))
+            {
+                evento.UsuariosFinais.Add(usuarioExistente);
+                await _eventoRepository.Update(eventoId, evento);
+                return true;
             }
 
             return false;
@@ -89,6 +86,7 @@ namespace EventPlanApp.Application.Services
         {
             return BCrypt.Net.BCrypt.HashPassword(senha);
         }
+
         public async Task CriarEventoComConvidados(EventoDto eventoDto, string senha)
         {
             var evento = _mapper.Map<Evento>(eventoDto);
@@ -129,7 +127,5 @@ namespace EventPlanApp.Application.Services
 
             return true;
         }
-
-
     }
 }
