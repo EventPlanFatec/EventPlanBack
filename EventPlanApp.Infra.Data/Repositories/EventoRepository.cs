@@ -82,6 +82,18 @@ namespace EventPlanApp.Infra.Data.Repositories
         {
             return await _context.Eventos.ToListAsync();
         }
+        public async Task<Evento> GetEventoByIdAsync(int eventoId)
+        {
+            return await _context.Eventos
+                .FirstOrDefaultAsync(e => e.EventoId == eventoId);
+        }
+
+        public async Task<bool> UpdateEventoAsync(Evento evento)
+        {
+            _context.Eventos.Update(evento);
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
+        }
 
     }
 }
