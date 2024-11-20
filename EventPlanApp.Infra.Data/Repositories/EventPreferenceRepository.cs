@@ -15,12 +15,20 @@ public class EventPreferenceRepository : IEventPreferenceRepository
 
         if (existingPreference != null)
         {
-            // Se já houver, você pode escolher atualizar ou retornar falso
-            return false; // Ou fazer um Update, se necessário
+            // Atualizar as preferências existentes
+            existingPreference.EventType = preferences.EventType;
+            existingPreference.Location = preferences.Location;
+            existingPreference.MinPrice = preferences.MinPrice;
+            existingPreference.MaxPrice = preferences.MaxPrice;
+
+            _context.EventPreferences.Update(existingPreference);
+        }
+        else
+        {
+            // Adicionar nova preferência
+            _context.EventPreferences.Add(preferences);
         }
 
-        // Adicionar nova preferência
-        _context.EventPreferences.Add(preferences);
         await _context.SaveChangesAsync();
         return true;
     }

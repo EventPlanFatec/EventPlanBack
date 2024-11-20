@@ -17,11 +17,18 @@ namespace EventPlanApp.Application.Services
         _repository = repository;
     }
 
-    public async Task<bool> SavePreferencesAsync(EventPreference preferences)
-    {
-        // Validação adicional pode ser realizada aqui
+        public async Task<bool> SavePreferencesAsync(EventPreference preferences)
+        {
+            if (string.IsNullOrEmpty(preferences.EventType))
+                throw new ArgumentException("O tipo de evento é obrigatório.");
 
-        return await _repository.SavePreferencesAsync(preferences);
+            if (preferences.MinPrice < 0 || preferences.MaxPrice < preferences.MinPrice)
+                throw new ArgumentException("A faixa de preço é inválida.");
+
+            return await _repository.SavePreferencesAsync(preferences);
+        }
+
+
+
     }
-}
 }
