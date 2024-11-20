@@ -24,15 +24,14 @@ namespace EventPlanApp.Application.Services
 
         public async Task CreateRoleAsync(RoleRequest roleRequest)
         {
-            var role = new Role
-            {
-                Name = roleRequest.RoleName,
-                Permissions = string.Join(",", roleRequest.Permissions) 
-            };
+            // Criando a instância de Role com os valores do roleRequest
+            var role = new Role(roleRequest.RoleName, string.Join(",", roleRequest.Permissions));
 
+            // Adicionando o role ao contexto e salvando no banco de dados
             _context.Roles.Add(role);
             await _context.SaveChangesAsync();
         }
+
         public RoleService(IRoleRepository roleRepository)
         {
             _roleRepository = roleRepository;

@@ -29,6 +29,7 @@ namespace EventPlanApp.Domain.Entities
         public ICollection<Ingresso> Ingressos { get; set; } = new List<Ingresso>();
         public virtual ICollection<ListaEspera> ListasEspera { get; set; } = new List<ListaEspera>();
         public Guid? RoleId { get; private set; }
+        public virtual Role Role { get; private set; }  // Relacionamento com Role
         public string Tema { get; private set; } = "light"; // Padrão: "light"
         public virtual ICollection<EventPreference> EventPreferences { get; set; } = new List<EventPreference>(); // Nova linha
         public UsuarioFinal(string nome, string sobrenome, Endereco endereco, string email,
