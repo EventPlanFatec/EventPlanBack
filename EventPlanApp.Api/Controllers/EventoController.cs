@@ -415,6 +415,42 @@ namespace EventPlanApp.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-           
+        [HttpPut("api/events/{id}/privacy")]
+        public async Task<IActionResult> UpdateEventoPrivacy(int id, [FromBody] UpdateEventoPrivacyRequest request)
+        {
+            // Validação de entrada
+            if (request == null)
+            {
+                return BadRequest("A solicitação é inválida.");
+            }
+
+            // Lógica para buscar o evento pelo id
+            var evento = await _context.Eventos.FindAsync(id);
+            if (evento == null)
+            {
+                return NotFound("Evento não encontrado.");
+            }
+
+            // Atualizar a configuração de privacidade
+            evento.Privacidade = request.Privacidade;
+
+            // Caso precise atualizar convidados (para evento privado)
+            if (request.Convidados != null && evento.Privacidade)
+            {
+                evento.ListaConvidados = request.Convidados;  // Alterar para ListaConvidados
+            }
+
+            try
+            {
+                // Salvar as alterações no banco de dados
+                await _context.SaveChangesAsync();
+                return Ok("Configuração de privacidade atualizada com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao atualizar a privacidade do evento: {ex.Message}");
+            }
+        }
+
     }
 }
