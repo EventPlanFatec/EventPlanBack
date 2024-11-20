@@ -13,13 +13,13 @@ public class PreferencesController : Controller
 {
     private readonly EventPlanContext _context;
     private readonly UserPreferencesValidator _validator;
-    private readonly IEventPreferenceService _eventPreferenceService;
+    private readonly IEventPreferenceService _preferenceService;
 
-    public PreferencesController(EventPlanContext context, UserPreferencesValidator validator, IEventPreferenceService eventPreferenceService)
+    public PreferencesController(EventPlanContext context, UserPreferencesValidator validator, IEventPreferenceService preferenceService)
     {
         _context = context;
         _validator = validator;
-        _eventPreferenceService = eventPreferenceService;
+        _preferenceService = preferenceService;
     }
 
     [HttpPost]
@@ -97,7 +97,7 @@ public class PreferencesController : Controller
         }
 
         // Utilizando o serviço para salvar as preferências
-        var result = await _eventPreferenceService.SavePreferencesAsync(preferences);
+        var result = await _preferenceService.SavePreferencesAsync(preferences);
 
         if (result)
         {
@@ -107,5 +107,20 @@ public class PreferencesController : Controller
         {
             return Conflict("Já existem preferências salvas para este usuário.");
         }
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdatePreferences([FromBody] EventPreference preferences)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest("Dados inválidos.");
+
+        // Chamar o serviço para salvar ou atualizar as preferências
+        var success = await _preferenceService.SavePreferencesAsync(preferences);
+
+        if (!success)
+            return BadRequest("Falha ao salvar as preferências.");
+
+        return Ok(new { message = "Preferências atualizadas com sucesso." });
     }
 }
