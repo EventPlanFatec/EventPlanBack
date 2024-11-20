@@ -78,6 +78,10 @@ namespace EventPlanApp.Infra.Data.Repositories
                 .Where(predicate)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Evento>> GetAllAsync()
+        {
+            return await _context.Eventos.ToListAsync();
+        }
 
     }
 }

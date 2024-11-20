@@ -21,6 +21,7 @@ namespace EventPlanApp.Domain.Entities
         public string Telefone { get; private set; }
 
         public string DDD { get; private set; }
+        public string Preferencias { get; set; }
         public virtual ICollection<Evento> Eventos { get; private set; } = new List<Evento>();
 
         public DateTime DataNascimento { get; private set; }
@@ -29,6 +30,7 @@ namespace EventPlanApp.Domain.Entities
         public virtual ICollection<ListaEspera> ListasEspera { get; set; } = new List<ListaEspera>();
         public Guid? RoleId { get; private set; }
         public string Tema { get; private set; } = "light"; // Padrão: "light"
+        public virtual ICollection<EventPreference> EventPreferences { get; set; } = new List<EventPreference>(); // Nova linha
         public UsuarioFinal(string nome, string sobrenome, Endereco endereco, string email,
                             string telefone, string ddd, DateTime dataNascimento)
         {

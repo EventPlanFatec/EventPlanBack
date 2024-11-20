@@ -22,6 +22,8 @@ namespace EventPlanApp.Domain.Entities
         public EventoStatus Status { get; private set; }
         public List<Tag> Tags { get; set; }
         public bool Privacidade { get; set; } // true = Público, false = Privado
+
+        
         public string ListaConvidadosSerializada
         {
             get => string.Join(",", ListaConvidados ?? new List<string>());

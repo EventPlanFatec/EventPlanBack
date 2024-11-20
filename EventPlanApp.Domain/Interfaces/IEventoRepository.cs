@@ -13,5 +13,6 @@ namespace EventPlanApp.Domain.Interfaces
         Task RemoverListaEsperaAsync(ListaEspera listaEspera);
         Task<Evento> GetByIdAsync(int eventoId);
         Task UpdateAsync(Evento evento);
+        Task<IEnumerable<Evento>> GetAllAsync();
     }
 }

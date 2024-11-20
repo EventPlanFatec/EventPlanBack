@@ -25,6 +25,7 @@ namespace EventPlanApp.Infra.Data
 
 
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
