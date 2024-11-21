@@ -184,9 +184,60 @@ namespace EventPlanApp.Application.Services
             return await _eventoRepository.ObterNumeroDeInscritosAsync(eventoId);
         }
 
+        public async Task<IEnumerable<HistoricoDeEventoDto>> ObterHistoricoDeEventosComEngajamentoAsync(int organizadorId)
+        {
+            // Buscar os eventos passados relacionados ao organizador
+            var eventos = await _context.Eventos
+                .Where(e => e.OrganizacaoId == organizadorId && e.DataFim < DateTime.Now) // Só eventos passados
+                .ToListAsync();
+
+            var eventosComEngajamento = new List<HistoricoDeEventoDto>(); // Usando o tipo esperado
+
+            foreach (var evento in eventos)
+            {
+                // Obter o número total de inscritos
+                var totalInscritos = await _context.Inscricoes
+                    .Where(i => i.EventoId == evento.EventoId)
+                    .CountAsync();
+
+                // Obter o número de presenças
+                var presencas = await _context.Inscricoes
+                    .Where(i => i.EventoId == evento.EventoId && i.Status == "Presente")
+                    .CountAsync();
+
+                // Calcular taxa de presença
+                decimal taxaDePresenca = totalInscritos == 0 ? 0 : (decimal)presencas / totalInscritos * 100;
+
+                // Obter as avaliações médias
+                var avaliacaoMedia = await _context.Avaliacoes
+                    .Where(a => a.EventoId == evento.EventoId)
+                    .AverageAsync(a => (double?)a.Avaliacao); // Garantir que o tipo seja nullable
+
+                // Se não houver avaliações, defina 0 como valor padrão
+                avaliacaoMedia = avaliacaoMedia ?? 0;
+
+                // Adicionar as estatísticas ao DTO
+                var eventoComEngajamento = new HistoricoDeEventoDto
+                {
+                    EventoId = evento.EventoId,
+                    NomeEvento = evento.NomeEvento,
+                    DataInicio = evento.DataInicio,
+                    DataFim = evento.DataFim,
+                    TotalInscritos = totalInscritos,
+                    TaxaDePresenca = taxaDePresenca,
+                    AvaliacaoMedia = (decimal)avaliacaoMedia // Garantir que seja decimal
+                };
+
+                eventosComEngajamento.Add(eventoComEngajamento);
+            }
+
+            return eventosComEngajamento.AsEnumerable(); // Retornar como IEnumerable
+        }
+
+
         public async Task<decimal> CalcularTaxaDeCancelamentoAsync(int eventoId, int organizadorId)
         {
-            // Verificar se o organizador tem permissão para acessar o evento
+            // Buscar o evento com o organizadorId correto
             var evento = await _context.Eventos
                 .FirstOrDefaultAsync(e => e.EventoId == eventoId && e.OrganizacaoId == organizadorId);
 
@@ -195,25 +246,23 @@ namespace EventPlanApp.Application.Services
                 throw new UnauthorizedAccessException("Você não tem permissão para acessar este evento.");
             }
 
-            // Obter o número total de inscrições e o número de inscrições canceladas
-            var totalInscricoes = await _context.Inscricoes
+            // Obter o número total de inscrições
+            var totalInscritos = await _context.Inscricoes
                 .Where(i => i.EventoId == eventoId)
                 .CountAsync();
 
-            var inscricoesCanceladas = await _context.Inscricoes
-                .Where(i => i.EventoId == eventoId && i.Status == "Cancelado")
+            // Obter o número de inscrições canceladas
+            var totalCanceladas = await _context.Inscricoes
+                .Where(i => i.EventoId == eventoId && i.Status == "Cancelada")
                 .CountAsync();
 
-            if (totalInscricoes == 0)
-            {
-                return 0; // Se não houver inscrições, a taxa de cancelamento será 0
-            }
-
             // Calcular a taxa de cancelamento
-            decimal taxaDeCancelamento = (decimal)inscricoesCanceladas / totalInscricoes * 100;
+            decimal taxaDeCancelamento = totalInscritos == 0 ? 0 : (decimal)totalCanceladas / totalInscritos * 100;
 
             return taxaDeCancelamento;
         }
 
+        
     }
+
 }

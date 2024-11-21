@@ -607,5 +607,30 @@ namespace EventPlanApp.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Organizador")]
+        [HttpGet("events/historico-engajamento")]
+        public async Task<IActionResult> ObterHistoricoDeEventosComEngajamento()
+        {
+            try
+            {
+                var organizadorIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); // ID do organizador como string
+                var organizadorId = int.Parse(organizadorIdString); // Converte o organizadorId de string para int
+
+                var eventosComEngajamento = await _eventoService.ObterHistoricoDeEventosComEngajamentoAsync(organizadorId);
+
+                if (eventosComEngajamento == null || !eventosComEngajamento.Any())
+                {
+                    return NotFound("Nenhum evento encontrado no histórico.");
+                }
+
+                return Ok(eventosComEngajamento);
+            }
+            catch (Exception ex)
+            {
+                // Tratar exceções genéricas, caso necessário
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
+        }
+
     }
 }
