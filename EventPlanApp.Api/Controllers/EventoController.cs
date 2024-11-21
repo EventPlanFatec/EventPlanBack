@@ -490,7 +490,7 @@ namespace EventPlanApp.API.Controllers
             return Ok("Acesso permitido!");
         }
 
-        [HttpGet("categoria/{categoriaId}")]
+        [HttpGet("search-categoria")]
         public async Task<IActionResult> BuscarPorCategoria(int categoriaId)
         {
             try
@@ -506,6 +506,42 @@ namespace EventPlanApp.API.Controllers
             {
                 return StatusCode(500, new { mensagem = "Erro interno no servidor.", detalhes = ex.Message });
             }
+        }
+
+        [HttpGet("search-nome")]
+        public async Task<IActionResult> BuscarEventosPorNome([FromQuery] string nome)
+        {
+            if (string.IsNullOrEmpty(nome))
+            {
+                return BadRequest("O nome do evento não pode ser vazio.");
+            }
+
+            var eventos = await _eventoService.BuscarEventosPorNomeAsync(nome);
+
+            if (eventos == null || !eventos.Any())
+            {
+                return NotFound("Nenhum evento encontrado com esse nome.");
+            }
+
+            return Ok(eventos);
+        }
+
+        [HttpGet("search/location")]
+        public async Task<IActionResult> BuscarEventosPorLocalizacao([FromQuery] string cidade, [FromQuery] string estado)
+        {
+            if (string.IsNullOrEmpty(cidade) && string.IsNullOrEmpty(estado))
+            {
+                return BadRequest("A localização (cidade ou estado) deve ser fornecida.");
+            }
+
+            var eventos = await _eventoService.BuscarEventosPorLocalizacaoAsync(cidade, estado);
+
+            if (eventos == null || !eventos.Any())
+            {
+                return NotFound("Nenhum evento encontrado para a localização especificada.");
+            }
+
+            return Ok(eventos);
         }
 
     }

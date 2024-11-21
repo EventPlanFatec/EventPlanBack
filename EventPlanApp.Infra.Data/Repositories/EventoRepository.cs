@@ -109,5 +109,35 @@ namespace EventPlanApp.Infra.Data.Repositories
                 .ToListAsync();
         }
 
+        // Implementação da busca por nome no banco de dados
+        public async Task<IEnumerable<Evento>> BuscarEventosPorNomeAsync(string nome)
+        {
+            return await _context.Eventos
+                .Where(e => e.NomeEvento.Contains(nome)) // Busca eventos com o nome que contenha o termo fornecido
+                .ToListAsync();
+        }
+
+        // Implementação da busca por localização no banco de dados
+        public async Task<IEnumerable<Evento>> BuscarEventosPorLocalizacaoAsync(string cidade, string estado)
+        {
+            var query = _context.Eventos
+                                .Include(e => e.Endereco) // Inclui o endereço no resultado da consulta
+                                .AsQueryable();
+
+            // Filtro por cidade, caso seja fornecida
+            if (!string.IsNullOrEmpty(cidade))
+            {
+                query = query.Where(e => e.Endereco.Cidade.Contains(cidade));
+            }
+
+            // Filtro por estado, caso seja fornecido
+            if (!string.IsNullOrEmpty(estado))
+            {
+                query = query.Where(e => e.Endereco.Estado.Contains(estado));
+            }
+
+            return await query.ToListAsync();
+        }
+
     }
 }

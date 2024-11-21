@@ -11,6 +11,8 @@ namespace EventPlanApp.Application.Interfaces
         string HashPassword(string senha);
         Task<bool> UpdateEventPassword(int eventoId, string novaSenha);
         Task<IEnumerable<Evento>> ObterEventosPorCategoriaAsync(int categoriaId);
+        Task<IEnumerable<Evento>> BuscarEventosPorNomeAsync(string nome);
+        Task<IEnumerable<Evento>> BuscarEventosPorLocalizacaoAsync(string cidade, string estado);
     }
 
 }

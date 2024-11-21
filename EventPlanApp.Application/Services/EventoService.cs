@@ -142,5 +142,19 @@ namespace EventPlanApp.Application.Services
         {
             return await _eventoRepository.BuscarEventosPorCategoriaAsync(categoriaId);
         }
+
+        // Implementação da busca por nome
+        public async Task<IEnumerable<Evento>> BuscarEventosPorNomeAsync(string nome)
+        {
+            // Chama o repositório para buscar os eventos que contêm o nome fornecido
+            return await _eventoRepository.BuscarEventosPorNomeAsync(nome);
+        }
+
+        // Implementação da busca por localização
+        public async Task<IEnumerable<Evento>> BuscarEventosPorLocalizacaoAsync(string cidade, string estado)
+        {
+            // Chama o repositório para buscar eventos com base na cidade ou estado
+            return await _eventoRepository.BuscarEventosPorLocalizacaoAsync(cidade, estado);
+        }
     }
 }
