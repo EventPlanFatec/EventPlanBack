@@ -23,6 +23,10 @@ namespace EventPlanApp.Domain.Entities
         public List<Tag> Tags { get; set; }
         public bool Privacidade { get; set; } // true = Público, false = Privado
         public bool Publicado { get; set; }
+        public int CategoriaId { get; set; }  // Adicionada a propriedade CategoriaId
+
+        // Relacionamento com a categoria (pode ser uma chave estrangeira)
+        public virtual Categoria Categoria { get; set; }
 
 
         public string ListaConvidadosSerializada
