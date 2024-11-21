@@ -13,6 +13,8 @@ namespace EventPlanApp.Application.Interfaces
         Task<IEnumerable<Evento>> ObterEventosPorCategoriaAsync(int categoriaId);
         Task<IEnumerable<Evento>> BuscarEventosPorNomeAsync(string nome);
         Task<IEnumerable<Evento>> BuscarEventosPorLocalizacaoAsync(string cidade, string estado);
+        Task<IEnumerable<Evento>> BuscarEventosComFiltrosAsync(
+       string nome, string categoria, string cidade, string estado);
     }
 
 }

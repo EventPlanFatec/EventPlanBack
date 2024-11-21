@@ -139,5 +139,41 @@ namespace EventPlanApp.Infra.Data.Repositories
             return await query.ToListAsync();
         }
 
+        // Método para buscar eventos com múltiplos filtros
+        public async Task<IEnumerable<Evento>> BuscarEventosComFiltrosAsync(
+            string nome, string categoria, string cidade, string estado)
+        {
+            var query = _context.Eventos
+                                .Include(e => e.Endereco) // Inclui o Endereço
+                                .Include(e => e.Categoria) // Inclui a Categoria (ajuste conforme sua estrutura)
+                                .AsQueryable();
+
+            // Filtro por nome
+            if (!string.IsNullOrEmpty(nome))
+            {
+                query = query.Where(e => e.NomeEvento.Contains(nome));
+            }
+
+            // Filtro por categoria (ajustar conforme seu relacionamento de categoria)
+            if (!string.IsNullOrEmpty(categoria))
+            {
+                query = query.Where(e => e.Categoria.Nome.Contains(categoria)); // Ajuste para o nome ou o relacionamento correto
+            }
+
+            // Filtro por cidade
+            if (!string.IsNullOrEmpty(cidade))
+            {
+                query = query.Where(e => e.Endereco.Cidade.Contains(cidade));
+            }
+
+            // Filtro por estado
+            if (!string.IsNullOrEmpty(estado))
+            {
+                query = query.Where(e => e.Endereco.Estado.Contains(estado));
+            }
+
+            return await query.ToListAsync();
+        }
+
     }
 }

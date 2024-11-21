@@ -156,5 +156,12 @@ namespace EventPlanApp.Application.Services
             // Chama o repositório para buscar eventos com base na cidade ou estado
             return await _eventoRepository.BuscarEventosPorLocalizacaoAsync(cidade, estado);
         }
+
+        // Método para buscar eventos com múltiplos filtros
+        public async Task<IEnumerable<Evento>> BuscarEventosComFiltrosAsync(
+            string nome, string categoria, string cidade, string estado)
+        {
+            return await _eventoRepository.BuscarEventosComFiltrosAsync(nome, categoria, cidade, estado);
+        }
     }
 }
