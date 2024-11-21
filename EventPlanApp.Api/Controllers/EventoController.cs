@@ -526,5 +526,23 @@ namespace EventPlanApp.API.Controllers
             return Ok(eventos);
         }
 
+        [HttpGet("search/location")]
+        public async Task<IActionResult> BuscarEventosPorLocalizacao([FromQuery] string cidade, [FromQuery] string estado)
+        {
+            if (string.IsNullOrEmpty(cidade) && string.IsNullOrEmpty(estado))
+            {
+                return BadRequest("A localização (cidade ou estado) deve ser fornecida.");
+            }
+
+            var eventos = await _eventoService.BuscarEventosPorLocalizacaoAsync(cidade, estado);
+
+            if (eventos == null || !eventos.Any())
+            {
+                return NotFound("Nenhum evento encontrado para a localização especificada.");
+            }
+
+            return Ok(eventos);
+        }
+
     }
 }
