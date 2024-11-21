@@ -544,5 +544,22 @@ namespace EventPlanApp.API.Controllers
             return Ok(eventos);
         }
 
+        [HttpGet("search-filter")]
+        public async Task<IActionResult> BuscarEventosComFiltros(
+        [FromQuery] string nome,
+        [FromQuery] string categoria,
+        [FromQuery] string cidade,
+        [FromQuery] string estado)
+        {
+            var eventos = await _eventoService.BuscarEventosComFiltrosAsync(nome, categoria, cidade, estado);
+
+            if (eventos == null || !eventos.Any())
+            {
+                return NotFound("Nenhum evento encontrado para os filtros especificados.");
+            }
+
+            return Ok(eventos);
+        }
+
     }
 }
