@@ -23,6 +23,7 @@ namespace EventPlanApp.Infra.Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<EventoCategoria> EventoCategorias { get; set; }
         public DbSet<Inscricao> Inscricoes { get; set; }
+        public DbSet<AvaliacaoEvento> Avaliacoes { get; set; }
 
 
 

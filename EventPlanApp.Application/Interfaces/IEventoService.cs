@@ -18,6 +18,9 @@ namespace EventPlanApp.Application.Interfaces
 
         Task<int> ObterNumeroDeInscritosAsync(int eventoId, int organizadorId);
         Task<decimal> CalcularTaxaDeCancelamentoAsync(int eventoId, int organizadorId);
+        Task<IEnumerable<HistoricoDeEventoDto>> ObterHistoricoDeEventosComEngajamentoAsync(int organizadorId);
+
+
     }
 
 }
