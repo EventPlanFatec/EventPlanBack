@@ -109,5 +109,13 @@ namespace EventPlanApp.Infra.Data.Repositories
                 .ToListAsync();
         }
 
+        // Implementação da busca por nome no banco de dados
+        public async Task<IEnumerable<Evento>> BuscarEventosPorNomeAsync(string nome)
+        {
+            return await _context.Eventos
+                .Where(e => e.NomeEvento.Contains(nome)) // Busca eventos com o nome que contenha o termo fornecido
+                .ToListAsync();
+        }
+
     }
 }

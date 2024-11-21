@@ -17,5 +17,6 @@ namespace EventPlanApp.Domain.Interfaces
         Task<Evento> GetEventoByIdAsync(int eventoId);
         Task<bool> UpdateEventoAsync(Evento evento);
         Task<IEnumerable<Evento>> BuscarEventosPorCategoriaAsync(int categoriaId);
+        Task<IEnumerable<Evento>> BuscarEventosPorNomeAsync(string nome);
     }
 }
