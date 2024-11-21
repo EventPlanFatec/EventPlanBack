@@ -21,5 +21,7 @@ namespace EventPlanApp.Domain.Interfaces
         Task<IEnumerable<Evento>> BuscarEventosPorLocalizacaoAsync(string cidade, string estado);
         Task<IEnumerable<Evento>> BuscarEventosComFiltrosAsync(
         string nome, string categoria, string cidade, string estado);
+
+        Task<int> ObterNumeroDeInscritosAsync(int eventoId);
     }
 }

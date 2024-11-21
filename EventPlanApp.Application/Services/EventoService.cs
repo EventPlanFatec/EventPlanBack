@@ -3,6 +3,8 @@ using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
+using EventPlanApp.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,16 +16,18 @@ namespace EventPlanApp.Application.Services
         private readonly IEventoRepository _eventoRepository;
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
         private readonly IEmailService _emailService;
+        private readonly EventPlanContext _context;
 
         public EventoService(IEventoRepository eventoRepository,
                              IMapper mapper,
                              IUsuarioFinalRepository usuarioFinalRepository,
-                             IEmailService emailService)
+                             IEmailService emailService, EventPlanContext context)
             : base(eventoRepository, mapper)
         {
             _eventoRepository = eventoRepository;
             _usuarioFinalRepository = usuarioFinalRepository;
             _emailService = emailService;
+            _context = context;
         }
 
         public async Task<bool> InscreverNaListaDeEspera(int eventoId, InscricaoListaEsperaDTO inscricao)
@@ -162,6 +166,22 @@ namespace EventPlanApp.Application.Services
             string nome, string categoria, string cidade, string estado)
         {
             return await _eventoRepository.BuscarEventosComFiltrosAsync(nome, categoria, cidade, estado);
+        }
+
+        public async Task<int> ObterNumeroDeInscritosAsync(int eventoId, int organizacaoId)
+        {
+            // Verifica se o evento existe e se o organizador (organização) tem acesso ao evento
+            var evento = await _context.Eventos
+                .FirstOrDefaultAsync(e => e.EventoId == eventoId && e.OrganizacaoId == organizacaoId);
+
+            // Caso o evento não seja encontrado ou o organizador não tenha permissão
+            if (evento == null)
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para acessar este evento.");
+            }
+
+            // Chama o repositório para obter o número de inscritos
+            return await _eventoRepository.ObterNumeroDeInscritosAsync(eventoId);
         }
     }
 }

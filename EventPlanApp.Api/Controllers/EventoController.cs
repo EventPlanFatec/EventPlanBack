@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EventPlanApp.API.Controllers
@@ -559,6 +560,28 @@ namespace EventPlanApp.API.Controllers
             }
 
             return Ok(eventos);
+        }
+
+        [Authorize(Roles = "Organizador")]
+        [HttpGet("events/{eventoId}/numero-inscritos")]
+        public async Task<IActionResult> ObterNumeroDeInscritos(int eventoId)
+        {
+            try
+            {
+                var organizadorIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); // ID do organizador como string
+                var organizadorId = int.Parse(organizadorIdString); // Converte o organizadorId de string para int
+
+                var numeroDeInscritos = await _eventoService.ObterNumeroDeInscritosAsync(eventoId, organizadorId);
+                return Ok(new { eventoId, numeroDeInscritos });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Você não tem permissão para acessar este evento.");
+            }
+            catch (FormatException)
+            {
+                return BadRequest("O identificador do organizador não é válido.");
+            }
         }
 
     }
