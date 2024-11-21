@@ -183,5 +183,37 @@ namespace EventPlanApp.Application.Services
             // Chama o repositório para obter o número de inscritos
             return await _eventoRepository.ObterNumeroDeInscritosAsync(eventoId);
         }
+
+        public async Task<decimal> CalcularTaxaDeCancelamentoAsync(int eventoId, int organizadorId)
+        {
+            // Verificar se o organizador tem permissão para acessar o evento
+            var evento = await _context.Eventos
+                .FirstOrDefaultAsync(e => e.EventoId == eventoId && e.OrganizacaoId == organizadorId);
+
+            if (evento == null)
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para acessar este evento.");
+            }
+
+            // Obter o número total de inscrições e o número de inscrições canceladas
+            var totalInscricoes = await _context.Inscricoes
+                .Where(i => i.EventoId == eventoId)
+                .CountAsync();
+
+            var inscricoesCanceladas = await _context.Inscricoes
+                .Where(i => i.EventoId == eventoId && i.Status == "Cancelado")
+                .CountAsync();
+
+            if (totalInscricoes == 0)
+            {
+                return 0; // Se não houver inscrições, a taxa de cancelamento será 0
+            }
+
+            // Calcular a taxa de cancelamento
+            decimal taxaDeCancelamento = (decimal)inscricoesCanceladas / totalInscricoes * 100;
+
+            return taxaDeCancelamento;
+        }
+
     }
 }

@@ -584,5 +584,28 @@ namespace EventPlanApp.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Organizador")]
+        [HttpGet("events/{eventoId}/taxa-cancelamento")]
+        public async Task<IActionResult> ObterTaxaDeCancelamento(int eventoId)
+        {
+            try
+            {
+                var organizadorIdString = User.FindFirstValue(ClaimTypes.NameIdentifier); // ID do organizador como string
+                var organizadorId = int.Parse(organizadorIdString); // Converte o organizadorId de string para int
+
+                var taxaDeCancelamento = await _eventoService.CalcularTaxaDeCancelamentoAsync(eventoId, organizadorId);
+
+                return Ok(new { eventoId, taxaDeCancelamento });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Você não tem permissão para acessar este evento.");
+            }
+            catch (FormatException)
+            {
+                return BadRequest("O identificador do organizador não é válido.");
+            }
+        }
+
     }
 }
