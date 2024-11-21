@@ -47,5 +47,18 @@ namespace EventPlanApp.Domain.Entities
             if (string.IsNullOrWhiteSpace(cep) || !Regex.IsMatch(cep, @"^\d{5}-?\d{3}$"))
                 throw new ArgumentException("CEP deve ser um formato válido (XXXXX-XXX).");
         }
+        public void AtualizarEndereco(string tipoLogradouro, string logradouro, string numeroCasa,
+                                      string bairro, string cidade, string estado, string cep)
+        {
+            ValidateDomain(tipoLogradouro, logradouro, numeroCasa, bairro, cidade, estado, cep);
+
+            TipoLogradouro = tipoLogradouro;
+            Logradouro = logradouro;
+            NumeroCasa = numeroCasa;
+            Bairro = bairro;
+            Cidade = cidade;
+            Estado = estado;
+            CEP = cep;
+        }
     }
 }

@@ -16,5 +16,15 @@ namespace EventPlanApp.Domain.Entities
 
             Nome = nome;
         }
+        public void AdicionarEvento(EventoCategoria eventoCategoria)
+        {
+            if (eventoCategoria == null)
+                throw new ArgumentException("O evento não pode ser nulo.");
+
+            if (!EventoCategorias.Any(ec => ec.EventoId == eventoCategoria.EventoId))
+            {
+                EventoCategorias.Add(eventoCategoria);
+            }
+        }
     }
 }

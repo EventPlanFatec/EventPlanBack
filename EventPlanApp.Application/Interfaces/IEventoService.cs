@@ -10,6 +10,7 @@ namespace EventPlanApp.Application.Interfaces
         Task<bool> ValidarSenha(int eventoId, string senha);
         string HashPassword(string senha);
         Task<bool> UpdateEventPassword(int eventoId, string novaSenha);
+        Task<IEnumerable<Evento>> ObterEventosPorCategoriaAsync(int categoriaId);
     }
 
 }

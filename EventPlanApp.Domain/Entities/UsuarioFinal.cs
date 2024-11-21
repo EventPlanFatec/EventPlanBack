@@ -21,7 +21,8 @@ namespace EventPlanApp.Domain.Entities
         public string Telefone { get; private set; }
 
         public string DDD { get; private set; }
-        public string Preferencias { get; set; }
+        public string? Preferencias { get; private set; }
+        
         public virtual ICollection<Evento> Eventos { get; private set; } = new List<Evento>();
 
         public DateTime DataNascimento { get; private set; }
@@ -88,5 +89,6 @@ namespace EventPlanApp.Domain.Entities
 
             Tema = tema;
         }
+        
     }
 }

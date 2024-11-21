@@ -101,6 +101,13 @@ namespace EventPlanApp.Infra.Data.Repositories
             _context.Eventos.Update(evento);
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<Evento>> BuscarEventosPorCategoriaAsync(int categoriaId)
+        {
+            return await _context.Eventos
+                .Where(e => e.CategoriaId == categoriaId)
+                .Include(e => e.Organizacao) // Inclui dados relacionados, se necessário.
+                .ToListAsync();
+        }
 
     }
 }

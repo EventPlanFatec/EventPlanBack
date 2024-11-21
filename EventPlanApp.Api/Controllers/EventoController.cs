@@ -489,5 +489,24 @@ namespace EventPlanApp.API.Controllers
             // Se tiver permissão, retorna uma resposta de sucesso
             return Ok("Acesso permitido!");
         }
+
+        [HttpGet("categoria/{categoriaId}")]
+        public async Task<IActionResult> BuscarPorCategoria(int categoriaId)
+        {
+            try
+            {
+                var eventos = await _eventoService.ObterEventosPorCategoriaAsync(categoriaId);
+                return Ok(eventos);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { mensagem = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = "Erro interno no servidor.", detalhes = ex.Message });
+            }
+        }
+
     }
 }

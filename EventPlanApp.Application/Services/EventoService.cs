@@ -127,5 +127,20 @@ namespace EventPlanApp.Application.Services
 
             return true;
         }
+
+        public async Task<IEnumerable<Evento>> ObterEventosPorCategoriaAsync(int categoriaId)
+        {
+            var eventos = await _eventoRepository.BuscarEventosPorCategoriaAsync(categoriaId);
+
+            if (!eventos.Any())
+                throw new KeyNotFoundException("Nenhum evento encontrado para a categoria especificada.");
+
+            return eventos;
+        }
+
+        public async Task<IEnumerable<Evento>> BuscarEventosPorCategoriaAsync(int categoriaId)
+        {
+            return await _eventoRepository.BuscarEventosPorCategoriaAsync(categoriaId);
+        }
     }
 }
