@@ -11,6 +11,8 @@
     <PackageReference Include="BCrypt.Net" Version="0.1.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.22" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
   </ItemGroup>

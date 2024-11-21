@@ -6,6 +6,7 @@ using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data.Repositories;
 using FluentValidation.AspNetCore;
+using Google.Api;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IEventPreferenceRepository, EventPreferenceRepository>();
 builder.Services.AddScoped<IEventPreferenceService, EventPreferenceService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 var app = builder.Build();
 

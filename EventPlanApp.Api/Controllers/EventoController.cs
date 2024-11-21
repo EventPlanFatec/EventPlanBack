@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data;
 using EventPlanApp.Infra.Data.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,9 +27,11 @@ namespace EventPlanApp.API.Controllers
         private readonly IIngressoRepository _ingressoRepository;
         private readonly ILogger<EventoController> _logger;
         private readonly EventPlanContext _context;
+        private readonly Application.Interfaces.IAuthorizationService _authorizationService;
+        private readonly IPermissionService _permissionService;
 
 
-        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService, IIngressoRepository ingressoRepository, ILogger<EventoController> logger, EventPlanContext context)
+        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService, IIngressoRepository ingressoRepository, ILogger<EventoController> logger, EventPlanContext context, Application.Interfaces.IAuthorizationService authorizationService, IPermissionService permissionService)
         {
             _eventoService = eventoService;
             _mapper = mapper;
@@ -35,6 +39,8 @@ namespace EventPlanApp.API.Controllers
             _ingressoRepository = ingressoRepository;
             _logger = logger;
             _context = context;
+            _authorizationService = authorizationService;
+            _permissionService = permissionService;
         }
 
         [HttpGet("{id}/compartilhar/facebook")]
@@ -300,7 +306,7 @@ namespace EventPlanApp.API.Controllers
                     NomeEvento = e.NomeEvento,
                     Descricao = e.Descricao,
                     Tags = e.Tags.Select(t => t.Nome).ToList(),  // Converte a lista de objetos Tag para uma lista de strings
-                    
+
                 })
                 .ToListAsync();
 
@@ -452,5 +458,36 @@ namespace EventPlanApp.API.Controllers
             }
         }
 
+        [HttpGet("restricted-area")]
+        public async Task<IActionResult> GetRestrictedArea()
+        {
+            // Verificar se o usuário tem acesso
+            var userHasAccess = await _authorizationService.CheckUserPermissionAsync(User);
+
+            if (!userHasAccess)
+            {
+                return Forbid("Você não tem permissão para acessar esta área.");
+            }
+
+            return Ok("Você tem acesso a essa área.");
+        }
+
+        [HttpGet("secure-endpoint")]
+        public async Task<IActionResult> SecureEndpoint()
+        {
+            var user = HttpContext.User;
+
+            // Verificar permissão
+            var hasPermission = await _permissionService.CheckUserPermissionAsync(user, "RequiredPermission");
+
+            if (!hasPermission)
+            {
+                // Retorna mensagem de acesso negado
+                return Forbid("Você não possui permissão para acessar este recurso.");
+            }
+
+            // Se tiver permissão, retorna uma resposta de sucesso
+            return Ok("Acesso permitido!");
+        }
     }
 }
