@@ -22,6 +22,7 @@ namespace EventPlanApp.Infra.Data
         public DbSet<EventPreference> EventPreferences { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<EventoCategoria> EventoCategorias { get; set; }
+        public DbSet<Inscricao> Inscricoes { get; set; }
 
 
 
@@ -30,6 +31,7 @@ namespace EventPlanApp.Infra.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(EventPlanContext).Assembly);
+
 
         }
     }

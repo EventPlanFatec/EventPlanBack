@@ -175,5 +175,12 @@ namespace EventPlanApp.Infra.Data.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<int> ObterNumeroDeInscritosAsync(int eventoId)
+        {
+            return await _context.Inscricoes
+                .Where(i => i.EventoId == eventoId && i.Status != "cancelado") // Filtrando inscrições confirmadas
+                .CountAsync();
+        }
+
     }
 }
