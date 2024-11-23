@@ -23,5 +23,6 @@ namespace EventPlanApp.Domain.Interfaces
         string nome, string categoria, string cidade, string estado);
 
         Task<int> ObterNumeroDeInscritosAsync(int eventoId);
+        Task<double> ObterTaxaCancelamentoAsync(int eventoId);
     }
 }

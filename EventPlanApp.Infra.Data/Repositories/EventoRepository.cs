@@ -182,5 +182,22 @@ namespace EventPlanApp.Infra.Data.Repositories
                 .CountAsync();
         }
 
+        public async Task<double> ObterTaxaCancelamentoAsync(int eventoId)
+        {
+            // Obtém o total de inscritos
+            var totalInscritos = await _context.Inscricoes
+                .Where(i => i.EventoId == eventoId)
+                .CountAsync();
+
+            // Obtém o total de cancelamentos
+            var totalCancelamentos = await _context.Inscricoes
+                .Where(i => i.EventoId == eventoId && i.Status == "cancelado")
+                .CountAsync();
+
+            // Retorna a taxa de cancelamento
+            if (totalInscritos == 0) return 0; // Evita divisão por zero
+            return (double)totalCancelamentos / totalInscritos * 100;
+        }
+
     }
 }

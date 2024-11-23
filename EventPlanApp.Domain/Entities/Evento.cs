@@ -24,6 +24,8 @@ namespace EventPlanApp.Domain.Entities
         public bool Privacidade { get; set; } // true = Público, false = Privado
         public bool Publicado { get; set; }
         public int CategoriaId { get; set; }  // Adicionada a propriedade CategoriaId
+        public int TotalInscritos { get; set; }
+        public int TotalCancelamentos { get; set; }
 
         // Relacionamento com a categoria (pode ser uma chave estrangeira)
         public virtual Categoria Categoria { get; set; }
@@ -209,5 +211,11 @@ namespace EventPlanApp.Domain.Entities
             Console.WriteLine($"Notificando {email}: A privacidade do evento foi alterada.");
         }
 
+        // Método para calcular a taxa de cancelamento
+        public double CalcularTaxaCancelamento()
+        {
+            if (TotalInscritos == 0) return 0; // Evita divisão por zero
+            return (double)TotalCancelamentos / TotalInscritos * 100;
+        }
     }
 }
