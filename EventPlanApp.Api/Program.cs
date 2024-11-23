@@ -38,6 +38,7 @@ builder.Services.AddScoped<IEventPreferenceService, EventPreferenceService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
