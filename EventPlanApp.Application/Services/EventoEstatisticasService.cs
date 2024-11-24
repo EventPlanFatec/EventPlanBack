@@ -35,5 +35,21 @@ namespace EventPlanApp.Application.Services
                 TaxaCancelamento = taxaCancelamento
             };
         }
+
+        public async Task<EventoEstatisticasDto> ObterEstatisticasPorEventoAsync(int eventoId)
+        {
+            var totalInscritos = await _eventoRepository.ObterNumeroDeInscritosAsync(eventoId);
+
+            // Aqui você pode adicionar outras estatísticas, como o total de cancelamentos e a taxa de cancelamento.
+            var totalCancelamentos = 0; // Exemplo, substitua pela lógica de cancelamentos, se necessário.
+            var taxaCancelamento = totalInscritos == 0 ? 0 : (double)totalCancelamentos / totalInscritos * 100;
+
+            return new EventoEstatisticasDto
+            {
+                TotalInscritos = totalInscritos,
+                TotalCancelamentos = totalCancelamentos,
+                TaxaCancelamento = taxaCancelamento
+            };
+        }
     }
 }

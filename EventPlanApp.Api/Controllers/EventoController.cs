@@ -30,9 +30,10 @@ namespace EventPlanApp.API.Controllers
         private readonly EventPlanContext _context;
         private readonly Application.Interfaces.IAuthorizationService _authorizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IEventoEstatisticasService _eventoEstatisticasService;
 
 
-        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService, IIngressoRepository ingressoRepository, ILogger<EventoController> logger, EventPlanContext context, Application.Interfaces.IAuthorizationService authorizationService, IPermissionService permissionService)
+        public EventoController(IEventoService eventoService, IMapper mapper, IEmailService emailService, IIngressoRepository ingressoRepository, ILogger<EventoController> logger, EventPlanContext context, Application.Interfaces.IAuthorizationService authorizationService, IPermissionService permissionService, IEventoEstatisticasService eventoEstatisticasService)
         {
             _eventoService = eventoService;
             _mapper = mapper;
@@ -42,6 +43,7 @@ namespace EventPlanApp.API.Controllers
             _context = context;
             _authorizationService = authorizationService;
             _permissionService = permissionService;
+            _eventoEstatisticasService = eventoEstatisticasService;
         }
 
         [HttpGet("{id}/compartilhar/facebook")]
@@ -630,6 +632,12 @@ namespace EventPlanApp.API.Controllers
                 // Tratar exceções genéricas, caso necessário
                 return StatusCode(500, $"Erro interno: {ex.Message}");
             }
+        }
+        [HttpGet("estatisticas-numero-de-inscritos/{eventoId}")]
+        public async Task<ActionResult<EventoEstatisticasDto>> GetEstatisticasPorEvento(int eventoId)
+        {
+            var estatisticas = await _eventoEstatisticasService.ObterEstatisticasPorEventoAsync(eventoId);
+            return Ok(estatisticas);
         }
 
     }
