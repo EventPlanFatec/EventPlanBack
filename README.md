@@ -18,9 +18,10 @@ POST /api/events
 ```json
 {
   "nomeEvento": "Workshop de Programação",
+  "tipo": "Workshop",
   "descricao": "Evento focado em boas práticas de Clean Code.",
-  "dataInicio": "2024-11-08T09:00:00",
-  "dataFim": "2024-11-08T18:00:00",
+  "dataInicio": "2025-11-08T09:00:00",
+  "dataFim": "2025-11-08T18:00:00",
   "horarioInicio": "09:00:00",
   "horarioFim": "18:00:00",
   "lotacaoMaxima": 100,
@@ -36,15 +37,19 @@ POST /api/events
   "imagens": [
     "https://exemplo.com/imagem1.jpg"
   ],
+  "categoriaId": 7,
+  "tags": ["Clean Code", "Programação", "Boas Práticas"],
   "video": "https://exemplo.com/video.mp4",
   "notaMedia": 4.8,
   "genero": "Tecnologia",
   "usuariosFinais": [],
   "ingressos": [],
-  "organizacaoId": 4,
+  "organizacaoId": 3,
   "isPrivate": true,
-  "senha": "eventoSegreto123"
+  "senha": "eventoSegreto123",
+  "emailsConvidados": []
 }
+
 ```
 
 ---
