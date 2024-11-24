@@ -16,5 +16,9 @@ namespace EventPlanApp.Domain.Entities
         public string ConteudoAlteradoAntes { get; set; }  // Conteúdo antes da edição (caso seja uma edição)
         public string ConteudoAlteradoDepois { get; set; }  // Conteúdo depois da edição (caso seja uma edição)
         public string IpEndereco { get; set; }  // Endereço IP do usuário que fez a ação
+        public string UserId { get; set; }  // ID do usuário que realizou a ação
+        public string ActionType { get; set; }  // Tipo da ação (criação, edição, etc.)
+        public string EntityName { get; set; }  // Nome da entidade afetada
+        public DateTime Date { get; set; }  // Data e hora da ação
     }
 }
