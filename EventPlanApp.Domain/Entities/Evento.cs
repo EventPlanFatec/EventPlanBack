@@ -63,7 +63,9 @@ namespace EventPlanApp.Domain.Entities
         public int VagasDisponiveis => LotacaoMaxima - IngressosVendidos;
         public bool IsPrivate { get; set; }
         public string? PasswordHash { get; set; }
-    
+        public decimal TaxaServicoValor { get; private set; }
+        public bool IsTaxaPercentual { get; private set; }
+
 
         public enum EventoStatus
         {

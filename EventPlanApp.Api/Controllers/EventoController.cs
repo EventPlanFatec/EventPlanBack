@@ -640,5 +640,52 @@ namespace EventPlanApp.API.Controllers
             return Ok(estatisticas);
         }
 
+        
+
+        [HttpGet("{obter-evento-por-id}")]
+        public async Task<IActionResult> GetEvento(int id)
+        {
+            var evento = await _eventoService.ObterEventoPorIdAsync(id);
+            if (evento == null)
+                return NotFound();
+
+            return Ok(evento);
+        }
+
+        [HttpPost("criar-evento")]
+        public async Task<IActionResult> CreateEvento([FromBody] Evento evento)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _eventoService.CriarEventoAsync(evento);
+            return CreatedAtAction(nameof(GetEvento), new { id = evento.EventoId }, evento);
+        }
+
+        [HttpPut("{atualizat-evento}")]
+        public async Task<IActionResult> UpdateEvento(int id, [FromBody] Evento evento)
+        {
+            if (id != evento.EventoId)
+                return BadRequest();
+
+            var eventoExistente = await _eventoService.ObterEventoPorIdAsync(id);
+            if (eventoExistente == null)
+                return NotFound();
+
+            await _eventoService.AtualizarEventoAsync(evento);
+            return NoContent();
+        }
+
+        [HttpDelete("{deletar-evento}")]
+        public async Task<IActionResult> DeleteEvento(int id)
+        {
+            var eventoExistente = await _eventoService.ObterEventoPorIdAsync(id);
+            if (eventoExistente == null)
+                return NotFound();
+
+            await _eventoService.DeletarEventoAsync(id);
+            return NoContent();
+        }
+
     }
 }
