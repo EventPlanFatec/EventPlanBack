@@ -262,7 +262,40 @@ namespace EventPlanApp.Application.Services
             return taxaDeCancelamento;
         }
 
-        
+        public async Task<List<Evento>> ObterTodosEventosAsync()
+        {
+            return await _context.Eventos.Include(e => e.Categoria).ToListAsync();
+        }
+
+        public async Task<Evento> ObterEventoPorIdAsync(int id)
+        {
+            return await _context.Eventos.Include(e => e.Categoria)
+                                         .FirstOrDefaultAsync(e => e.EventoId == id);
+        }
+
+        public async Task CriarEventoAsync(Evento evento)
+        {
+            await _context.Eventos.AddAsync(evento);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AtualizarEventoAsync(Evento evento)
+        {
+            _context.Eventos.Update(evento);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeletarEventoAsync(int id)
+        {
+            var evento = await _context.Eventos.FindAsync(id);
+            if (evento != null)
+            {
+                _context.Eventos.Remove(evento);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
     }
 
 }
