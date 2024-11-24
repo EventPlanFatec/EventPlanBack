@@ -11,7 +11,7 @@ namespace EventPlanApp.Infra.Data.EntityConfiguration
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.TipoLogradouro)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(100);
 
             builder.Property(e => e.Logradouro)

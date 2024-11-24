@@ -135,7 +135,7 @@ namespace EventPlanApp.API.Controllers
             return Ok(evento);
         }
 
-        [HttpDelete("{id1}")]
+        [HttpDelete("cancelar/{id}")]
         public async Task<IActionResult> CancelarEvento(int id)
         {
             var evento = await _eventoRepository.GetByIdAsync(id);
@@ -164,7 +164,7 @@ namespace EventPlanApp.API.Controllers
             return Ok("Evento cancelado e notificações enviadas.");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deletar/{id}")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
             var existingEvent = await _eventoService.GetById(id);
@@ -181,6 +181,7 @@ namespace EventPlanApp.API.Controllers
 
             return NoContent();
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(int id, [FromBody] Evento eventoAtualizado)
@@ -255,42 +256,42 @@ namespace EventPlanApp.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}/categorias")]
-        public async Task<IActionResult> UpdateEventCategories(int id, [FromBody] EventoDto eventoDto)
-        {
-            if (eventoDto == null || eventoDto.CategoriaIds == null || eventoDto.CategoriaIds.Count == 0)
-            {
-                return BadRequest("Evento ou categorias não fornecidos.");
-            }
+        //[HttpPut("{id}/categorias")]
+        //public async Task<IActionResult> UpdateEventCategories(int id, [FromBody] EventoDto eventoDto)
+        //{
+        //    if (eventoDto == null || eventoDto.CategoriaIds == null || eventoDto.CategoriaIds.Count == 0)
+        //    {
+        //        return BadRequest("Evento ou categorias não fornecidos.");
+        //    }
 
-            var evento = await _context.Eventos
-                .Include(e => e.EventoCategorias)
-                .ThenInclude(ec => ec.Categoria)
-                .FirstOrDefaultAsync(e => e.EventoId == id);
+        //    var evento = await _context.Eventos
+        //        .Include(e => e.EventoCategorias)
+        //        .ThenInclude(ec => ec.Categoria)
+        //        .FirstOrDefaultAsync(e => e.EventoId == id);
 
-            if (evento == null)
-            {
-                return NotFound($"Evento com ID {id} não encontrado.");
-            }
+        //    if (evento == null)
+        //    {
+        //        return NotFound($"Evento com ID {id} não encontrado.");
+        //    }
 
-            evento.EventoCategorias.Clear();
+        //    evento.EventoCategorias.Clear();
 
-            foreach (var categoriaId in eventoDto.CategoriaIds)
-            {
-                var categoria = await _context.Categorias.FindAsync(categoriaId);
-                if (categoria != null)
-                {
-                    evento.EventoCategorias.Add(new EventoCategoria
-                    {
-                        EventoId = evento.EventoId,
-                        CategoriaId = categoriaId
-                    });
-                }
-            }
+        //    foreach (var categoriaId in eventoDto.CategoriaIds)
+        //    {
+        //        var categoria = await _context.Categorias.FindAsync(categoriaId);
+        //        if (categoria != null)
+        //        {
+        //            evento.EventoCategorias.Add(new EventoCategoria
+        //            {
+        //                EventoId = evento.EventoId,
+        //                CategoriaId = categoriaId
+        //            });
+        //        }
+        //    }
 
-            await _context.SaveChangesAsync();
-            return Ok("Categorias do evento atualizadas com sucesso.");
-        }
+        //    await _context.SaveChangesAsync();
+        //    return Ok("Categorias do evento atualizadas com sucesso.");
+        //}
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<EventoDto>>> SearchEvents([FromQuery] string q)
         {

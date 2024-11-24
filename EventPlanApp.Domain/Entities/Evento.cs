@@ -13,7 +13,6 @@ namespace EventPlanApp.Domain.Entities
         public DateTime DataInicio { get; private set; }
         public DateTime DataFim { get; private set; }
         public string Tipo { get; set; }
-        public string Logradouro { get; set; }
         public TimeSpan HorarioInicio { get; private set; }
         public TimeSpan HorarioFim { get; private set; }
         public int LotacaoMaxima { get; private set; }
@@ -56,7 +55,6 @@ namespace EventPlanApp.Domain.Entities
         public virtual ICollection<ListaEspera> ListasEspera { get; private set; } = new List<ListaEspera>();
         public virtual ICollection<UsuarioFinal> UsuariosFinais { get; private set; } = new List<UsuarioFinal>();
         public List<Categoria> Categorias { get; set; } = new List<Categoria>();
-        public ICollection<EventoCategoria> EventoCategorias { get; set; }
         public int OrganizacaoId { get; private set; }
         public Organizacao Organizacao { get; private set; }
         public int IngressosVendidos => Ingressos.Count;

@@ -21,7 +21,6 @@ namespace EventPlanApp.Infra.Data
         public DbSet<UserPreferences> UserPreferences { get; set; }
         public DbSet<EventPreference> EventPreferences { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<EventoCategoria> EventoCategorias { get; set; }
         public DbSet<Inscricao> Inscricoes { get; set; }
         public DbSet<AvaliacaoEvento> Avaliacoes { get; set; }
         public DbSet<TaxaServicoConfig> TaxaServicoConfig { get; set; }

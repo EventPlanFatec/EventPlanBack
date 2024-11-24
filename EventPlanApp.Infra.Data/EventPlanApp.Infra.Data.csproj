@@ -22,4 +22,8 @@
     <ProjectReference Include="..\EventPlanApp.Domain\EventPlanApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
