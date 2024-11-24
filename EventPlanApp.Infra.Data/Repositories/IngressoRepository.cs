@@ -55,5 +55,12 @@ namespace EventPlanApp.Infra.Data.Repositories
                 .Where(i => i.EventoId == eventoId)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Ingresso>> ObterIngressosPorIdsAsync(IEnumerable<int> ingressoIds)
+        {
+            return await _context.Set<Ingresso>()
+                .Where(i => ingressoIds.Contains(i.IngressoId))
+                .ToListAsync();
+        }
     }
 }
