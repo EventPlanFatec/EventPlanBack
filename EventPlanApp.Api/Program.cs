@@ -37,6 +37,7 @@ builder.Services.AddScoped<IEventPreferenceRepository, EventPreferenceRepository
 builder.Services.AddScoped<IEventPreferenceService, EventPreferenceService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
+builder.Services.AddScoped<IIngressoService, IngressoService>();
 
 
 var app = builder.Build();

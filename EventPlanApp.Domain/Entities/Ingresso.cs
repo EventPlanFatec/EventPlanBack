@@ -7,6 +7,7 @@ namespace EventPlanApp.Domain.Entities
     {
         public int IngressoId { get; private set; }
         public decimal Valor { get; private set; }
+        public decimal ValorFinal { get; set; }
         public string QRCode { get; private set; }
         public string NomeEvento { get; private set; }
         public DateTime Data { get; private set; }
