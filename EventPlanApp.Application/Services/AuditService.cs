@@ -1,7 +1,9 @@
 ﻿using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Application.ViewModels;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +51,31 @@ namespace EventPlanApp.Application.Services
 
             _context.AuditLogs.Add(auditLog);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<AuditLog>> GetAuditLogsAsync(AuditLogFilter filter)
+        {
+            IQueryable<AuditLog> query = _context.AuditLogs.AsQueryable();
+
+            // Filtro por data (intervalo)
+            if (filter.StartDate.HasValue && filter.EndDate.HasValue)
+            {
+                query = query.Where(log => log.Date >= filter.StartDate && log.Date <= filter.EndDate);
+            }
+
+            // Filtro por tipo de ação
+            if (!string.IsNullOrEmpty(filter.ActionType))
+            {
+                query = query.Where(log => log.ActionType.Contains(filter.ActionType));
+            }
+
+            // Filtro por usuário
+            if (!string.IsNullOrEmpty(filter.UserId))
+            {
+                query = query.Where(log => log.UserId.Contains(filter.UserId));
+            }
+
+            return await query.ToListAsync();
         }
     }
 }
