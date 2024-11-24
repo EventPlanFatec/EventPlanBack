@@ -10,5 +10,10 @@ namespace EventPlanApp.Domain.Interfaces
     public interface IUsuarioAdmRepository
     {
         Task<UsuarioAdm> GetById(int id);
+        Task<UsuarioAdm> GetByIdAsync(int id);
+        Task<IEnumerable<UsuarioAdm>> GetAllAsync();
+        Task AddAsync(UsuarioAdm usuarioAdm);
+        Task UpdateAsync(UsuarioAdm usuarioAdm);
+        Task DeleteAsync(int id);
     }
 }

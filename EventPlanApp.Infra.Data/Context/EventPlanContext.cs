@@ -24,6 +24,7 @@ namespace EventPlanApp.Infra.Data
         public DbSet<Inscricao> Inscricoes { get; set; }
         public DbSet<AvaliacaoEvento> Avaliacoes { get; set; }
         public DbSet<TaxaServicoConfig> TaxaServicoConfig { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
 
 
