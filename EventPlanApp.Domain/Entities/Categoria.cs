@@ -6,8 +6,6 @@ namespace EventPlanApp.Domain.Entities
     {
         public int CategoriaId { get; private set; }
         public string Nome { get; private set; }
-        public virtual ICollection<Evento> Eventos { get; private set; } = new List<Evento>();
-        public ICollection<EventoCategoria> EventoCategorias { get; set; }
 
         public Categoria(string nome)
         {
@@ -15,16 +13,6 @@ namespace EventPlanApp.Domain.Entities
                 throw new ArgumentException("Nome da categoria não pode ser nulo ou vazio.");
 
             Nome = nome;
-        }
-        public void AdicionarEvento(EventoCategoria eventoCategoria)
-        {
-            if (eventoCategoria == null)
-                throw new ArgumentException("O evento não pode ser nulo.");
-
-            if (!EventoCategorias.Any(ec => ec.EventoId == eventoCategoria.EventoId))
-            {
-                EventoCategorias.Add(eventoCategoria);
-            }
         }
     }
 }

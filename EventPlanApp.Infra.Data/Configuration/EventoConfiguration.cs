@@ -53,5 +53,9 @@ public class EventoConfiguration : IEntityTypeConfiguration<Evento>
             .WithMany(u => u.Eventos)
             .UsingEntity(j => j.ToTable("UsuarioFinalEvento"));
 
+        builder.HasOne(e => e.Categoria)
+            .WithMany()
+            .HasForeignKey(e => e.CategoriaId)
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

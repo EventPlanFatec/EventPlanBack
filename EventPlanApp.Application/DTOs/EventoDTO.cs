@@ -7,6 +7,7 @@ namespace EventPlanApp.Application.DTOs
     {
         public int EventoId { get; set; }
         public string NomeEvento { get; set; }
+        public string Tipo { get; set; }
         public string Descricao { get; set; }
         public DateTime? DataInicio { get; set; } 
         public DateTime? DataFim { get; set; }    
@@ -15,7 +16,7 @@ namespace EventPlanApp.Application.DTOs
         public int? LotacaoMaxima { get; set; }    
         public EnderecoDto? Endereco { get; set; } 
         public List<string>? Imagens { get; set; }
-        public List<int> CategoriaIds { get; set; }
+        public int CategoriaId { get; set; }
         public List<string> Tags { get; set; }
         public string? Video { get; set; }        
         public decimal? NotaMedia { get; set; }    

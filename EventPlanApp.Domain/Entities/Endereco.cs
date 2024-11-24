@@ -7,7 +7,7 @@ namespace EventPlanApp.Domain.Entities
     {
         public int Id { get; set; }
         public string TipoLogradouro { get; private set; }
-        public string Logradouro { get; private set; }
+        public string? Logradouro { get; private set; }
         public string NumeroCasa { get; private set; }
         public string Bairro { get; private set; }
         public string Cidade { get; private set; }
@@ -34,8 +34,6 @@ namespace EventPlanApp.Domain.Entities
         {
             if (string.IsNullOrWhiteSpace(tipoLogradouro))
                 throw new ArgumentException("Tipo de logradouro não pode ser nulo ou vazio.");
-            if (string.IsNullOrWhiteSpace(logradouro))
-                throw new ArgumentException("Logradouro não pode ser nulo ou vazio.");
             if (string.IsNullOrWhiteSpace(numeroCasa))
                 throw new ArgumentException("Número da casa não pode ser nulo ou vazio.");
             if (string.IsNullOrWhiteSpace(bairro))

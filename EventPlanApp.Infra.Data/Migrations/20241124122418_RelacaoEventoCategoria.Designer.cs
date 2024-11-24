@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventPlanApp.Infra.Data.Migrations
 {
     [DbContext(typeof(EventPlanContext))]
-    [Migration("20241030222510_purchase")]
-    partial class purchase
+    [Migration("20241124122418_RelacaoEventoCategoria")]
+    partial class RelacaoEventoCategoria
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,21 @@ namespace EventPlanApp.Infra.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("EventoTag", b =>
+                {
+                    b.Property<int>("EventosEventoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsTagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventosEventoId", "TagsTagId");
+
+                    b.HasIndex("TagsTagId");
+
+                    b.ToTable("EventoTag");
+                });
 
             modelBuilder.Entity("EventoUsuarioFinal", b =>
                 {
@@ -37,6 +52,50 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.HasIndex("UsuariosFinaisId");
 
                     b.ToTable("UsuarioFinalEvento", (string)null);
+                });
+
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.AvaliacaoEvento", b =>
+                {
+                    b.Property<int>("AvaliacaoEventoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvaliacaoEventoId"), 1L, 1);
+
+                    b.Property<decimal>("Avaliacao")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EventoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioFinalId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AvaliacaoEventoId");
+
+                    b.ToTable("Avaliacoes");
+                });
+
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Categoria", b =>
+                {
+                    b.Property<int>("CategoriaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoriaId"), 1L, 1);
+
+                    b.Property<int?>("EventoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CategoriaId");
+
+                    b.HasIndex("EventoId");
+
+                    b.ToTable("Categorias");
                 });
 
             modelBuilder.Entity("EventPlanApp.Domain.Entities.Endereco", b =>
@@ -78,7 +137,6 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("TipoLogradouro")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -94,6 +152,9 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventoId"), 1L, 1);
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DataFim")
                         .HasColumnType("datetime2");
@@ -127,6 +188,10 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ListaConvidadosSerializada")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("LotacaoMaxima")
                         .HasColumnType("int");
 
@@ -144,6 +209,19 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Privacidade")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Publicado")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Video")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -151,11 +229,44 @@ namespace EventPlanApp.Infra.Data.Migrations
 
                     b.HasKey("EventoId");
 
+                    b.HasIndex("CategoriaId");
+
                     b.HasIndex("EnderecoId");
 
                     b.HasIndex("OrganizacaoId");
 
                     b.ToTable("Eventos");
+                });
+
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("EventoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UsuarioFinalId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UsuarioFinalId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventoId");
+
+                    b.HasIndex("UsuarioFinalId1");
+
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("EventPlanApp.Domain.Entities.Ingresso", b =>
@@ -201,6 +312,83 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.ToTable("Ingressos");
                 });
 
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Inscricao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DataInscricao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EventoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioFinalId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UsuarioFinalId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventoId");
+
+                    b.HasIndex("UsuarioFinalId1");
+
+                    b.ToTable("Inscricoes");
+                });
+
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Permissions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.UserPreferences", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PriceRange")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPreferences");
+                });
+
             modelBuilder.Entity("EventPlanApp.Domain.Entities.UsuarioAdm", b =>
                 {
                     b.Property<int>("AdmId")
@@ -222,6 +410,9 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.Property<int>("OrganizacaoId")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Senha")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -235,6 +426,8 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.HasKey("AdmId");
 
                     b.HasIndex("OrganizacaoId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("UsuariosAdm");
                 });
@@ -265,6 +458,12 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Preferencias")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Sobrenome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -274,11 +473,84 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Tema")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EnderecoId");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("UsuariosFinais");
+                });
+
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Volunteer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Volunteers");
+                });
+
+            modelBuilder.Entity("EventPreference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("MaxPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UsuarioFinalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioFinalId");
+
+                    b.ToTable("EventPreferences");
                 });
 
             modelBuilder.Entity("ListaEspera", b =>
@@ -324,11 +596,47 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .HasPrecision(3, 1)
                         .HasColumnType("decimal(3,1)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OrganizacaoId");
 
                     b.HasIndex("EnderecoId");
 
                     b.ToTable("Organizacoes");
+                });
+
+            modelBuilder.Entity("Tag", b =>
+                {
+                    b.Property<int>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"), 1L, 1);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TagId");
+
+                    b.ToTable("Tag");
+                });
+
+            modelBuilder.Entity("EventoTag", b =>
+                {
+                    b.HasOne("EventPlanApp.Domain.Entities.Evento", null)
+                        .WithMany()
+                        .HasForeignKey("EventosEventoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EventoUsuarioFinal", b =>
@@ -346,8 +654,21 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Categoria", b =>
+                {
+                    b.HasOne("EventPlanApp.Domain.Entities.Evento", null)
+                        .WithMany("Categorias")
+                        .HasForeignKey("EventoId");
+                });
+
             modelBuilder.Entity("EventPlanApp.Domain.Entities.Evento", b =>
                 {
+                    b.HasOne("EventPlanApp.Domain.Entities.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .IsRequired();
+
                     b.HasOne("EventPlanApp.Domain.Entities.Endereco", "Endereco")
                         .WithMany()
                         .HasForeignKey("EnderecoId")
@@ -360,9 +681,30 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
+                    b.Navigation("Categoria");
+
                     b.Navigation("Endereco");
 
                     b.Navigation("Organizacao");
+                });
+
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Favorite", b =>
+                {
+                    b.HasOne("EventPlanApp.Domain.Entities.Evento", "Evento")
+                        .WithMany()
+                        .HasForeignKey("EventoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EventPlanApp.Domain.Entities.UsuarioFinal", "UsuarioFinal")
+                        .WithMany()
+                        .HasForeignKey("UsuarioFinalId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Evento");
+
+                    b.Navigation("UsuarioFinal");
                 });
 
             modelBuilder.Entity("EventPlanApp.Domain.Entities.Ingresso", b =>
@@ -384,6 +726,25 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.Navigation("UsuarioFinal");
                 });
 
+            modelBuilder.Entity("EventPlanApp.Domain.Entities.Inscricao", b =>
+                {
+                    b.HasOne("EventPlanApp.Domain.Entities.Evento", "Evento")
+                        .WithMany()
+                        .HasForeignKey("EventoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EventPlanApp.Domain.Entities.UsuarioFinal", "UsuarioFinal")
+                        .WithMany()
+                        .HasForeignKey("UsuarioFinalId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Evento");
+
+                    b.Navigation("UsuarioFinal");
+                });
+
             modelBuilder.Entity("EventPlanApp.Domain.Entities.UsuarioAdm", b =>
                 {
                     b.HasOne("Organizacao", "Organizacao")
@@ -392,7 +753,13 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EventPlanApp.Domain.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
                     b.Navigation("Organizacao");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("EventPlanApp.Domain.Entities.UsuarioFinal", b =>
@@ -403,7 +770,24 @@ namespace EventPlanApp.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EventPlanApp.Domain.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
                     b.Navigation("Endereco");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("EventPreference", b =>
+                {
+                    b.HasOne("EventPlanApp.Domain.Entities.UsuarioFinal", "UsuarioFinal")
+                        .WithMany("EventPreferences")
+                        .HasForeignKey("UsuarioFinalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UsuarioFinal");
                 });
 
             modelBuilder.Entity("ListaEspera", b =>
@@ -438,6 +822,8 @@ namespace EventPlanApp.Infra.Data.Migrations
 
             modelBuilder.Entity("EventPlanApp.Domain.Entities.Evento", b =>
                 {
+                    b.Navigation("Categorias");
+
                     b.Navigation("Ingressos");
 
                     b.Navigation("ListasEspera");
@@ -445,6 +831,8 @@ namespace EventPlanApp.Infra.Data.Migrations
 
             modelBuilder.Entity("EventPlanApp.Domain.Entities.UsuarioFinal", b =>
                 {
+                    b.Navigation("EventPreferences");
+
                     b.Navigation("Ingressos");
 
                     b.Navigation("ListasEspera");
