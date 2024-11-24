@@ -3,6 +3,8 @@ using EventPlanApp.Application.Interfaces;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
+using System.Net.Mail;
+using System.Net;
 using System.Threading.Tasks;
 
 public class EmailService : IEmailService
@@ -69,6 +71,23 @@ public class EmailService : IEmailService
         var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
 
         var response = await client.SendEmailAsync(msg);
+    }
+
+    public async Task SendEmail(string to, string subject, string body)
+    {
+        // Implementação para enviar e-mail (usando SMTP ou qualquer outro serviço de e-mail)
+        var mailMessage = new MailMessage("admin@seusite.com", to)
+        {
+            Subject = subject,
+            Body = body
+        };
+
+        var smtpClient = new SmtpClient("smtp.seusite.com")
+        {
+            Credentials = new NetworkCredential("usuario", "senha")
+        };
+
+        await smtpClient.SendMailAsync(mailMessage);
     }
 
 }
