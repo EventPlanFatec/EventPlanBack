@@ -71,6 +71,17 @@ namespace EventPlanApp.Infra.Data.Repositories
 
             return await query.ToListAsync();
         }
+
+       
+
+                // Este método pode ser ajustado para utilizar a política de retenção
+        
+
+        // Método sem parâmetros, se necessário, para retornar todos os logs
+        public async Task<IEnumerable<AuditLog>> GetAuditLogs()
+        {
+            return await _context.AuditLogs.ToListAsync();
+        }
     }
 
 }

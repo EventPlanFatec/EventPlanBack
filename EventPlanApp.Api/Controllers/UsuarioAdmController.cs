@@ -1,4 +1,5 @@
 ﻿using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -8,11 +9,14 @@ public class UsuarioAdmController : ControllerBase
 {
     private readonly IAuditService _auditService;
     private readonly IUsuarioAdmService _usuarioAdmService;  // Serviço para manipular usuários
+    private readonly IAuditLogRetentionService _auditLogRetentionService;
 
-    public UsuarioAdmController(IAuditService auditService, IUsuarioAdmService usuarioAdmService)
+    public UsuarioAdmController(IAuditService auditService, IUsuarioAdmService usuarioAdmService, IAuditLogRetentionService auditLogRetentionService)
     {
         _auditService = auditService;
         _usuarioAdmService = usuarioAdmService;
+        _auditLogRetentionService = auditLogRetentionService;
+        _auditLogRetentionService = auditLogRetentionService;
     }
 
     [HttpGet("{id-userAdm-get}")]
@@ -50,5 +54,14 @@ public class UsuarioAdmController : ControllerBase
     {
         await _usuarioAdmService.ExcluirUsuarioAdmAsync(id);
         return NoContent();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SetRetentionPolicy(AuditLogRetentionPolicy policy)
+    {
+        // Aplicar a política de retenção de logs
+        await _auditLogRetentionService.ApplyRetentionPolicy(policy);
+
+        return RedirectToAction("RetentionPolicyPage");
     }
 }
