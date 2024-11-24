@@ -15,6 +15,7 @@ namespace EventPlanApp.Domain.Interfaces
         Task AddAsync(TaxaServicoConfig taxaServicoConfig);
         void Update(TaxaServicoConfig taxaServicoConfig);
         void Remove(TaxaServicoConfig taxaServicoConfig);
+        Task<TaxaServicoConfig> ObterTaxaServicoPorEventoAsync(int eventoId);
 
     }
 }
