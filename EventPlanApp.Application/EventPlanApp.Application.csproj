@@ -23,4 +23,8 @@
     <ProjectReference Include="..\EventPlanApp.Infra.Data\EventPlanApp.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>

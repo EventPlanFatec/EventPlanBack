@@ -20,5 +20,7 @@ namespace EventPlanApp.Domain.Entities
         public string ActionType { get; set; }  // Tipo da ação (criação, edição, etc.)
         public string EntityName { get; set; }  // Nome da entidade afetada
         public DateTime Date { get; set; }  // Data e hora da ação
+        public string Details { get; set; }
+        public bool IsSuspicious { get; set; }
     }
 }
