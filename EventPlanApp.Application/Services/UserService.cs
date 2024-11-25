@@ -1,4 +1,6 @@
-﻿using EventPlanApp.Domain.Entities;
+﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +17,15 @@ namespace EventPlanApp.Application.Services
         private readonly IUsuarioAdmRepository _usuarioAdmRepository;
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
         private readonly EventPlanContext _context;
-        
+        private readonly IEmailService _emailService;
 
-        public UserService(IUsuarioAdmRepository usuarioAdmRepository, IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context)
+
+        public UserService(IUsuarioAdmRepository usuarioAdmRepository, IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context, IEmailService emailService)
         {
             _usuarioAdmRepository = usuarioAdmRepository;
             _usuarioFinalRepository = usuarioFinalRepository;
             _context = context;
+            _emailService = emailService;
         }
 
         public async Task<bool> UserHasPermission(int userId, string permission)
@@ -57,6 +61,47 @@ namespace EventPlanApp.Application.Services
         {
             await _usuarioFinalRepository.UpdateAsync(usuario);
         }
-    }
 
+        public async Task CriarUsuarioFinalAsync(UsuarioFinal usuario)
+        {
+            // Salvar o usuário no banco de dados (supondo que o repositório já esteja implementado)
+            await _usuarioFinalRepository.AddAsync(usuario);
+
+            // Gerar o link de acesso para o primeiro login (por exemplo, um link com um token de primeiro acesso)
+            string linkAcesso = GerarLinkPrimeiroAcesso(usuario.Email);
+
+            // Enviar o e-mail de boas-vindas
+            await EnviarEmailBoasVindasAsync(usuario.Email, usuario.Nome, linkAcesso);
+        }
+
+        private string GerarLinkPrimeiroAcesso(string email)
+        {
+            // Geração do link (um exemplo simples, mas pode incluir um token de segurança)
+            return $"https://www.eventplan.com/primeiro-acesso?email={email}";
+        }
+
+        // O método que envia o e-mail de boas-vindas, conforme mostrado anteriormente
+        public async Task EnviarEmailBoasVindasAsync(string email, string nome, string linkAcesso)
+        {
+            string assunto = "Bem-vindo ao EventPlan!";
+            string corpoEmail = $@"
+        <p>Olá {nome},</p>
+        <p>Bem-vindo ao EventPlan! Estamos felizes em tê-lo conosco.</p>
+        <p>Para começar, por favor, siga as instruções abaixo para acessar sua conta:</p>
+        <p><a href='{linkAcesso}'>Clique aqui para acessar sua conta e configurar sua senha.</a></p>
+        <p>Se você tiver algum problema, nossa equipe está à disposição para ajudá-lo.</p>
+        <p>Atenciosamente,<br>Equipe EventPlan</p>
+        ";
+
+            var mensagemEmail = new MensagemEmail
+            {
+                Destinatario = email,
+                Assunto = assunto,
+                Conteudo = corpoEmail
+            };
+
+            // Envia o e-mail
+            await _emailService.SendEmailAsync(mensagemEmail);
+        }
+    }
 }
