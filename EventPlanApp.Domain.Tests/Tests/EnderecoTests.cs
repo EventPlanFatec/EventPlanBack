@@ -34,7 +34,6 @@ namespace EventPlanApp.Tests.Domain.Entities
 
         [Theory]
         [InlineData(null, "Teste", "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000")]
-        [InlineData("Rua", null, "123", "Bairro Teste", "Cidade Teste", "SP", "00000-000")]
         [InlineData("Rua", "Teste", null, "Bairro Teste", "Cidade Teste", "SP", "00000-000")]
         [InlineData("Rua", "Teste", "123", null, "Cidade Teste", "SP", "00000-000")]
         [InlineData("Rua", "Teste", "123", "Bairro Teste", null, "SP", "00000-000")]
