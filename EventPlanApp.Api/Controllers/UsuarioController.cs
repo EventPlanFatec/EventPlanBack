@@ -16,12 +16,14 @@ namespace EventPlanApp.Api.Controllers
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
         private readonly EventPlanContext _context;
         private readonly IUsuarioService _usuarioService;
+        private readonly UserService _userService;
 
-        public UsuarioController(IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context, IUsuarioService usuarioService)
+        public UsuarioController(IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context, IUsuarioService usuarioService, UserService userService)
         {
             _usuarioFinalRepository = usuarioFinalRepository;
             _context = context;
             _usuarioService = usuarioService;
+            _userService = userService;
         }
 
         // GET: api/usuario/tema/{id}
@@ -185,6 +187,18 @@ namespace EventPlanApp.Api.Controllers
             return Ok("Usuário desativado com sucesso.");
         }
 
-        
+        [HttpPost("deactivate/{userId}")]
+        public async Task<IActionResult> DeactivateUser(Guid userId) // Alterando para Guid
+        {
+            try
+            {
+                await _userService.DeactivateUserAsync(userId);
+                return Ok("Usuário desativado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao desativar o usuário: {ex.Message}");
+            }
+        }
     }
 }

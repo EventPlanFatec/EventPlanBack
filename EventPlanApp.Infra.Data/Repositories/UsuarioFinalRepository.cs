@@ -48,6 +48,16 @@ namespace EventPlanApp.Infra.Data.Repositories
         {
             return await _context.UsuariosFinais.FindAsync(userId);
         }
-       
+
+        public async Task DeactivateUserAsync(int userId)
+        {
+            var user = await GetByIdAsync(userId);
+            if (user != null)
+            {
+                user.IsActive = false; // Define o usuário como inativo
+                await UpdateAsync(user); // Atualiza no banco de dados
+            }
+        }
+
     }
 }

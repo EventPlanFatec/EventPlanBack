@@ -18,14 +18,16 @@ namespace EventPlanApp.Application.Services
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
         private readonly EventPlanContext _context;
         private readonly IEmailService _emailService;
+        private readonly IUserRepository _userRepository;
 
 
-        public UserService(IUsuarioAdmRepository usuarioAdmRepository, IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context, IEmailService emailService)
+        public UserService(IUsuarioAdmRepository usuarioAdmRepository, IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context, IEmailService emailService, IUserRepository userRepository)
         {
             _usuarioAdmRepository = usuarioAdmRepository;
             _usuarioFinalRepository = usuarioFinalRepository;
             _context = context;
             _emailService = emailService;
+            _userRepository = userRepository;
         }
 
         public async Task<bool> UserHasPermission(int userId, string permission)
@@ -102,6 +104,21 @@ namespace EventPlanApp.Application.Services
 
             // Envia o e-mail
             await _emailService.SendEmailAsync(mensagemEmail);
+        }
+
+        public async Task DeactivateUserAsync(Guid userId)
+        {
+            // Verificar se o usuário existe
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado.");
+            }
+
+            // Chama o repositório para desativar o usuário
+            await _userRepository.DeactivateUserAsync(user.Id); // Acessando a propriedade 'Id'
+
+            // Aqui, você pode adicionar a lógica de notificação por e-mail, se necessário
         }
     }
 }

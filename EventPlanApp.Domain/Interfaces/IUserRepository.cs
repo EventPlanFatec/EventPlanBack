@@ -13,6 +13,7 @@ namespace EventPlanApp.Domain.Interfaces
         Task UpdateAsync(UsuarioFinal usuarioFinal);
         Task<IEnumerable<UsuarioFinal>> GetAdmins();
         Task<string> GetFailedLoginAttempts(string userId);
+        Task DeactivateUserAsync(Guid userId);
 
     }
 }
