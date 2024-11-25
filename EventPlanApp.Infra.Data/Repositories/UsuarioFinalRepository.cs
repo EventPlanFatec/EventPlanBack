@@ -43,5 +43,11 @@ namespace EventPlanApp.Infra.Data.Repositories
             await _context.UsuariosFinais.AddAsync(usuarioFinal); // Adiciona o usuário ao DbContext
             await _context.SaveChangesAsync(); // Salva as alterações no banco de dados
         }
+
+        public async Task<UsuarioFinal> GetByIdAsync(int userId)
+        {
+            return await _context.UsuariosFinais.FindAsync(userId);
+        }
+       
     }
 }
