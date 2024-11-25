@@ -1,6 +1,9 @@
 ﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
+using EventPlanApp.Infra.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventPlanApp.Api.Controllers
 {
@@ -9,10 +12,12 @@ namespace EventPlanApp.Api.Controllers
     public class UsuarioController : Controller
     {
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
+        private readonly EventPlanContext _context;
 
-        public UsuarioController(IUsuarioFinalRepository usuarioFinalRepository)
+        public UsuarioController(IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context)
         {
             _usuarioFinalRepository = usuarioFinalRepository;
+            _context = context;
         }
 
         // GET: api/usuario/tema/{id}
@@ -48,6 +53,72 @@ namespace EventPlanApp.Api.Controllers
 
             return NoContent();
         }
-        
+
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateUsuario([FromBody] CreateUserRequest request)
+        {
+            if (request == null)
+                return BadRequest("Dados inválidos.");
+
+            // Validar se todos os campos obrigatórios estão preenchidos
+            if (string.IsNullOrWhiteSpace(request.Email))
+                return BadRequest("O e-mail é obrigatório.");
+
+            if (string.IsNullOrWhiteSpace(request.Nome))
+                return BadRequest("O nome é obrigatório.");
+
+            if (string.IsNullOrWhiteSpace(request.Sobrenome))
+                return BadRequest("O sobrenome é obrigatório.");
+
+            if (request.DataNascimento == default)
+                return BadRequest("A data de nascimento é obrigatória.");
+
+            // Verificar se o e-mail já está registrado
+            var existingUser = await _context.Usuarios
+                .AnyAsync(u => u.Email == request.Email);
+            if (existingUser)
+                return Conflict("Este e-mail já está registrado.");
+
+            try
+            {
+                // Criar o objeto de endereço utilizando o construtor da classe Endereco
+                var endereco = new Endereco(
+                    request.Endereco.TipoLogradouro,
+                    request.Endereco.Logradouro,
+                    request.Endereco.NumeroCasa,
+                    request.Endereco.Bairro,
+                    request.Endereco.Cidade,
+                    request.Endereco.Estado,
+                    request.Endereco.CEP
+                );
+
+                // Criar o usuário com o endereço
+                var usuario = new UsuarioFinal(
+                    request.Nome,
+                    request.Sobrenome,
+                    endereco,
+                    request.Email,
+                    request.Telefone,
+                    request.Ddd,
+                    request.DataNascimento
+                );
+
+                // Salvar o usuário no banco de dados
+                _context.Usuarios.Add(usuario);
+                await _context.SaveChangesAsync();
+
+                // Enviar e-mail de boas-vindas (pseudo código)
+                // await EmailService.SendWelcomeEmail(usuario.Email);
+
+                return Ok(new { message = "Usuário criado com sucesso!" });
+            }
+            catch (Exception ex)
+            {
+                // Log de erro pode ser adicionado aqui
+                return StatusCode(500, $"Erro ao criar o usuário: {ex.Message}");
+            }
+        }
+
     }
 }
