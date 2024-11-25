@@ -1,5 +1,6 @@
 ﻿using EventPlanApp.Application.DTOs;
 using EventPlanApp.Application.Interfaces;
+using EventPlanApp.Application.Services;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data;
@@ -184,5 +185,6 @@ namespace EventPlanApp.Api.Controllers
             return Ok("Usuário desativado com sucesso.");
         }
 
+        
     }
 }
