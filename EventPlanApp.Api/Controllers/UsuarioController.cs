@@ -1,4 +1,5 @@
 ﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Domain.Entities;
 using EventPlanApp.Domain.Interfaces;
 using EventPlanApp.Infra.Data;
@@ -13,11 +14,13 @@ namespace EventPlanApp.Api.Controllers
     {
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
         private readonly EventPlanContext _context;
+        private readonly IUsuarioService _usuarioService;
 
-        public UsuarioController(IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context)
+        public UsuarioController(IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context, IUsuarioService usuarioService)
         {
             _usuarioFinalRepository = usuarioFinalRepository;
             _context = context;
+            _usuarioService = usuarioService;
         }
 
         // GET: api/usuario/tema/{id}
@@ -164,6 +167,21 @@ namespace EventPlanApp.Api.Controllers
                 // Log de erro pode ser adicionado aqui
                 return StatusCode(500, $"Erro ao atualizar o usuário: {ex.Message}");
             }
+        }
+
+        [HttpPost("desativar-usuario/{id}")]
+        public async Task<IActionResult> DesativarUsuario(int id)
+        {
+            var usuario = await _usuarioService.GetByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound("Usuário não encontrado.");
+            }
+
+            usuario.IsActive = false; // Certifique-se de que a propriedade existe
+            await _usuarioService.UpdateAsync(usuario);
+
+            return Ok("Usuário desativado com sucesso.");
         }
 
     }

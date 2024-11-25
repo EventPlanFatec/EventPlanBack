@@ -15,6 +15,7 @@ namespace EventPlanApp.Application.Services
         private readonly IUsuarioAdmRepository _usuarioAdmRepository;
         private readonly IUsuarioFinalRepository _usuarioFinalRepository;
         private readonly EventPlanContext _context;
+        
 
         public UserService(IUsuarioAdmRepository usuarioAdmRepository, IUsuarioFinalRepository usuarioFinalRepository, EventPlanContext context)
         {
@@ -45,6 +46,16 @@ namespace EventPlanApp.Application.Services
             return await _context.UsuariosAdm
                                  .Include(u => u.Role)  // Incluindo o relacionamento com Role
                                  .FirstOrDefaultAsync(u => u.AdmId == id); // Aqui, usando o Guid para buscar o UsuarioAdm
+        }
+
+        public async Task<UsuarioFinal> GetByIdAsync(int id)
+        {
+            return await _usuarioFinalRepository.GetByIdAsync(id);
+        }
+
+        public async Task UpdateAsync(UsuarioFinal usuario)
+        {
+            await _usuarioFinalRepository.UpdateAsync(usuario);
         }
     }
 
