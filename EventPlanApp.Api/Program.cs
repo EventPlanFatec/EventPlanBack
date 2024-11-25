@@ -43,6 +43,8 @@ builder.Services.AddScoped<IIngressoRepository, IngressoRepository>();
 
 
 
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
