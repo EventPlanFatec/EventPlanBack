@@ -59,5 +59,15 @@ namespace EventPlanApp.Infra.Data.Repositories
             }
         }
 
+        public async Task DeleteUserAsync(Guid userId)
+        {
+            var user = await _context.UsuariosFinais.FindAsync(userId);
+            if (user != null)
+            {
+                _context.UsuariosFinais.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }
