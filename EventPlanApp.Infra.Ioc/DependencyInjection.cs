@@ -12,6 +12,7 @@ namespace EventPlanApp.Infra.Ioc
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
+
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<IEventoRepository, EventoRepository>();
             services.AddScoped<IUsuarioFinalRepository, UsuarioFinalRepository>();
@@ -25,6 +26,10 @@ namespace EventPlanApp.Infra.Ioc
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IEventoEstatisticasService, EventoEstatisticasService>();
+            services.AddScoped<IEventPreferenceRepository, EventPreferenceRepository>();
+            services.AddScoped<IEventPreferenceService, EventPreferenceService>();
+            services.AddScoped<IPermissionService, PermissionService>();
 
             var sendGridApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             services.AddScoped<IEmailService>(provider => new EmailService(sendGridApiKey));

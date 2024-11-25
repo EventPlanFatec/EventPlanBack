@@ -77,13 +77,7 @@ namespace EventPlanApp.API.Controllers
             {
                 return NotFound("No events found.");
             }
-
-            return Ok(events.Select(e => new
-            {
-                e.NomeEvento,
-                e.DataInicio,
-                e.DataFim
-            }));
+            return Ok(events);
         }
 
         [HttpPost]
