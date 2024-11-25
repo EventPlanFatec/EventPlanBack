@@ -120,5 +120,19 @@ namespace EventPlanApp.Application.Services
 
             // Aqui, você pode adicionar a lógica de notificação por e-mail, se necessário
         }
+
+        public async Task DeleteUserAsync(Guid userId)
+        {
+            // Verificar se o usuário existe
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado.");
+            }
+
+            // Chama o repositório para excluir o usuário
+            await _userRepository.DeleteUserAsync(userId);
+
+        }
     }
 }
