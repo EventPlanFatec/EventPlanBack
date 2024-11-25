@@ -120,5 +120,51 @@ namespace EventPlanApp.Api.Controllers
             }
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateUsuario(Guid id, [FromBody] UpdateUsuarioRequest request)
+        {
+            if (request == null)
+                return BadRequest("Os dados enviados são inválidos.");
+
+            // Buscar o usuário existente no banco de dados
+            var usuario = await _context.Usuarios
+                .Include(u => u.Role) // Carregar dados relacionados à Role
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (usuario == null)
+                return NotFound("Usuário não encontrado.");
+
+            try
+            {
+                // Atualizar as propriedades do usuário
+                if (!string.IsNullOrWhiteSpace(request.Nome))
+                    usuario.SetNome(request.Nome);
+
+                if (!string.IsNullOrWhiteSpace(request.Sobrenome))
+                    usuario.SetSobrenome(request.Sobrenome);
+
+                if (!string.IsNullOrWhiteSpace(request.Email))
+                    usuario.SetEmail(request.Email);
+
+                if (request.RoleId.HasValue)
+                    usuario.AssignRole(request.RoleId.Value);
+
+                // Atualizar o tema, caso informado
+                if (!string.IsNullOrWhiteSpace(request.Tema))
+                    usuario.SetTema(request.Tema);
+
+                // Salvar mudanças no banco de dados
+                _context.Usuarios.Update(usuario);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Usuário atualizado com sucesso!" });
+            }
+            catch (Exception ex)
+            {
+                // Log de erro pode ser adicionado aqui
+                return StatusCode(500, $"Erro ao atualizar o usuário: {ex.Message}");
+            }
+        }
+
     }
 }

@@ -89,6 +89,34 @@ namespace EventPlanApp.Domain.Entities
 
             Tema = tema;
         }
-        
+
+        public void SetNome(string nome)
+        {
+            if (string.IsNullOrWhiteSpace(nome))
+                throw new ArgumentException("Nome não pode ser nulo ou vazio.");
+            if (nome.Length < 3 || nome.Length > 100)
+                throw new ArgumentException("O nome deve ter entre 3 e 100 caracteres.");
+
+            Nome = nome;
+        }
+
+        public void SetSobrenome(string sobrenome)
+        {
+            if (string.IsNullOrWhiteSpace(sobrenome))
+                throw new ArgumentException("Sobrenome não pode ser nulo ou vazio.");
+            if (sobrenome.Length < 3 || sobrenome.Length > 100)
+                throw new ArgumentException("O sobrenome deve ter entre 3 e 100 caracteres.");
+
+            Sobrenome = sobrenome;
+        }
+
+        public void SetEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                throw new ArgumentException("Email deve ser um formato válido.");
+
+            Email = email;
+        }
+
     }
 }
