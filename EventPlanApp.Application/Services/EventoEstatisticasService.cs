@@ -1,4 +1,5 @@
 ﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Application.Interfaces;
 using EventPlanApp.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EventPlanApp.Application.Services
 {
-    public class EventoEstatisticasService
+    public class EventoEstatisticasService : IEventoEstatisticasService
     {
         private readonly IEventoRepository _eventoRepository;
 
