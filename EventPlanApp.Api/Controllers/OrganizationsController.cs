@@ -34,7 +34,7 @@ namespace EventPlanApp.Api.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("{id}/status")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetStatus(int id)
         {
             var organizacao = await _organizacaoRepository.GetByIdAsync(id);
@@ -43,7 +43,7 @@ namespace EventPlanApp.Api.Controllers
                 return NotFound("Organização não encontrada.");
             }
 
-            return Ok(new { Status = organizacao.Status }); // Retornar o status
+            return Ok();
         }
     }
 }

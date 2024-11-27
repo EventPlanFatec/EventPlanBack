@@ -4,15 +4,13 @@ namespace EventPlanApp.Domain.Entities
 {
     public class Categoria
     {
+        public Categoria(string nome)
+        {
+            Nome = nome;
+        }
+
         public int CategoriaId { get; private set; }
         public string Nome { get; private set; }
 
-        public Categoria(string nome)
-        {
-            if (string.IsNullOrWhiteSpace(nome))
-                throw new ArgumentException("Nome da categoria não pode ser nulo ou vazio.");
-
-            Nome = nome;
-        }
     }
 }

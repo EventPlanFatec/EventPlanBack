@@ -272,30 +272,6 @@ namespace EventPlanApp.Application.Services
             return await _context.Eventos.Include(e => e.Categoria)
                                          .FirstOrDefaultAsync(e => e.EventoId == id);
         }
-
-        public async Task CriarEventoAsync(Evento evento)
-        {
-            await _context.Eventos.AddAsync(evento);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task AtualizarEventoAsync(Evento evento)
-        {
-            _context.Eventos.Update(evento);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeletarEventoAsync(int id)
-        {
-            var evento = await _context.Eventos.FindAsync(id);
-            if (evento != null)
-            {
-                _context.Eventos.Remove(evento);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-
     }
 
 }

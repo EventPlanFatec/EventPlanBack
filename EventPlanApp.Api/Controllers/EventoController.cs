@@ -184,42 +184,12 @@ namespace EventPlanApp.API.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEvent(int id, [FromBody] Evento eventoAtualizado)
+        public async Task<IActionResult> UpdateEvent(int id,[FromBody] EventoDto eventoDto)
         {
-            if (id != eventoAtualizado.EventoId)
-            {
-                return BadRequest("O ID do evento na URL não corresponde ao ID do evento no corpo da requisição.");
-            }
-
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var eventoExistente = await _eventoRepository.GetByIdAsync(id);
-                if (eventoExistente == null)
-                {
-                    return NotFound("Evento não encontrado.");
-                }
-
-                eventoExistente.AtualizarEvento(
-                    eventoAtualizado.NomeEvento,
-                    eventoAtualizado.DataInicio,
-                    eventoAtualizado.DataFim,
-                    eventoAtualizado.HorarioInicio,
-                    eventoAtualizado.HorarioFim,
-                    eventoAtualizado.LotacaoMaxima
-                );
-
-                await _eventoRepository.UpdateAsync(eventoExistente);
-                return NoContent(); // 204 No Content
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao atualizar o evento: {ex.Message}");
-            }
+            
+                await _eventoService.Update(id, eventoDto);
+                return NoContent(); 
+            
         }
 
         [HttpPut("{id}/senha")]
@@ -640,53 +610,5 @@ namespace EventPlanApp.API.Controllers
             var estatisticas = await _eventoEstatisticasService.ObterEstatisticasPorEventoAsync(eventoId);
             return Ok(estatisticas);
         }
-
-        
-
-        [HttpGet("{obter-evento-por-id}")]
-        public async Task<IActionResult> GetEvento(int id)
-        {
-            var evento = await _eventoService.ObterEventoPorIdAsync(id);
-            if (evento == null)
-                return NotFound();
-
-            return Ok(evento);
-        }
-
-        [HttpPost("criar-evento")]
-        public async Task<IActionResult> CreateEvento([FromBody] Evento evento)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            await _eventoService.CriarEventoAsync(evento);
-            return CreatedAtAction(nameof(GetEvento), new { id = evento.EventoId }, evento);
-        }
-
-        [HttpPut("{atualizat-evento}")]
-        public async Task<IActionResult> UpdateEvento(int id, [FromBody] Evento evento)
-        {
-            if (id != evento.EventoId)
-                return BadRequest();
-
-            var eventoExistente = await _eventoService.ObterEventoPorIdAsync(id);
-            if (eventoExistente == null)
-                return NotFound();
-
-            await _eventoService.AtualizarEventoAsync(evento);
-            return NoContent();
-        }
-
-        [HttpDelete("{deletar-evento}")]
-        public async Task<IActionResult> DeleteEvento(int id)
-        {
-            var eventoExistente = await _eventoService.ObterEventoPorIdAsync(id);
-            if (eventoExistente == null)
-                return NotFound();
-
-            await _eventoService.DeletarEventoAsync(id);
-            return NoContent();
-        }
-
     }
 }
