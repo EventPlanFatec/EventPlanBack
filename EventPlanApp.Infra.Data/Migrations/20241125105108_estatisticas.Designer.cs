@@ -4,6 +4,7 @@ using EventPlanApp.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventPlanApp.Infra.Data.Migrations
 {
     [DbContext(typeof(EventPlanContext))]
-    partial class EventPlanContextModelSnapshot : ModelSnapshot
+    [Migration("20241125105108_estatisticas")]
+    partial class estatisticas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,7 +112,6 @@ namespace EventPlanApp.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuditLogs", (string)null);
                     b.ToTable("AuditLogs");
                 });
 
@@ -463,30 +464,6 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.ToTable("TaxaServicoConfig");
                 });
 
-            modelBuilder.Entity("EventPlanApp.Domain.Entities.TaxaServicoConfig", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("EventoId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("TaxaFixa")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("TaxaPercentual")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventoId");
-
-                    b.ToTable("TaxaServicoConfig", (string)null);
-                });
-
             modelBuilder.Entity("EventPlanApp.Domain.Entities.UserPreferences", b =>
                 {
                     b.Property<string>("Id")
@@ -608,6 +585,7 @@ namespace EventPlanApp.Infra.Data.Migrations
                     b.HasIndex("EnderecoId");
 
                     b.HasIndex("RoleId");
+
                     b.ToTable("UsuarioFinal");
                 });
 
