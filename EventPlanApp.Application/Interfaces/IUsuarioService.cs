@@ -1,15 +1,10 @@
-﻿using EventPlanApp.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EventPlanApp.Application.DTOs;
+using EventPlanApp.Domain.Entities;
 
 namespace EventPlanApp.Application.Interfaces
 {
-    public interface IUsuarioService
+    public interface IUsuarioService : IService<UsuarioDTO>
     {
-        Task<UsuarioFinal> GetByIdAsync(int id);
-        Task UpdateAsync(UsuarioFinal usuario);
+        // Métodos específicos de Usuario, se necessário
     }
 }

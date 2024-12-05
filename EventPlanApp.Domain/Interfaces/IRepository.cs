@@ -9,6 +9,5 @@ namespace EventPlanApp.Domain.Interfaces
         Task<T> Add(T entity);
         Task<T> Update(int id, T entity);
         Task<bool> Delete(int id);
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
     }
 }

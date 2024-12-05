@@ -8,27 +8,11 @@ namespace EventPlanApp.Infra.Data
     {
         public EventPlanContext(DbContextOptions<EventPlanContext> options) : base(options) { }
 
-        public DbSet<UsuarioFinal> UsuariosFinais { get; set; }
-        public DbSet<UsuarioAdm> UsuariosAdm { get; set; }
-        public DbSet<Organizacao> Organizacoes { get; set; }
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Ingresso> Ingressos { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
-        public DbSet<ListaEspera> ListasEspera { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Favorite> Favorites { get; set; }
-        public DbSet<Volunteer> Volunteers { get; set; }
-        public DbSet<UserPreferences> UserPreferences { get; set; }
-        public DbSet<EventPreference> EventPreferences { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<Inscricao> Inscricoes { get; set; }
-        public DbSet<AvaliacaoEvento> Avaliacoes { get; set; }
-        public DbSet<TaxaServicoConfig> TaxaServicoConfig { get; set; }
-        public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<UsuarioFinal> Usuarios { get; set; }
-
-
-
+        public DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
