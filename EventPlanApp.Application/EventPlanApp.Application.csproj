@@ -7,9 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="ViewModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Abp" Version="7.0.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="BCrypt.Net" Version="0.1.0" />
+    <PackageReference Include="FireSharp" Version="2.0.4" />
     <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.68.0.3557" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
@@ -21,10 +28,6 @@
   <ItemGroup>
     <ProjectReference Include="..\EventPlanApp.Domain\EventPlanApp.Domain.csproj" />
     <ProjectReference Include="..\EventPlanApp.Infra.Data\EventPlanApp.Infra.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>

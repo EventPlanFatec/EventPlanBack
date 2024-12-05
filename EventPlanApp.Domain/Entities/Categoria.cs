@@ -1,18 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace EventPlanApp.Domain.Entities
+﻿namespace EventPlanApp.Domain.Entities;
+public class Categoria
 {
-    public class Categoria
-    {
-        public int CategoriaId { get; private set; }
-        public string Nome { get; private set; }
-
-        public Categoria(string nome)
-        {
-            if (string.IsNullOrWhiteSpace(nome))
-                throw new ArgumentException("Nome da categoria não pode ser nulo ou vazio.");
-
-            Nome = nome;
-        }
-    }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string Nome { get; set; }
+    public string Descricao { get; set; }
+    public List<string> EventosIds { get; set; } = new List<string>();
 }

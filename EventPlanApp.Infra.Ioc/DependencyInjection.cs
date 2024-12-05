@@ -13,26 +13,22 @@ namespace EventPlanApp.Infra.Ioc
         {
             services.AddAutoMapper(typeof(DomainToDTOMappingProfile));
 
-            services.AddScoped<IEventoService, EventoService>();
-            services.AddScoped<IEventoRepository, EventoRepository>();
-            services.AddScoped<IUsuarioFinalRepository, UsuarioFinalRepository>();
-            services.AddScoped<IIngressoRepository, IngressoRepository>();
-            services.AddScoped<IIngressoService, IngressoService>();
-            services.AddScoped<IOrganizacaoRepository, OrganizacaoRepository>();
-            services.AddScoped<IOrganizacaoService, OrganizacaoService>();
-            services.AddScoped<ICalendarService, CalendarService>();
-            services.AddScoped<IVolunteerRepository, VolunteerRepository>();
-            services.AddScoped<IVolunteerService, VolunteerService>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IAuthorizationService, AuthorizationService>();
-            services.AddScoped<IEventoEstatisticasService, EventoEstatisticasService>();
-            services.AddScoped<IEventPreferenceRepository, EventPreferenceRepository>();
-            services.AddScoped<IEventPreferenceService, EventPreferenceService>();
-            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<DomainToDTOMappingProfile>();
 
-            var sendGridApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
-            services.AddScoped<IEmailService>(provider => new EmailService(sendGridApiKey));
+            services.AddScoped<IIngressoRepository, IngressoRepository>();
+            services.AddScoped<IEventoRepository, EventoRepository>();
+            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+
+            services.AddScoped<IIngressoService, IngressoService>();
+            services.AddScoped<IEventoService, EventoService>();
+            services.AddScoped<IEnderecoService, EnderecoService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<ICategoriaService, CategoriaService>();
+            //services.AddScoped<IFirebaseService, FirebaseService>();
 
             return services;
         }

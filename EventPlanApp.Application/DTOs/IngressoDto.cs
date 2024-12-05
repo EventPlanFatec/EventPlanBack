@@ -1,15 +1,11 @@
-﻿namespace EventPlanApp.Application.DTOs
+﻿namespace EventPlanApp.Application.DTOs;
+public class IngressoDTO
 {
-    public class IngressoDto
-    {
-        public int IngressoId { get; set; }
-        public decimal Valor { get; set; }
-        public string QRCode { get; set; }
-        public string NomeEvento { get; set; }
-        public DateTime Data { get; set; }
-        public Guid UsuarioFinalId { get; set; }
-        public int EventoId { get; set; }
-        public bool Vip { get; set; }
-    }
-
+    public string Id { get; set; }
+    public string EventoId { get; set; }
+    public string UsuarioId { get; set; }
+    public string TipoIngresso { get; set; }
+    public decimal Valor { get; set; }
+    public DateTime DataCompra { get; set; }
+    public bool IsValido { get; set; }
 }
