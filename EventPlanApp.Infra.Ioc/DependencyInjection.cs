@@ -15,6 +15,7 @@ namespace EventPlanApp.Infra.Ioc
 
             services.AddScoped<DomainToDTOMappingProfile>();
 
+            // Registrando os repositórios
             services.AddScoped<IIngressoRepository, IngressoRepository>();
             services.AddScoped<IEventoRepository, EventoRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
@@ -22,13 +23,22 @@ namespace EventPlanApp.Infra.Ioc
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
+            // Registrando os serviços
             services.AddScoped<IIngressoService, IngressoService>();
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<IEnderecoService, EnderecoService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ICategoriaService, CategoriaService>();
-            //services.AddScoped<IFirebaseService, FirebaseService>();
+
+            // Registrando o serviço Firebase
+            services.AddScoped<IFirebaseService, FirebaseService>();
+
+            // Registrando o repositório Firebase
+            services.AddScoped<IFirebaseRepository, FirebaseRepository>();
+
+            // Registrando o serviço de sincronização
+            services.AddScoped<EventoSyncService>();
 
             return services;
         }

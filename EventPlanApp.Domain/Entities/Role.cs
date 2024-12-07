@@ -6,4 +6,6 @@ public class Role
     public string Nome { get; set; }
     public string Descricao { get; set; }
     public List<string> Permissoes { get; set; } = new List<string>();
+
+    public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 }

@@ -10,6 +10,7 @@ public class Endereco
     public string Cidade { get; set; }
     public string Estado { get; set; }
     public string Cep { get; set; }
-    public List<string> UsuariosIds { get; set; } = new List<string>();
-    public List<string> EventosIds { get; set; } = new List<string>();
+
+    public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public ICollection<Evento> Eventos { get; set; } = new List<Evento>();
 }
