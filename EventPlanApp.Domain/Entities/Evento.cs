@@ -18,6 +18,11 @@ public class Evento
     public string ValorMin { get; set; }
 
     // Relacionamentos
-    public List<string> IngressosIds { get; set; } = new List<string>();
-    public List<string> UsuariosIds { get; set; } = new List<string>();
+    public Categoria? Categoria { get; set; }
+    public string? CategoriaId { get; set; }
+
+    public Endereco? Endereco { get; set; }
+    public string? EnderecoId { get; set; }
+    public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public ICollection<Ingresso> Ingressos { get; set; } = new List<Ingresso>();
 }

@@ -23,7 +23,7 @@ namespace EventPlanApp.Application.Services
             return _mapper.Map<IEnumerable<TDTO>>(entities);
         }
 
-        public virtual async Task<TDTO> GetById(int id)
+        public virtual async Task<TDTO> GetById(string id)
         {
             var entity = await _repository.GetById(id);
             return _mapper.Map<TDTO>(entity);
@@ -36,14 +36,14 @@ namespace EventPlanApp.Application.Services
             return _mapper.Map<TDTO>(addedEntity);
         }
 
-        public virtual async Task<TDTO> Update(int id, TDTO dto)
+        public virtual async Task<TDTO> Update(string id, TDTO dto)
         {
             var entity = _mapper.Map<TEntity>(dto);
             var updatedEntity = await _repository.Update(id, entity);
             return _mapper.Map<TDTO>(updatedEntity);
         }
 
-        public virtual async Task<bool> Delete(int id)
+        public virtual async Task<bool> Delete(string id)
         {
             return await _repository.Delete(id);
         }

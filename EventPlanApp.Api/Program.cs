@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EventPlanContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<FirebaseDbContext>();
+
 builder.Services.AddApplicationServices();
 
 builder.Services.AddCors(options =>

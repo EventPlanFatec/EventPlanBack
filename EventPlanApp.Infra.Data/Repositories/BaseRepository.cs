@@ -17,7 +17,7 @@ namespace EventPlanApp.Infra.Data.Repositories
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public virtual async Task<TEntity> GetById(int id)
+        public virtual async Task<TEntity> GetById(string id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }
@@ -29,7 +29,7 @@ namespace EventPlanApp.Infra.Data.Repositories
             return entity;
         }
 
-        public virtual async Task<bool> Delete(int id)
+        public virtual async Task<bool> Delete(string id)
         {
             var entity = await GetById(id);
             if (entity == null)
@@ -40,7 +40,7 @@ namespace EventPlanApp.Infra.Data.Repositories
             return true;
         }
 
-        public virtual async Task<TEntity> Update(int id, TEntity entity)
+        public virtual async Task<TEntity> Update(string id, TEntity entity)
         {
             var existingEntity = await GetById(id);
             if (existingEntity == null)

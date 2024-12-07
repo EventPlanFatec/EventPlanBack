@@ -29,7 +29,7 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public virtual async Task<ActionResult<TDTO>> GetById(int id)
+        public virtual async Task<ActionResult<TDTO>> GetById(string id)
         {
             var dto = await _service.GetById(id);
             if (dto == null)
@@ -49,7 +49,7 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public virtual async Task<ActionResult<TDTO>> Update(int id, [FromBody] TDTO dto)
+        public virtual async Task<ActionResult<TDTO>> Update(string id, [FromBody] TDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -66,7 +66,7 @@ namespace EventPlanApp.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public virtual async Task<ActionResult> Delete(int id)
+        public virtual async Task<ActionResult> Delete(string id)
         {
             var success = await _service.Delete(id);
             if (!success)
